@@ -1,0 +1,11 @@
+# Builds
+build/
+node_modules/
+styles/css/*
+
+#IDE
+.idea/
+package-lock.json
+
+# Mac stuff
+.DS_Store
