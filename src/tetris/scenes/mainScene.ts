@@ -27,7 +27,7 @@ export class MainScene extends Phaser.Scene {
 	//endregion
 
 	//region constructor
-	constructor() {
+	public constructor() {
 		super({
 			key: "MainScene"
 		});
