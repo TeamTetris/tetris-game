@@ -4,14 +4,25 @@
 import "phaser";
 import Vector2 = Phaser.Math.Vector2;
 import Brick from "./brick.ts";
+import BiasEngine from "../biasEngine/biasEngine.ts";
+import Field from "../field/field.ts";
 
 export default class BrickFactory {
-	/* TODO: private _biasEngine: BiasEngine; */
-	private readonly _brickCreationFunctions: ((blockAssetId: string, position: Vector2) => Brick)[];
-	private readonly _blockAssetIds: string[];
 
-	constructor(/* TODO: biasEngine: BiasEngine */) {
-		/* TODO: this._biasEngine = biasEngine; */
+	//region public members
+	//endregion
+
+	//region public methods
+	public newBrick(field: Field): Brick {
+		const blockAssetId = this._selectBlockAssetId();
+		const bias = this._biasEngine.newBrickBias(field);
+		return this._newBrick(blockAssetId, bias.position, bias.chances);
+	}
+	//endregion
+
+	//region constructor
+	public constructor(biasEngine: BiasEngine) {
+		this._biasEngine = biasEngine;
 
 		this._brickCreationFunctions = [
 			this._newI,
@@ -29,29 +40,30 @@ export default class BrickFactory {
 			 */
 		]
 	}
+	//endregion
 
-	public newBrick(/* TODO: field: Field */): Brick {
-		const blockAssetId = this._selectBlockAssetId();
+	//region private members
+	private _biasEngine: BiasEngine;
+	private readonly _brickCreationFunctions: ((blockAssetId: string, position: Vector2) => Brick)[];
+	private readonly _blockAssetIds: string[];
+	//endregion
 
-		// TODO: get brick chances and brick position from bias engine
-		// TODO: (pseudo) let bias = this._biasEngine.newBrickBias(field);
-		// TODO: return this._newBrick(blockAssetId, bias.position, bias.chances);
-		return null;
-	}
-
+	//region private methods
 	private _selectBlockAssetId(): string {
 		const index = Math.floor(Math.random() * Math.floor(this._blockAssetIds.length));
 		return this._blockAssetIds[index];
 	}
 
-	private _newBrick(blockAssetId: string, position: Vector2, chances: number[]) {
+	private _newBrick(blockAssetId: string, position: Vector2, chances: number[]): Brick {
 		if (chances.length != this._brickCreationFunctions.length) {
 			throw new Error("cannot generate brick: #chances did not match #brick.");
 		}
 
+		const total = chances.reduce((sum, chance) => sum + Math.abs(chance), 0);
+
 		let random = Math.random();
 		for (let i = 0; i < chances.length; i++) {
-			if (chances[i] < random) {
+			if (Math.abs(chances[i]) / total < random) {
 				random -= chances[i];
 				continue;
 			}
@@ -139,4 +151,5 @@ export default class BrickFactory {
 
 		return brick;
 	}
+	//endregion
 }

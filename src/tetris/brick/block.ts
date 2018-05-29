@@ -5,19 +5,32 @@ import "phaser";
 import Vector2 = Phaser.Math.Vector2;
 
 export default class Block {
-	private _assetId: string;
-	private _position: Vector2;
 
+	//region public members
+	public get position(): Vector2 {
+		return this._position;
+	}
+
+	public set position(position: Vector2) {
+		this._position = position;
+	}
+	//endregion
+
+	//region public methods
+	//endregion
+
+	//region constructor
 	public constructor(assetId: string, position: Vector2) {
 		this._assetId = assetId;
 		this.position = position;
 	}
+	//endregion
 
-	get position() {
-		return this._position;
-	}
+	//region private members
+	private _assetId: string;
+	private _position: Vector2;
+	//endregion
 
-	set position(position: Vector2) {
-		this._position = position;
-	}
+	//region private methods
+	//endregion
 }
