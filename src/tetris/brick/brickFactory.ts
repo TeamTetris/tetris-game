@@ -1,7 +1,6 @@
 /// <reference path="../../../definitions/phaser.d.ts"/>
 
 
-import "phaser";
 import Vector2 = Phaser.Math.Vector2;
 import Brick from "tetris/brick/brick";
 import BiasEngine from "tetris/biasEngine/biasEngine";
@@ -20,7 +19,7 @@ export default class BrickFactory {
 	public newBrick(field: Field): Brick {
 		const blockAssetId = this._selectBlockAssetId();
 		const bias = this._biasEngine.newBrickBias(field);
-		return this._newBrick(blockAssetId, bias.position, bias.chances);
+		return this._newBrick(blockAssetId, bias.position, bias.chances.chances);
 	}
 	//endregion
 

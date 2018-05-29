@@ -1,11 +1,13 @@
 /// <reference path="../../../definitions/phaser.d.ts"/>
 
 
-/** import { Brick } from "./brick/brick"; */
-import { BiasEvent } from "tetris/biasEngine/biasEvent"
-import { BiasEventType } from "tetris/biasEngine/biasEventType";
+import BiasEvent from "tetris/biasEngine/biasEvent";
+import BiasEventType from "tetris/biasEngine/biasEventType";
+import BiasEventReceiver from "tetris/biasEngine/biasEventReceiver";
+import Field from "tetris/field/field";
+import BrickBias from "tetris/brick/brickBias";
 
-export class BiasEngine {
+export default class BiasEngine {
 
 	//region public members
 	//endregion
@@ -18,9 +20,17 @@ export class BiasEngine {
 		}
 	}
 
-	/**getNewBrickBias(field: Field): BrickBias {
-        // TODO: generate new brick bias
-    }*/
+	public newEventReceiver(): BiasEventReceiver {
+		const receiver = new BiasEventReceiver();
+		this._eventReceivers = this._eventReceivers.concat(receiver);
+
+		return receiver;
+	}
+
+	public newBrickBias(field: Field): BrickBias {
+		// TODO: implement biasing logic
+		return BrickBias.newDefault(field);
+	}
 	//endregion
 
 	//region constructor
@@ -33,11 +43,15 @@ export class BiasEngine {
 	private static POSSIBLE_EVENTS: BiasEventType[];
 	private _lastBiasEvent: number = 0;
 	private _biasEventInterval : number = 1000;
-	//private _biasEventSubscribers: BiasEventSubscriber[];
+	private _eventReceivers: BiasEventReceiver[] = [];
 	/** private profiler: Profiler;*/
 	//endregion
 
 	//region private methods
+	private _sendBiasEvent(event: BiasEvent): void {
+		this._eventReceivers.forEach((eventReceiver) => eventReceiver.receiveEvent(event));
+	}
+
 	private _spawnBiasEvent(): void {
 
 	}

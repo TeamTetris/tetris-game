@@ -1,6 +1,6 @@
 /// <reference path="../../../definitions/phaser.d.ts"/>
 
-import { BiasEventType } from "./biasEventType"
+import BiasEventType from "tetris/biasEngine/biasEventType"
 
 export class BiasEvent {
 

@@ -1,5 +1,5 @@
 
 export enum BiasEventType {
-	Ta,
-	Te,
+	DisableInput,
+	DuplicateInput,
 }
