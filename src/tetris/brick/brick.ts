@@ -3,7 +3,7 @@
 
 import "phaser";
 import Vector2 = Phaser.Math.Vector2;
-import Block from "./block";
+import Block from "tetris/brick/block";
 
 export default class Brick {
 

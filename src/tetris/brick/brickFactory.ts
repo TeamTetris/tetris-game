@@ -3,9 +3,9 @@
 
 import "phaser";
 import Vector2 = Phaser.Math.Vector2;
-import Brick from "./brick";
-import BiasEngine from "../biasEngine/biasEngine";
-import Field from "../field/field";
+import Brick from "tetris/brick/brick";
+import BiasEngine from "tetris/biasEngine/biasEngine";
+import Field from "tetris/field/field";
 
 export default class BrickFactory {
 

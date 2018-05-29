@@ -1,6 +1,6 @@
 import Vector2 = Phaser.Math.Vector2;
-import BrickChances from "./brickChances"
-import Field from "../field/Field"
+import BrickChances from "tetris/brick/brickChances"
+import Field from "tetris/field/Field"
 
 export default class BrickBias {
 
