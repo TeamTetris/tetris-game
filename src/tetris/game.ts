@@ -1,7 +1,7 @@
 /// <reference path="../../definitions/phaser.d.ts"/>
 
 import "phaser";
-import MainScene from "tetris/scenes/mainScene";
+import MainScene from "tetris/scene/mainScene";
 
 // main game configuration
 const config: GameConfig = {
