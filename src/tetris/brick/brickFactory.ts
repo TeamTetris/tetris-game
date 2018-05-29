@@ -7,6 +7,10 @@ import Brick from "tetris/brick/brick";
 import BiasEngine from "tetris/biasEngine/biasEngine";
 import Field from "tetris/field/field";
 
+interface BrickCreationFunction {
+	(blockAssetId: string, position: Vector2): Brick;
+}
+
 export default class BrickFactory {
 
 	//region public members
@@ -44,7 +48,7 @@ export default class BrickFactory {
 
 	//region private members
 	private _biasEngine: BiasEngine;
-	private readonly _brickCreationFunctions: ((blockAssetId: string, position: Vector2) => Brick)[];
+	private readonly _brickCreationFunctions: BrickCreationFunction[];
 	private readonly _blockAssetIds: string[];
 	//endregion
 
