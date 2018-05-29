@@ -1,37 +1,46 @@
 /// <reference path="../../../definitions/phaser.d.ts"/>
 
+
 /** import { Brick } from "./brick/brick"; */
-import { BiasEvent } from "./biasEvent"
-import { BiasEventType } from "./biasEventType";
-import { BiasEventSubscriber } from "./biasEventSubscriber"
+import { BiasEvent } from "tetris/biasEngine/biasEvent"
+import { BiasEventType } from "tetris/biasEngine/biasEventType";
+import { BiasEventSubscriber } from "tetris/biasEngine/biasEventSubscriber"
 
 export class BiasEngine {
-    private static POSSIBLE_EVENTS: BiasEventType[];
-    private lastBiasEvent: number = 0;
-    private biasEventInterval : number = 1000;
-    private biasEventSubscribers: BiasEventSubscriber[];
-    /** private profiler: Profiler;*/
 
-    constructor(/** TODO: profiler: Profiler */) {
-        /** this.profiler = profiler; */
-    }
+	//region public members
+	//endregion
 
-    /**getNewBrickBias(field: Field): BrickBias {
+	//region public methods
+	public update(time: number, delta: number): void {
+		if (time > this._lastBiasEvent + this._biasEventInterval) {
+			this._lastBiasEvent = time;
+			this._spawnBiasEvent();
+		}
+	}
+
+	/**getNewBrickBias(field: Field): BrickBias {
         // TODO: generate new brick bias
     }*/
+	//endregion
 
-    private spawnBiasEvent(): void {
-        
-    }
+	//region constructor
+	constructor(/** TODO: profiler: Profiler */) {
+		/** this.profiler = profiler; */
+	}
+	//endregion
 
-    update(time: number, delta: number): void {
-        if (time > this.lastBiasEvent + this.biasEventInterval) {
-            this.lastBiasEvent = time;
-            this.spawnBiasEvent();
-        }
-    }     
-    
-    subscribeForBiasEvents(biasEventSubscriber: BiasEventSubscriber): void {
-        this.biasEventSubscribers.push(biasEventSubscriber);
-    }
+	//region private members
+	private static POSSIBLE_EVENTS: BiasEventType[];
+	private _lastBiasEvent: number = 0;
+	private _biasEventInterval : number = 1000;
+	private _biasEventSubscribers: BiasEventSubscriber[];
+	/** private profiler: Profiler;*/
+	//endregion
+
+	//region private methods
+	private _spawnBiasEvent(): void {
+
+	}
+	//endregion
 }
