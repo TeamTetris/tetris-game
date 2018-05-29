@@ -26,6 +26,15 @@ export default class Brick {
 		const block = new Block(this._blockAssetId, this.position.add(relativePosition));
 		this._blocks = this.blocks.concat(block);
 	}
+
+	public isStuck(): boolean {
+		// TODO: implement me
+		return true;
+	}
+
+	public update(time: number, delta: number): void {
+		// TODO: implement me
+	}
 	//endregion
 
 	//region constructor

@@ -7,7 +7,7 @@ import BrickFactory from "tetris/brick/brickFactory";
 const GAME_WIDTH: number = 18;
 const GAME_HEIGHT: number = 10;
 
-export class MainScene extends Phaser.Scene {
+export default class MainScene extends Phaser.Scene {
 
 	//region public members
 	//endregion
