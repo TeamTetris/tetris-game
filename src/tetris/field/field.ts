@@ -53,6 +53,10 @@ export default class Field {
         return this._state;
     }
 
+    get bricks(): Brick[] {
+    	return this._bricks;
+	}
+
     public update(time: number, delta: number) {
         if (!this.activeBrick) {
             this.activeBrick = this._brickFactory.newBrick(this);
