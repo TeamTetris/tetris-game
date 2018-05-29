@@ -9,37 +9,37 @@ export default class BrickChances {
 
 	//region public methods
 	public setChanceI(chance: number): BrickChances {
-		this._chances[this._chanceBrickMapping.I] = chance;
+		this._chances[this._indexI] = chance;
 		return this;
 	}
 
 	public setChanceO(chance: number): BrickChances {
-		this._chances[this._chanceBrickMapping.O] = chance;
+		this._chances[this._indexO] = chance;
 		return this;
 	}
 
 	public setChanceL(chance: number): BrickChances {
-		this._chances[this._chanceBrickMapping.L] = chance;
+		this._chances[this._indexL] = chance;
 		return this;
 	}
 
 	public setChanceJ(chance: number): BrickChances {
-		this._chances[this._chanceBrickMapping.J] = chance;
+		this._chances[this._indexJ] = chance;
 		return this;
 	}
 
 	public setChanceT(chance: number): BrickChances {
-		this._chances[this._chanceBrickMapping.T] = chance;
+		this._chances[this._indexT] = chance;
 		return this;
 	}
 
 	public setChanceS(chance: number): BrickChances {
-		this._chances[this._chanceBrickMapping.S] = chance;
+		this._chances[this._indexS] = chance;
 		return this;
 	}
 
 	public setChanceZ(chance: number): BrickChances {
-		this._chances[this._chanceBrickMapping.Z] = chance;
+		this._chances[this._indexZ] = chance;
 		return this;
 	}
 	//endregion
@@ -60,22 +60,19 @@ export default class BrickChances {
 	}
 
 	private constructor() {
-		this._chanceBrickMapping = {
-			I: 0,
-			O: 1,
-			L: 2,
-			J: 3,
-			T: 4,
-			S: 5,
-			Z: 6
-		};
-
 		this._chances = [];
 	}
 	//endregion
 
 	//region private members
-	private readonly _chanceBrickMapping: object;
+	private readonly _indexI: number = 0;
+	private readonly _indexO: number = 1;
+	private readonly _indexL: number = 2;
+	private readonly _indexJ: number = 3;
+	private readonly _indexT: number = 4;
+	private readonly _indexS: number = 5;
+	private readonly _indexZ: number = 6;
+
 	private _chances: number[];
 	//endregion
 
