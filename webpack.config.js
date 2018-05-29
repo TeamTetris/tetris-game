@@ -20,6 +20,7 @@ module.exports = {
 		extensions: ['.ts', '.js'],
 		alias: {
 			phaser: phaser,
+			tetris: path.resolve(__dirname, 'src/tetris/')
 		}
 	},
 	module: {
