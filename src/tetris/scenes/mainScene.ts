@@ -9,18 +9,10 @@ const GAME_HEIGHT: number = 10;
 
 export class MainScene extends Phaser.Scene {
 
-	private phaserSprite: Phaser.GameObjects.Sprite;
-	private player: Player;
-	private field: Field;
+	//region public members
+	//endregion
 
-	constructor() {
-		super({
-			key: "MainScene"
-		});
-		this.player = new Player();
-		this.field = new Field(GAME_WIDTH, GAME_HEIGHT, new BrickFactory());
-	}
-
+	//region public methods
 	public preload(): void {
 		this.load.image("logo", "./assets/images/phaser.png");
 	}
@@ -32,4 +24,24 @@ export class MainScene extends Phaser.Scene {
 	public update(time: number, interval: number): void {
 
 	}
+	//endregion
+
+	//region constructor
+	constructor() {
+		super({
+			key: "MainScene"
+		});
+		this.player = new Player();
+		this.field = new Field(GAME_WIDTH, GAME_HEIGHT, new BrickFactory());
+	}
+	//endregion
+
+	//region private members
+	private phaserSprite: Phaser.GameObjects.Sprite;
+	private player: Player;
+	private field: Field;
+	//endregion
+
+	//region private methods
+	//endregion
 }
