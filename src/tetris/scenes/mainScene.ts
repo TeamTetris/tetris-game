@@ -1,8 +1,8 @@
 /// <reference path="../../../definitions/phaser.d.ts"/>
 
-import Field from "../field/field";
-import Player from "../player/player";
-import BrickFactory from "../brickFactory/brickFactory";
+import Field from "tetris/field/field";
+import Player from "tetris/player/player";
+import BrickFactory from "tetris/brick/brickFactory";
 
 const GAME_WIDTH: number = 18;
 const GAME_HEIGHT: number = 10;

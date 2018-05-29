@@ -1,8 +1,8 @@
 /// <reference path="../../../definitions/phaser.d.ts"/>
 
-import Brick from '../brick/brick';
-import Block from '../brick/block';
-import BrickFactory from '../brick/brickFactory';
+import Brick from 'tetris/brick/brick';
+import Block from 'tetris/brick/block';
+import BrickFactory from 'tetris/brick/brickFactory';
 
 export default class Field {
 

@@ -4,7 +4,6 @@
 /** import { Brick } from "./brick/brick"; */
 import { BiasEvent } from "tetris/biasEngine/biasEvent"
 import { BiasEventType } from "tetris/biasEngine/biasEventType";
-import { BiasEventSubscriber } from "tetris/biasEngine/biasEventSubscriber"
 
 export class BiasEngine {
 
@@ -34,7 +33,7 @@ export class BiasEngine {
 	private static POSSIBLE_EVENTS: BiasEventType[];
 	private _lastBiasEvent: number = 0;
 	private _biasEventInterval : number = 1000;
-	private _biasEventSubscribers: BiasEventSubscriber[];
+	//private _biasEventSubscribers: BiasEventSubscriber[];
 	/** private profiler: Profiler;*/
 	//endregion
 
