@@ -32,9 +32,9 @@ export default class MainScene extends Phaser.Scene {
 	public constructor(biasEngine: BiasEngine) {
 		super({
 			key: "MainScene"
-		});
-		this._player = new LocalPlayer(this._field, this.input.keyboard, biasEngine.newEventReceiver());
+		});		
 		this._field = new Field(FIELD_WIDTH, FIELD_HEIGHT, new BrickFactory(this, biasEngine));
+		//this._player = new LocalPlayer(this._field, this.input.keyboard, biasEngine.newEventReceiver());
 	}
 	//endregion
 

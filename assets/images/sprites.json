@@ -1,31 +1,31 @@
 {
 "frames": {
-	"element_blue_square.png": {
+	"element_blue_square": {
 		"frame": {"x":0, "y":0, "w":32, "h":32},
 		"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 		"sourceSize": {"w":32,"h":32}
 	},
-	"element_green_square.png": {
+	"element_green_square": {
 		"frame": {"x":0, "y":66, "w":32, "h":32},
 		"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 		"sourceSize": {"w":32,"h":32}
 	},
-	"element_grey_square.png": {
+	"element_grey_square": {
 		"frame": {"x":33, "y":33, "w":32, "h":32},
 		"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 		"sourceSize": {"w":32,"h":32}
 	},
-	"element_purple_square.png": {
+	"element_purple_square": {
 		"frame": {"x":33, "y":0, "w":32, "h":32},
 		"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 		"sourceSize": {"w":32,"h":32}
 	},
-	"element_red_square.png": {
+	"element_red_square": {
 		"frame": {"x":33, "y":66, "w":32, "h":32},
 		"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 		"sourceSize": {"w":32,"h":32}
 	},
-	"element_yellow_square.png": {
+	"element_yellow_square": {
 		"frame": {"x":0, "y":33, "w":32, "h":32},
 		"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 		"sourceSize": {"w":32,"h":32}

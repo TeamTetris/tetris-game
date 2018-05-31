@@ -41,10 +41,10 @@ export default class Field {
 		if (!this.activeBrick) {
 			this.activeBrick = this._brickFactory.newBrick(this);
 		} else {
-			this._activeBrick.update(time, delta);
+			this.activeBrick.update(time, delta);
 		}
 		if (this.activeBrick.isStuck()) {
-			this._addToField(this._activeBrick.blocks);
+			this._addToField(this.activeBrick.blocks);
 			this.addBrick(this.activeBrick);
 			this.activeBrick = null;
 		}

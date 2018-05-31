@@ -30,13 +30,13 @@ export default class BrickFactory {
 		this._scene = scene;
 
 		this._brickCreationFunctions = [
-			this._newI,
-			this._newO,
-			this._newL,
-			this._newJ,
-			this._newT,
-			this._newS,
-			this._newZ
+			this._newI.bind(this),
+			this._newO.bind(this),
+			this._newL.bind(this),
+			this._newJ.bind(this),
+			this._newT.bind(this),
+			this._newS.bind(this),
+			this._newZ.bind(this)
 		];
 
 		this._blockAssetIds = [
