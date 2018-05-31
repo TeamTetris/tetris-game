@@ -41,7 +41,12 @@ export default class Field {
 	public update(time: number, delta: number): void {
 		if (!this.activeBrick) {
 			this.activeBrick = this._brickFactory.newBrick(this);
+			this._nextActiveBrickDrop = time + this._activeBrickDropInterval;
 		} else {
+			if (this._nextActiveBrickDrop < time) {
+				this._nextActiveBrickDrop = time + this._activeBrickDropInterval;
+				this.activeBrick.position.add(new Vector2(0, 1));
+			}
 			this.activeBrick.update(time, delta);
 		}
 		if (this.activeBrick.isStuck()) {
@@ -72,6 +77,9 @@ export default class Field {
 	private readonly _height: integer;
 	private readonly _drawOffset: Vector2;
 	private readonly _brickFactory: BrickFactory;
+
+	private _nextActiveBrickDrop: number;
+	private _activeBrickDropInterval: number = 400;
 
 	// contains only stuck bricks
 	private readonly _bricks: Brick[];
