@@ -5,7 +5,7 @@ import Player from "tetris/player/player";
 import BiasEventReceiver from 'tetris/biasEngine/biasEventReceiver';
 import KeyboardManager = Phaser.Input.Keyboard.KeyboardManager;
 import BiasEvenType from 'tetris/biasEngine/biasEventType';
-import BiasEventDuplicateInput from 'tetris/biasEngine/biasEventDuplicateInput';
+import BiasEventDuplicateInput from 'tetris/biasEngine/events/biasEventDuplicateInput';
 
 export default class LocalPlayer extends Player {
 
@@ -38,7 +38,7 @@ export default class LocalPlayer extends Player {
 		moveOperation();
 
 		// check whether to apply operation a second time (as bias)
-		if (this._biasEventReceiver.hasEvent(BiasEvenType.DuplicateInput)) {
+		if (this._biasEventReceiver.has(BiasEvenType.DuplicateInput)) {
 			const biasEvent = this._biasEventReceiver.get(BiasEvenType.DuplicateInput) as BiasEventDuplicateInput;
 			if(biasEvent.chance <= Math.random()) {
 				moveOperation();
@@ -53,7 +53,7 @@ export default class LocalPlayer extends Player {
 		this._keyboard = keyboard;
 		this._cursor = keyboard.createCursorKeys();
 		this._biasEventReceiver = biasEventReceiver;
-		this._biasEventReceiver.filter = [ BiasEvenType.DisabpleInput, BiasEvenType.DuplicateInput ];
+		this._biasEventReceiver.filters = [ BiasEvenType.DisableInput, BiasEvenType.DuplicateInput ];
 	}
 	//endregion
 
