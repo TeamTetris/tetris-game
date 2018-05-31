@@ -2,7 +2,7 @@
 import BiasEventType from "tetris/biasEngine/biasEventType";
 import BiasEvent from "tetris/biasEngine/biasEvent";
 
-export default class BiasEventReceiver{
+export default class BiasEventReceiver {
 
 	//region public members
 	public get filters(): BiasEventType[] {

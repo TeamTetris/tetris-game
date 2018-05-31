@@ -4,12 +4,12 @@ import BiasEventType from "tetris/biasEngine/biasEventType";
 export default class BiasEventDuplicateInput extends BiasEvent {
 
 	//region public members
-	public get duplicateChance(): number {
-		return this._duplicateChance;
+	public get chance(): number {
+		return this._chance;
 	}
 
-	public set duplicateChance(chance: number) {
-		this._duplicateChance = Math.min(1, Math.abs(chance));
+	public set chance(chance: number) {
+		this._chance = Math.min(1, Math.abs(chance));
 	}
 	//endregion
 
@@ -19,12 +19,12 @@ export default class BiasEventDuplicateInput extends BiasEvent {
 	//region constructor
 	public constructor(startTime: number, endTime: number, duplicateChance: number = 1.0) {
 		super(BiasEventType.DuplicateInput, startTime, endTime);
-		this.duplicateChance = duplicateChance;
+		this.chance = duplicateChance;
 	}
 	//endregion
 
 	//region private members
-	private _duplicateChance: number;
+	private _chance: number;
 	//endregion
 
 	//region private methods
