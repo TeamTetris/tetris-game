@@ -30,10 +30,13 @@ export default class Brick {
 
 	public drop(): void {
 		// TODO: Implement
+		// Drop to active brick at the current x position
+		// and spawn a new brick
 	}
 
 	public rotate(): void{
 		// TODO: Implement
+		// standard one-way rotation (clockwise)
 	}
 
 	public moveDown(): void {
