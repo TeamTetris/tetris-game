@@ -36,6 +36,7 @@ export default class LocalPlayer extends Player {
 		}
 
 		moveOperation();
+		this._applyDuplicateInputBias(moveOperation);
 	}
 	//endregion
 
@@ -56,7 +57,7 @@ export default class LocalPlayer extends Player {
 	//endregion
 
 	//region private methods
-	private _applyDuplicateInputBias(moveOperation: () => ()) {
+	private _applyDuplicateInputBias(moveOperation: () => void) {
 		if (!this._biasEventReceiver.has(BiasEvenType.DuplicateInput)) {
 			return;
 		}
