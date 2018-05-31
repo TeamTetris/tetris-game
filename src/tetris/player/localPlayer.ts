@@ -1,11 +1,13 @@
 /// <reference path="../../../definitions/phaser.d.ts"/>
 
-import Field from '../field/field';
-import Player from "./player";
-import BiasEventReceiver from '../biasEngine/biasEventReceiver';
+import Field from 'tetris/field/field';
+import Player from "tetris/player/player";
+import BiasEventReceiver from 'tetris/biasEngine/biasEventReceiver';
 import KeyboardManager = Phaser.Input.Keyboard.KeyboardManager;
+import BiasEvenType from 'tetris/biasEngine/biasEventType';
+import BiasEventDuplicateInput from 'tetris/biasEngine/biasEventDuplicateInput';
 
-export default abstract class LocalPlayer extends Player {
+export default class LocalPlayer extends Player {
 
 	//region public members
 	//endregion
@@ -13,9 +15,9 @@ export default abstract class LocalPlayer extends Player {
 	//region public methods
 	public update(time: number, delta: number): void {
 		// update bias events
-		this._biasEventReciver.update(time, delta);
+		this._biasEventReceiver.update(time, delta);
 		// apply bias
-		if (this._biasEventReciver.hasEvent(/** TODO: Set specific BiasEvent type **/)) {
+		if (this._biasEventReceiver.has(BiasEvenType.DisableInput)) {
 			return;
 		}
 		let moveOperation: () => void;
@@ -29,31 +31,36 @@ export default abstract class LocalPlayer extends Player {
 			moveOperation = this.moveDown;
 		} else if (this._cursor.space.isDown) {
 			moveOperation = this.drop;
+		} else if (this._cursor.up.isDown) {
+			moveOperation = this.rotate;
 		}
 
 		moveOperation();
-		if (this._biasEventReciver.hasEvent(/** TODO: Set specific BiasEvent type **/)) {
-			const biasEvent = this._biasEventReciver.getEvent(/** TODO: Set specific BiasEvent type **/);
-			/** TODO: Implement multiple execution *//
+
+		// check whether to apply operation a second time (as bias)
+		if (this._biasEventReceiver.hasEvent(BiasEvenType.DuplicateInput)) {
+			const biasEvent = this._biasEventReceiver.get(BiasEvenType.DuplicateInput) as BiasEventDuplicateInput;
+			if(biasEvent.chance <= Math.random()) {
+				moveOperation();
+			}
 		}
 	}
 	//endregion
 
 	//region constructor
-	protected constructor(field: Field, keyboard: KeyboardManager, biasEventReceiver: BiasEventReceiver) {
+	public constructor(field: Field, keyboard: KeyboardManager, biasEventReceiver: BiasEventReceiver) {
 		super(field);
 		this._keyboard = keyboard;
 		this._cursor = keyboard.createCursorKeys();
-		this._biases = [];
-		this._biasEventReciver = biasEventReceiver;
-		this._biasEventReciver.filter(/** TODO: define events localPlayer is interested in **/)
+		this._biasEventReceiver = biasEventReceiver;
+		this._biasEventReceiver.filter = [ BiasEvenType.DisabpleInput, BiasEvenType.DuplicateInput ];
 	}
 	//endregion
 
 	//region private members
 	private _cursor: CursorKeys;
 	private _keyboard: KeyboardManager;
-	private _biasEventReciver: BiasEventReceiver;
+	private _biasEventReceiver: BiasEventReceiver;
 	//endregion
 
 	//region private methods
