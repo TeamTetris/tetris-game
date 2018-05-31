@@ -5,7 +5,7 @@ import Vector2 = Phaser.Math.Vector2;
 import Brick from "tetris/brick/brick";
 import BiasEngine from "tetris/biasEngine/biasEngine";
 import Field from "tetris/field/field";
-import BrickChances from "./brickChances";
+import BrickChances from "tetris/brick/brickChances";
 
 interface BrickCreationFunction {
 	(blockAssetId: string, position: Vector2): Brick;

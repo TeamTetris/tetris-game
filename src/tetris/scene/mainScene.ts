@@ -4,7 +4,7 @@ import Field from "tetris/field/field";
 import Player from "tetris/player/player";
 import BrickFactory from "tetris/brick/brickFactory";
 import BiasEngine from "tetris/biasEngine/biasEngine";
-import LocalPlayer from "../player/localPlayer";
+import LocalPlayer from "tetris/player/localPlayer";
 
 const FIELD_WIDTH: number = 18;
 const FIELD_HEIGHT: number = 10;
