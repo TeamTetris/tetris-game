@@ -35,8 +35,8 @@ export default abstract class Player {
 		this._field.activeBrick.moveDown();
 	}
 
-	protected drop(): void {
-		this._field.activeBrick.drop();
+	protected dropToFloor(): void {
+		this._field.activeBrick.dropToFloor();
 	}
 
 	protected rotate(): void {

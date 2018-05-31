@@ -45,7 +45,7 @@ export default class Field {
 		} else {
 			if (this._nextActiveBrickDrop < time) {
 				this._nextActiveBrickDrop = time + this._activeBrickDropInterval;
-				this.activeBrick.position.add(new Vector2(0, 1));
+				this.activeBrick.dropOne();
 			}
 			this.activeBrick.update(time, delta);
 		}

@@ -24,10 +24,12 @@ export default class MainScene extends Phaser.Scene {
 
 	public create(): void {
 		this._createFieldBackground();
+		this._player = new LocalPlayer(this._field, this.input.keyboard, this._biasEngine.newEventReceiver());		
 	}
 
 	public update(time: number, delta: number): void {
 		this._field.update(time, delta);
+		this._player.update(time, delta);
 	}
 	//endregion
 
@@ -36,12 +38,13 @@ export default class MainScene extends Phaser.Scene {
 		super({
 			key: "MainScene"
 		});
+		this._biasEngine = biasEngine;
 		this._field = new Field(FIELD_WIDTH, FIELD_HEIGHT, FIELD_DRAW_OFFSET, new BrickFactory(this, biasEngine));
-		//this._player = new LocalPlayer(this._field, this.input.keyboard, biasEngine.newEventReceiver());
 	}
 	//endregion
 
 	//region private members
+	private _biasEngine: BiasEngine;
 	private _player: Player;
 	private _field: Field;
 	private _fieldBackground: Phaser.GameObjects.Graphics;

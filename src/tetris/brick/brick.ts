@@ -21,17 +21,21 @@ export default class Brick {
 	}
 
 	public moveLeft(): void {
-		// TODO: Implement
+		this.position.x--;		
 	}
 
 	public moveRight(): void {
-		// TODO: Implement
+		this.position.x++;				
 	}
 
-	public drop(): void {
+	public dropOne(): void {
+		this.position.y++;
+	}
+	
+	public dropToFloor(): void {
 		// TODO: Implement
 		// Drop to active brick at the current x position
-		// and spawn a new brick
+		// and spawn a new brick				this.activeBrick.position.y++;
 	}
 
 	public rotate(): void{
@@ -40,7 +44,7 @@ export default class Brick {
 	}
 
 	public moveDown(): void {
-
+		this.position.y++;
 	}
 	//endregion
 
