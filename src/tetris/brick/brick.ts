@@ -44,8 +44,7 @@ export default class Brick {
 	}
 
 	public rotate(): void {
-		// TODO: Implement
-		// standard one-way rotation (clockwise)
+		this._tryToRotate(true);
 	}
 
 	public moveDown(): void {
@@ -93,11 +92,35 @@ export default class Brick {
 			this._stuck = true;
 		}
 	}
-
+	
 	private _isMovePossible(move: Vector2): boolean {
 		let possible = true;
 		this._blocks.forEach(b => {
 			const targetPosition = b.position.clone().add(move).add(this._position);
+			if (targetPosition.x < 0 || targetPosition.y < 0 || targetPosition.x >= this._field.width || targetPosition.y >= this._field.height || this._field.state[targetPosition.x][targetPosition.y]) {				
+				possible = false;
+			}
+		})
+		return possible;
+	}
+
+	private _tryToRotate(clockwise: boolean): void {
+		const rotatedBlocks = this._blocks.map(originalBlock => {
+			let rotatedBlock = originalBlock.clone();
+			rotatedBlock.position = clockwise ? new Vector2(-rotatedBlock.position.y, rotatedBlock.position.x) : new Vector2(rotatedBlock.position.y, -rotatedBlock.position.x); 
+			return rotatedBlock; 
+		});
+		const rotationOffset = new Vector2(Math.abs(Math.min(...rotatedBlocks.map(b => b.position.x))), Math.abs(Math.min(...rotatedBlocks.map(b => b.position.y))));
+		rotatedBlocks.forEach(b => b.position.add(rotationOffset) );
+		if (this._isRotationPossible(rotatedBlocks)) {
+			this._blocks = rotatedBlocks;
+		}
+	}
+
+	private _isRotationPossible(rotatedBlocks: Block[]): boolean {
+		let possible = true;
+		rotatedBlocks.forEach(b => {
+			const targetPosition = b.position.clone().add(this._position);
 			if (targetPosition.x < 0 || targetPosition.y < 0 || targetPosition.x >= this._field.width || targetPosition.y >= this._field.height || this._field.state[targetPosition.x][targetPosition.y]) {				
 				possible = false;
 			}
