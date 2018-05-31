@@ -19,6 +19,26 @@ export default class Brick {
 	public get blocks(): Block[] {
 		return this._blocks;
 	}
+
+	public moveLeft(): void {
+		// TODO: Implement
+	}
+
+	public moveRight(): void {
+		// TODO: Implement
+	}
+
+	public drop(): void {
+		// TODO: Implement
+	}
+
+	public rotate(): void{
+		// TODO: Implement
+	}
+
+	public moveDown(): void {
+
+	}
 	//endregion
 
 	//region public methods
