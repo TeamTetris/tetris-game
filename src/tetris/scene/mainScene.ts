@@ -6,8 +6,8 @@ import BrickFactory from "tetris/brick/brickFactory";
 import BiasEngine from "tetris/biasEngine/biasEngine";
 import LocalPlayer from "tetris/player/localPlayer";
 
-const FIELD_WIDTH: number = 18;
-const FIELD_HEIGHT: number = 10;
+const FIELD_WIDTH: number = 10;
+const FIELD_HEIGHT: number = 18;
 
 export default class MainScene extends Phaser.Scene {
 
