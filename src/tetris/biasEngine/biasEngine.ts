@@ -1,6 +1,5 @@
 /// <reference path="../../../definitions/phaser.d.ts"/>
 
-
 import BiasEvent from "tetris/biasEngine/biasEvent";
 import BiasEventType from "tetris/biasEngine/biasEventType";
 import BiasEventReceiver from "tetris/biasEngine/biasEventReceiver";
@@ -34,7 +33,7 @@ export default class BiasEngine {
 	//endregion
 
 	//region constructor
-	constructor(/** TODO: profiler: Profiler */) {
+	public constructor(/** TODO: profiler: Profiler */) {
 		/** this.profiler = profiler; */
 	}
 	//endregion

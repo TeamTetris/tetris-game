@@ -2,6 +2,7 @@
 
 import "phaser";
 import MainScene from "tetris/scene/mainScene";
+import BiasEngine from "tetris/biasEngine/biasEngine"
 
 // main game configuration
 const config: GameConfig = {
@@ -20,9 +21,27 @@ const config: GameConfig = {
 
 // game class
 export class Game extends Phaser.Game {
-  constructor(config: GameConfig) {
-    super(config);
-  }
+
+	//region public members
+	//endregion
+
+	//region public methods
+	//endregion
+
+	//region constructor
+	public constructor(config: GameConfig) {
+		super(config);
+
+		this._biasEngine = new BiasEngine();
+	}
+	//endregion
+
+	//region private members
+	private readonly _biasEngine;
+	//endregion
+
+	//region private methods
+	//endregion
 }
 
 // when the page is loaded, create our game instance

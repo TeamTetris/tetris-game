@@ -3,10 +3,10 @@
 import Field from "tetris/field/field";
 import Player from "tetris/player/player";
 import BrickFactory from "tetris/brick/brickFactory";
-import BiasEngine from "tetris/BiasEngine/BiasEngine";
+import BiasEngine from "tetris/biasEngine/biasEngine";
 
-const GAME_WIDTH: number = 18;
-const GAME_HEIGHT: number = 10;
+const FIELD_WIDTH: number = 18;
+const FIELD_HEIGHT: number = 10;
 
 export default class MainScene extends Phaser.Scene {
 
@@ -28,13 +28,12 @@ export default class MainScene extends Phaser.Scene {
 	//endregion
 
 	//region constructor
-	public constructor() {
+	public constructor(biasEngine: BiasEngine) {
 		super({
 			key: "MainScene"
 		});
-		this._biasEngine = new BiasEngine();
 		this._player = new Player();
-		this._field = new Field(GAME_WIDTH, GAME_HEIGHT, new BrickFactory(this._biasEngine));
+		this._field = new Field(FIELD_WIDTH, FIELD_HEIGHT, new BrickFactory(biasEngine));
 	}
 	//endregion
 
@@ -42,7 +41,6 @@ export default class MainScene extends Phaser.Scene {
 	private _phaserSprite: Phaser.GameObjects.Sprite;
 	private _player: Player;
 	private _field: Field;
-	private _biasEngine: BiasEngine;
 	//endregion
 
 	//region private methods

@@ -16,16 +16,8 @@ export default class BiasEventReceiver{
 
 	//region public methods
 	public update(time: number, delta: number): void {
-		// remove expired events
-		this._events = this._events.filter((event) => event.endTime >= time);
-
-		this._events.forEach((event) => {
-			if (!this._eventFunctions.has(event.eventType)) {
-				return;
-			}
-
-			this._eventFunctions[event.eventType](event);
-		});
+		this._removeExpiredEvents(time);
+		this._triggerEventCallbacks();
 	}
 
 	public receiveEvent(event: BiasEvent): void {
@@ -33,7 +25,7 @@ export default class BiasEventReceiver{
 			return;
 		}
 
-		this._events = this._events.concat(event);
+		this._events.set(event.eventType, event);
 	}
 
 	public addFilter(eventType: BiasEventType): BiasEventReceiver {
@@ -49,20 +41,55 @@ export default class BiasEventReceiver{
 		this._eventFunctions.set(eventType, callback);
 		return this;
 	}
+
+	public has(eventType: BiasEventType): boolean {
+		return this._events.has(eventType);
+	}
+
+	public get(eventType: BiasEventType): BiasEvent {
+		if (!this._events.has(eventType)) {
+			return null;
+		}
+
+		return this._events[eventType];
+	}
 	//endregion
 
 	//region constructor
 	public constructor() {
+		this._events = new Map<BiasEventType, BiasEvent>();
 		this._eventFunctions = new Map<BiasEventType, (BiasEvent) => void>();
 	}
 	//endregion
 
 	//region private members
-	private _events: BiasEvent[] = [];
+	private readonly _events: Map<BiasEventType, BiasEvent>;
 	private _eventFilters: BiasEventType[] = [];
-	private _eventFunctions: Map<BiasEventType, (BiasEvent) => void>;
+	private readonly _eventFunctions: Map<BiasEventType, (BiasEvent) => void>;
 	//endregion
 
 	//region private methods
+	private _removeExpiredEvents(time: number): void {
+		for (let i = 0; i < this._events.size; ) {
+			const key = this._events.keys()[i];
+
+			if (this._events[key].endTime >= time) {
+				i++;
+				continue;
+			}
+
+			this._events.delete(key);
+		}
+	}
+
+	private _triggerEventCallbacks(): void {
+		this._events.forEach((event: BiasEvent, eventType: BiasEventType) => {
+			if (!this._eventFunctions.has(eventType)) {
+				return;
+			}
+
+			this._eventFunctions[eventType](event);
+		});
+	}
 	//endregion
 }

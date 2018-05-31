@@ -19,7 +19,7 @@ export default class BrickFactory {
 	public newBrick(field: Field): Brick {
 		const blockAssetId = this._selectBlockAssetId();
 		const bias = this._biasEngine.newBrickBias(field);
-		return this._newBrick(blockAssetId, bias.position, bias.chances.chances);
+		return this._newBrick(blockAssetId, bias.position, bias.chances.probabilities);
 	}
 	//endregion
 
@@ -59,15 +59,17 @@ export default class BrickFactory {
 
 	private _newBrick(blockAssetId: string, position: Vector2, chances: number[]): Brick {
 		if (chances.length != this._brickCreationFunctions.length) {
-			throw new Error("cannot generate brick: #chances did not match #brick.");
+			throw new Error("cannot generate brick: #probabilities did not match #brick.");
 		}
 
 		const total = chances.reduce((sum, chance) => sum + Math.abs(chance), 0);
 
 		let random = Math.random();
 		for (let i = 0; i < chances.length; i++) {
-			if (Math.abs(chances[i]) / total < random) {
-				random -= chances[i];
+			const normalized_chance = Math.abs(chances[i]) / total;
+
+			if (normalized_chance < random) {
+				random -= normalized_chance;
 				continue;
 			}
 
