@@ -3,6 +3,7 @@
 
 import "phaser";
 import Vector2 = Phaser.Math.Vector2;
+import Field from "tetris/field/field";
 import Block from "tetris/brick/block";
 
 export default class Brick {
@@ -20,35 +21,37 @@ export default class Brick {
 		return this._blocks;
 	}
 
+	public set field(field: Field) {
+		this._field = field;
+	}
+	//endregion
+
+	//region public methods
 	public moveLeft(): void {
-		this.position.x--;		
+		this._tryToMove(new Vector2(-1, 0));
 	}
 
 	public moveRight(): void {
-		this.position.x++;				
+		this._tryToMove(new Vector2(1, 0));
 	}
 
 	public dropOne(): void {
-		this.position.y++;
+		this._tryToMove(new Vector2(0, 1), true);
 	}
 	
 	public dropToFloor(): void {
-		// TODO: Implement
-		// Drop to active brick at the current x position
-		// and spawn a new brick				this.activeBrick.position.y++;
+		
 	}
 
-	public rotate(): void{
+	public rotate(): void {
 		// TODO: Implement
 		// standard one-way rotation (clockwise)
 	}
 
 	public moveDown(): void {
-		this.position.y++;
+		this._tryToMove(new Vector2(0, 1), true);
 	}
-	//endregion
 
-	//region public methods
 	public addBlock(sprite: Phaser.GameObjects.Sprite, relativePosition: Vector2): void {
 		const block = new Block(sprite, relativePosition);
 		this._blocks = this.blocks.concat(block);
@@ -56,7 +59,7 @@ export default class Brick {
 
 	public isStuck(): boolean {
 		// TODO: implement me
-		return false;
+		return this._stuck;
 	}
 
 	public update(time: number, delta: number): void {
@@ -78,8 +81,28 @@ export default class Brick {
 	//region private members
 	private _position: Vector2;
 	private _blocks: Block[];
+	private _field: Field;
+	private _stuck: boolean = false;
 	//endregion
 
 	//region private methods
+	private _tryToMove(move: Vector2, stuckIfFails: boolean = false): void {
+		if (this._isMovePossible(move)) {
+			this.position.add(move);		
+		} else if (stuckIfFails) {
+			this._stuck = true;
+		}
+	}
+
+	private _isMovePossible(move: Vector2): boolean {
+		let possible = true;
+		this._blocks.forEach(b => {
+			const targetPosition = b.position.clone().add(move).add(this._position);
+			if (targetPosition.x < 0 || targetPosition.y < 0 || targetPosition.x >= this._field.width || targetPosition.y >= this._field.height || this._field.state[targetPosition.x][targetPosition.y]) {				
+				possible = false;
+			}
+		})
+		return possible;
+	}
 	//endregion
 }

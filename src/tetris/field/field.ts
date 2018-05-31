@@ -40,8 +40,7 @@ export default class Field {
 	//region public methods
 	public update(time: number, delta: number): void {
 		if (!this.activeBrick) {
-			this.activeBrick = this._brickFactory.newBrick(this);
-			this._nextActiveBrickDrop = time + this._activeBrickDropInterval;
+			this._generateNewBrick(time);
 		} else {
 			if (this._nextActiveBrickDrop < time) {
 				this._nextActiveBrickDrop = time + this._activeBrickDropInterval;
@@ -50,10 +49,12 @@ export default class Field {
 			this.activeBrick.update(time, delta);
 		}
 		if (this.activeBrick.isStuck()) {
-			this._addToField(this.activeBrick.blocks);
+			this._addToField(this.activeBrick.blocks, this.activeBrick.position);
 			this.addBrick(this.activeBrick);
-			this.activeBrick = null;
+			this._generateNewBrick(time);
 		}
+
+		// Pre-Draw
 		this._bricks.forEach(b => b.preDraw(this._drawOffset));
 		this.activeBrick.preDraw(this._drawOffset);
 	}
@@ -87,6 +88,12 @@ export default class Field {
 	//endregion
 
 	//region private methods
+	private _generateNewBrick(time: number): void {
+		this.activeBrick = this._brickFactory.newBrick(this);
+		this.activeBrick.field = this;
+		this._nextActiveBrickDrop = time + this._activeBrickDropInterval;
+	}
+
 	private _setupField(): void {
 		const iterator = this._state.keys();
 		for (let key of iterator) {
@@ -94,9 +101,9 @@ export default class Field {
 		}
 	}
 
-	private _addToField(blocks: Block[]): void {
+	private _addToField(blocks: Block[], brickOffset: Vector2): void {
 		blocks.forEach(block => {
-			this._state[block.position.x][block.position.y] = true;
+			this._state[brickOffset.x + block.position.x][brickOffset.y + block.position.y] = true;
 		});
 	}
 	//endregion
