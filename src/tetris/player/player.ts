@@ -1,4 +1,4 @@
-import Field from '../field/field';
+import Field from 'tetris/field/field';
 
 export default abstract class Player {
 
@@ -24,19 +24,23 @@ export default abstract class Player {
 
 	//region protected methods
 	protected moveLeft(): void {
-		this._field.moveBrickLeft();
+		this._field.activeBrick.moveLeft();
 	}
 
 	protected moveRight(): void {
-		this._field.moveBrickRight();
+		this._field.activeBrick.moveRight();
 	}
 
 	protected moveDown(): void {
-		this._field.moveBrickDown();
+		this._field.activeBrick.moveDown();
 	}
 
 	protected drop(): void {
-		this._field.dropBrick();
+		this._field.activeBrick.drop();
+	}
+
+	protected rotate(): void {
+		this._field.activeBrick.rotate();
 	}
 	//endregion
 }
