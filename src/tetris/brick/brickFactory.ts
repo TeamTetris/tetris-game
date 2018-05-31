@@ -25,8 +25,9 @@ export default class BrickFactory {
 	//endregion
 
 	//region constructor
-	public constructor(biasEngine: BiasEngine) {
+	public constructor(scene: Phaser.Scene, biasEngine: BiasEngine) {
 		this._biasEngine = biasEngine;
+		this._scene = scene;
 
 		this._brickCreationFunctions = [
 			this._newI,
@@ -39,15 +40,19 @@ export default class BrickFactory {
 		];
 
 		this._blockAssetIds = [
-			/*
-			TODO: add block asset ids
-			 */
-		]
+			"element_blue_square",
+			"element_green_square",
+			"element_grey_square",
+			"element_purple_square",
+			"element_red_square",
+			"element_yellow_square",
+		];
 	}
 	//endregion
 
 	//region private members
 	private _biasEngine: BiasEngine;
+	private _scene: Phaser.Scene;
 	private readonly _brickCreationFunctions: BrickCreationFunction[];
 	private readonly _blockAssetIds: string[];
 	//endregion
@@ -80,80 +85,84 @@ export default class BrickFactory {
 		throw new Error("cannot generate brick: no chance was met (random = " + random + ").");
 	}
 
+
+	private _createSprite(blockAssetId: string): Phaser.GameObjects.Sprite {
+		return this._scene.add.sprite(0, 0, "puzzleSpriteAtlas", blockAssetId);
+	}
+
 	private _newI(blockAssetId: string, position: Vector2): Brick {
-		const brick = new Brick(blockAssetId, position);
+		const brick = new Brick(position);
 
-		brick.addBlock(new Vector2(0, 0));
-		brick.addBlock(new Vector2(0, 1));
-		brick.addBlock(new Vector2(0, 2));
-		brick.addBlock(new Vector2(0, 3));
-
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 0));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 1));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 2));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 3));
 
 		return brick;
 	}
 
 	private _newO(blockAssetId: string, position: Vector2): Brick {
-		const brick = new Brick(blockAssetId, position);
+		const brick = new Brick(position);
 
-		brick.addBlock(new Vector2(0, 0));
-		brick.addBlock(new Vector2(1, 0));
-		brick.addBlock(new Vector2(0, 1));
-		brick.addBlock(new Vector2(1, 1));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 0));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 0));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 1));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 1));
 
 		return brick;
 	}
 
 	private _newL(blockAssetId: string, position: Vector2): Brick {
-		const brick = new Brick(blockAssetId, position);
+		const brick = new Brick(position);
 
-		brick.addBlock(new Vector2(0, 0));
-		brick.addBlock(new Vector2(0, 1));
-		brick.addBlock(new Vector2(0, 2));
-		brick.addBlock(new Vector2(1, 2));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 0));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 1));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 2));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 2));
 
 		return brick;
 	}
 
 	private _newJ(blockAssetId: string, position: Vector2): Brick {
-		const brick = new Brick(blockAssetId, position);
+		const brick = new Brick(position);
 
-		brick.addBlock(new Vector2(1, 0));
-		brick.addBlock(new Vector2(1, 1));
-		brick.addBlock(new Vector2(1, 2));
-		brick.addBlock(new Vector2(0, 2));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 0));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 1));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 2));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 2));
 
 		return brick;
 	}
 
 	private _newT(blockAssetId: string, position: Vector2): Brick {
-		const brick = new Brick(blockAssetId, position);
+		const brick = new Brick(position);
 
-		brick.addBlock(new Vector2(0, 0));
-		brick.addBlock(new Vector2(1, 0));
-		brick.addBlock(new Vector2(2, 0));
-		brick.addBlock(new Vector2(1, 1));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 0));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 0));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(2, 0));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 1));
 
 		return brick;
 	}
 
 	private _newZ(blockAssetId: string, position: Vector2): Brick {
-		const brick = new Brick(blockAssetId, position);
+		const brick = new Brick(position);
 
-		brick.addBlock(new Vector2(0, 0));
-		brick.addBlock(new Vector2(1, 0));
-		brick.addBlock(new Vector2(1, 1));
-		brick.addBlock(new Vector2(2, 1));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 0));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 0));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 1));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(2, 1));
 
 		return brick;
 	}
 
 	private _newS(blockAssetId: string, position: Vector2): Brick {
-		const brick = new Brick(blockAssetId, position);
+		const brick = new Brick(position);
 
-		brick.addBlock(new Vector2(1, 0));
-		brick.addBlock(new Vector2(2, 0));
-		brick.addBlock(new Vector2(0, 1));
-		brick.addBlock(new Vector2(1, 1));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 0));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(2, 0));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 1));
+		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 1));
 
 		return brick;
 	}

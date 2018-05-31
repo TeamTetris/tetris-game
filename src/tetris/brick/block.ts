@@ -17,18 +17,22 @@ export default class Block {
 	//endregion
 
 	//region public methods
+	public update(brickPosition: Vector2): void {
+		const fieldPosition = brickPosition.add(this._position).scale(this._sprite.getBounds().x);
+		this._sprite.setPosition(fieldPosition.x, fieldPosition.y);
+	}
 	//endregion
 
 	//region constructor
-	public constructor(assetId: string, position: Vector2) {
-		this._assetId = assetId;
+	public constructor(sprite: Phaser.GameObjects.Sprite, position: Vector2) {
+		this._sprite = sprite;
 		this.position = position;
 	}
 	//endregion
 
 	//region private members
-	private _assetId: string;
 	private _position: Vector2;
+	private _sprite: Phaser.GameObjects.Sprite;
 	//endregion
 
 	//region private methods

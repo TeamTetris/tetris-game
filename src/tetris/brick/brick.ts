@@ -45,24 +45,23 @@ export default class Brick {
 	//endregion
 
 	//region public methods
-	public addBlock(relativePosition: Vector2): void {
-		const block = new Block(this._blockAssetId, this.position.add(relativePosition));
+	public addBlock(sprite: Phaser.GameObjects.Sprite, relativePosition: Vector2): void {
+		const block = new Block(sprite, this.position.add(relativePosition));
 		this._blocks = this.blocks.concat(block);
 	}
 
 	public isStuck(): boolean {
 		// TODO: implement me
-		return true;
+		return false;
 	}
 
 	public update(time: number, delta: number): void {
-		// TODO: implement me
+		this._blocks.forEach(b => b.update(this._position));
 	}
 	//endregion
 
 	//region constructor
-	public constructor(blockAssetId: string, position: Vector2) {
-		this._blockAssetId = blockAssetId;
+	public constructor(position: Vector2) {
 		this.position = position;
 		this._blocks = [];
 	}
@@ -71,7 +70,6 @@ export default class Brick {
 	//region private members
 	private _position: Vector2;
 	private _blocks: Block[];
-	private readonly _blockAssetId: string;
 	//endregion
 
 	//region private methods

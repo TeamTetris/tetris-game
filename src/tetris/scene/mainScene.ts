@@ -16,15 +16,15 @@ export default class MainScene extends Phaser.Scene {
 
 	//region public methods
 	public preload(): void {
-		this.load.image("logo", "./assets/images/phaser.png");
+		this.load.atlas("puzzleSpriteAtlas", "./assets/images/sprites.png", "./assets/images/sprites.json");
 	}
 
 	public create(): void {
-		this._phaserSprite = this.add.sprite(400, 300, "logo");
+
 	}
 
-	public update(time: number, interval: number): void {
-
+	public update(time: number, delta: number): void {
+		this._field.update(time, delta);
 	}
 	//endregion
 
@@ -33,13 +33,12 @@ export default class MainScene extends Phaser.Scene {
 		super({
 			key: "MainScene"
 		});
-		this._field = new Field(FIELD_WIDTH, FIELD_HEIGHT, new BrickFactory(biasEngine));
 		this._player = new LocalPlayer(this._field, this.input.keyboard, biasEngine.newEventReceiver());
+		this._field = new Field(FIELD_WIDTH, FIELD_HEIGHT, new BrickFactory(this, biasEngine));
 	}
 	//endregion
 
 	//region private members
-	private _phaserSprite: Phaser.GameObjects.Sprite;
 	private _player: Player;
 	private _field: Field;
 	//endregion
