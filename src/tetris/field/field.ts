@@ -3,6 +3,7 @@
 import Brick from 'tetris/brick/brick';
 import Block from 'tetris/brick/block';
 import BrickFactory from 'tetris/brick/brickFactory';
+import Vector2 = Phaser.Math.Vector2;
 
 export default class Field {
 
@@ -48,13 +49,16 @@ export default class Field {
 			this.addBrick(this.activeBrick);
 			this.activeBrick = null;
 		}
+		this._bricks.forEach(b => b.preDraw(this._drawOffset));
+		this.activeBrick.preDraw(this._drawOffset);
 	}
 	//endregion
 
 	//region constructor
-	public constructor(width: number, height: number, brickFactory: BrickFactory) {
+	public constructor(width: number, height: number, drawOffset: Vector2, brickFactory: BrickFactory) {
 		this._width = width;
 		this._height = height;
+		this._drawOffset = drawOffset;
 		this._bricks = [];
 		this._brickFactory = brickFactory;
 		this._state = new Array(this._height);
@@ -66,6 +70,7 @@ export default class Field {
 	private _activeBrick: Brick;
 	private readonly _width: integer;
 	private readonly _height: integer;
+	private readonly _drawOffset: Vector2;
 	private readonly _brickFactory: BrickFactory;
 
 	// contains only stuck bricks

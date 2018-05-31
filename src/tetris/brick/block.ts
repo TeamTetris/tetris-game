@@ -17,9 +17,12 @@ export default class Block {
 	//endregion
 
 	//region public methods
-	public update(brickPosition: Vector2): void {
+	public update(): void {
+	}
+	
+	public preDraw(brickPosition: Vector2, fieldOffset: Vector2) {
 		const fieldPosition = brickPosition.clone().add(this._position);
-		const pixelPosition = fieldPosition.clone().scale(this._sprite.frame.cutHeight).add(new Vector2(this._sprite.frame.cutWidth, this._sprite.frame.cutHeight).scale(0.5));
+		const pixelPosition = fieldPosition.clone().scale(this._sprite.frame.cutHeight).add(new Vector2(this._sprite.frame.cutWidth, this._sprite.frame.cutHeight).scale(0.5)).add(fieldOffset);
 		this._sprite.setPosition(pixelPosition.x, pixelPosition.y);
 	}
 	//endregion

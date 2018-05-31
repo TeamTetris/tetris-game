@@ -56,7 +56,11 @@ export default class Brick {
 	}
 
 	public update(time: number, delta: number): void {
-		this._blocks.forEach(b => b.update(this._position));
+		this._blocks.forEach(b => b.update());
+	}
+
+	public preDraw(fieldOffset: Vector2) {
+		this._blocks.forEach(b => b.preDraw(this._position, fieldOffset));		
 	}
 	//endregion
 
