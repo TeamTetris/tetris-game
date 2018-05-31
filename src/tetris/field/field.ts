@@ -40,8 +40,9 @@ export default class Field {
 	public update(time: number, delta: number): void {
 		if (!this.activeBrick) {
 			this.activeBrick = this._brickFactory.newBrick(this);
+		} else {
+			this._activeBrick.update(time, delta);
 		}
-		this._activeBrick.update(time, delta);
 		if (this.activeBrick.isStuck()) {
 			this._addToField(this._activeBrick.blocks);
 			this.addBrick(this.activeBrick);
