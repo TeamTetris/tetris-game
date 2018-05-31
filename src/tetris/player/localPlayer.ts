@@ -36,14 +36,6 @@ export default class LocalPlayer extends Player {
 		}
 
 		moveOperation();
-
-		// check whether to apply operation a second time (as bias)
-		if (this._biasEventReceiver.has(BiasEvenType.DuplicateInput)) {
-			const biasEvent = this._biasEventReceiver.get(BiasEvenType.DuplicateInput) as BiasEventDuplicateInput;
-			if(biasEvent.chance <= Math.random()) {
-				moveOperation();
-			}
-		}
 	}
 	//endregion
 
@@ -64,5 +56,14 @@ export default class LocalPlayer extends Player {
 	//endregion
 
 	//region private methods
+	private _applyDuplicateInputBias(moveOperation: () => ()) {
+		if (!this._biasEventReceiver.has(BiasEvenType.DuplicateInput)) {
+			return;
+		}
+		const biasEvent = this._biasEventReceiver.get(BiasEvenType.DuplicateInput) as BiasEventDuplicateInput;
+		if (biasEvent.chance <= Math.random()) {
+			moveOperation();
+		}
+	}
 	//endregion
 }
