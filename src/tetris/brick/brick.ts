@@ -46,7 +46,7 @@ export default class Brick {
 
 	//region public methods
 	public addBlock(sprite: Phaser.GameObjects.Sprite, relativePosition: Vector2): void {
-		const block = new Block(sprite, this.position.add(relativePosition));
+		const block = new Block(sprite, relativePosition);
 		this._blocks = this.blocks.concat(block);
 	}
 

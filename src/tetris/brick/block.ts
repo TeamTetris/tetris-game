@@ -18,8 +18,9 @@ export default class Block {
 
 	//region public methods
 	public update(brickPosition: Vector2): void {
-		const fieldPosition = brickPosition.add(this._position).scale(this._sprite.getBounds().x);
-		this._sprite.setPosition(fieldPosition.x, fieldPosition.y);
+		const fieldPosition = brickPosition.clone().add(this._position);
+		const pixelPosition = fieldPosition.clone().scale(this._sprite.frame.cutHeight).add(new Vector2(this._sprite.frame.cutWidth, this._sprite.frame.cutHeight).scale(0.5));
+		this._sprite.setPosition(pixelPosition.x, pixelPosition.y);
 	}
 	//endregion
 
