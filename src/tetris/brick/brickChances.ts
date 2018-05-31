@@ -2,44 +2,44 @@
 export default class BrickChances {
 
 	//region public members
-	public get probabilities(): number[] {
-		return this._probabilities;
+	public get chances(): number[] {
+		return this._chances;
 	}
 	//endregion
 
 	//region public methods
 	public setChanceI(chance: number): BrickChances {
-		this._probabilities[this._brickIndices["I"]] = chance;
+		this._chances[this._brickIndices["I"]] = chance;
 		return this;
 	}
 
 	public setChanceO(chance: number): BrickChances {
-		this._probabilities[this._brickIndices["O"]] = chance;
+		this._chances[this._brickIndices["O"]] = chance;
 		return this;
 	}
 
 	public setChanceL(chance: number): BrickChances {
-		this._probabilities[this._brickIndices["L"]] = chance;
+		this._chances[this._brickIndices["L"]] = chance;
 		return this;
 	}
 
 	public setChanceJ(chance: number): BrickChances {
-		this._probabilities[this._brickIndices["J"]] = chance;
+		this._chances[this._brickIndices["J"]] = chance;
 		return this;
 	}
 
 	public setChanceT(chance: number): BrickChances {
-		this._probabilities[this._brickIndices["T"]] = chance;
+		this._chances[this._brickIndices["T"]] = chance;
 		return this;
 	}
 
 	public setChanceS(chance: number): BrickChances {
-		this._probabilities[this._brickIndices["S"]] = chance;
+		this._chances[this._brickIndices["S"]] = chance;
 		return this;
 	}
 
 	public setChanceZ(chance: number): BrickChances {
-		this._probabilities[this._brickIndices["Z"]] = chance;
+		this._chances[this._brickIndices["Z"]] = chance;
 		return this;
 	}
 	//endregion
@@ -47,14 +47,14 @@ export default class BrickChances {
 	//region constructor
 	public static newEqualChances(): BrickChances {
 		const chances = new BrickChances();
-		chances._probabilities = [1, 1, 1, 1, 1, 1, 1];
+		chances._chances = [1, 1, 1, 1, 1, 1, 1];
 
 		return chances;
 	}
 
 	public static newNoChances(): BrickChances {
 		const chances = new BrickChances();
-		chances._probabilities = [0, 0, 0, 0, 0, 0, 0];
+		chances._chances = [0, 0, 0, 0, 0, 0, 0];
 
 		return chances;
 	}
@@ -69,13 +69,13 @@ export default class BrickChances {
 			.set("S", 5)
 			.set("Z", 6);
 
-		this._probabilities = [];
+		this._chances = [];
 	}
 	//endregion
 
 	//region private members
 	private readonly _brickIndices: Map<string, number>;
-	private _probabilities: number[];
+	private _chances: number[];
 	//endregion
 
 	//region private methods

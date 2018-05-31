@@ -70,16 +70,13 @@ export default class BiasEventReceiver {
 
 	//region private methods
 	private _removeExpiredEvents(time: number): void {
-		for (let i = 0; i < this._events.size; ) {
-			const key = this._events.keys()[i];
-
-			if (this._events[key].endTime >= time) {
-				i++;
-				continue;
+		this._events.forEach((value: BiasEvent, key: BiasEventType) => {
+			if (value.endTime >= time) {
+				return;
 			}
 
 			this._events.delete(key);
-		}
+		})
 	}
 
 	private _triggerEventCallbacks(): void {

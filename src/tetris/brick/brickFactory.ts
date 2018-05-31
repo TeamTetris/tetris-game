@@ -5,6 +5,7 @@ import Vector2 = Phaser.Math.Vector2;
 import Brick from "tetris/brick/brick";
 import BiasEngine from "tetris/biasEngine/biasEngine";
 import Field from "tetris/field/field";
+import BrickChances from "./brickChances";
 
 interface BrickCreationFunction {
 	(blockAssetId: string, position: Vector2): Brick;
@@ -19,7 +20,7 @@ export default class BrickFactory {
 	public newBrick(field: Field): Brick {
 		const blockAssetId = this._selectBlockAssetId();
 		const bias = this._biasEngine.newBrickBias(field);
-		return this._newBrick(blockAssetId, bias.position, bias.chances.probabilities);
+		return this._newBrick(blockAssetId, bias.position, bias.chances);
 	}
 	//endregion
 
@@ -57,15 +58,15 @@ export default class BrickFactory {
 		return this._blockAssetIds[index];
 	}
 
-	private _newBrick(blockAssetId: string, position: Vector2, chances: number[]): Brick {
-		if (chances.length != this._brickCreationFunctions.length) {
-			throw new Error("cannot generate brick: #probabilities did not match #brick.");
+	private _newBrick(blockAssetId: string, position: Vector2, chances: BrickChances): Brick {
+		if (chances.chances.length != this._brickCreationFunctions.length) {
+			throw new Error("cannot generate brick: #chances did not match #brick.");
 		}
 
-		const total = chances.reduce((sum, chance) => sum + Math.abs(chance), 0);
+		const total = chances.chances.reduce((sum, chance) => sum + Math.abs(chance), 0);
 
 		let random = Math.random();
-		for (let i = 0; i < chances.length; i++) {
+		for (let i = 0; i < chances.chances.length; i++) {
 			const normalized_chance = Math.abs(chances[i]) / total;
 
 			if (normalized_chance < random) {
