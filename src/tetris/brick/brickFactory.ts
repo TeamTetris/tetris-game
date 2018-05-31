@@ -72,7 +72,7 @@ export default class BrickFactory {
 
 		let random = Math.random();
 		for (let i = 0; i < chances.chances.length; i++) {
-			const normalized_chance = Math.abs(chances[i]) / total;
+			const normalized_chance = Math.abs(chances.chances[i]) / total;
 
 			if (normalized_chance < random) {
 				random -= normalized_chance;
