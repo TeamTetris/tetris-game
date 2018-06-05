@@ -20,10 +20,6 @@ export default class Brick {
 	public get blocks(): Block[] {
 		return this._blocks;
 	}
-
-	public set field(field: Field) {
-		this._field = field;
-	}
 	//endregion
 
 	//region public methods
@@ -57,7 +53,6 @@ export default class Brick {
 	}
 
 	public isStuck(): boolean {
-		// TODO: implement me
 		return this._stuck;
 	}
 
@@ -71,8 +66,9 @@ export default class Brick {
 	//endregion
 
 	//region constructor
-	public constructor(position: Vector2) {
+	public constructor(position: Vector2, field: Field) {
 		this.position = position;
+		this._field = field;
 		this._blocks = [];
 	}
 	//endregion
@@ -97,17 +93,27 @@ export default class Brick {
 		let possible = true;
 		this._blocks.forEach(b => {
 			const targetPosition = b.position.clone().add(move).add(this._position);
-			if (targetPosition.x < 0 || targetPosition.y < 0 || targetPosition.x >= this._field.width || targetPosition.y >= this._field.height || this._field.state[targetPosition.x][targetPosition.y]) {				
+			if (targetPosition.x < 0
+				|| targetPosition.y < 0
+				|| targetPosition.x >= this._field.width
+				|| targetPosition.y >= this._field.height
+				|| this._field.state[targetPosition.x][targetPosition.y]) {
 				possible = false;
 			}
-		})
+		});
 		return possible;
 	}
 
 	private _tryToRotate(clockwise: boolean): void {
 		const rotatedBlocks = this._blocks.map(originalBlock => {
 			let rotatedBlock = originalBlock.clone();
-			rotatedBlock.position = clockwise ? new Vector2(-rotatedBlock.position.y, rotatedBlock.position.x) : new Vector2(rotatedBlock.position.y, -rotatedBlock.position.x); 
+
+			if (clockwise) {
+				rotatedBlock.position = new Vector2(-rotatedBlock.position.y, rotatedBlock.position.x);
+			} else {
+				rotatedBlock.position = new Vector2(rotatedBlock.position.y, -rotatedBlock.position.x);
+			}
+
 			return rotatedBlock; 
 		});
 		const rotationOffset = new Vector2(Math.abs(Math.min(...rotatedBlocks.map(b => b.position.x))), Math.abs(Math.min(...rotatedBlocks.map(b => b.position.y))));
@@ -121,10 +127,14 @@ export default class Brick {
 		let possible = true;
 		rotatedBlocks.forEach(b => {
 			const targetPosition = b.position.clone().add(this._position);
-			if (targetPosition.x < 0 || targetPosition.y < 0 || targetPosition.x >= this._field.width || targetPosition.y >= this._field.height || this._field.state[targetPosition.x][targetPosition.y]) {				
+			if (targetPosition.x < 0
+				|| targetPosition.y < 0
+				|| targetPosition.x >= this._field.width
+				|| targetPosition.y >= this._field.height
+				|| this._field.state[targetPosition.x][targetPosition.y]) {
 				possible = false;
 			}
-		})
+		});
 		return possible;
 	}
 	//endregion

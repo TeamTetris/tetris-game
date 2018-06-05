@@ -8,14 +8,6 @@ import Vector2 = Phaser.Math.Vector2;
 export default class Field {
 
 	//region public members
-	public addBrick(brick: Brick): void {
-		this._bricks.push(brick);
-	}
-
-	public set activeBrick(brick: Brick) {
-		this._activeBrick = brick;
-	}
-
 	public get activeBrick(): Brick {
 		return this._activeBrick;
 	}
@@ -42,7 +34,7 @@ export default class Field {
 		if (!this.activeBrick) {
 			this._generateNewBrick(time);
 		} else {
-			if (this._nextActiveBrickDrop < time) {
+			if (this._nextActiveBrickDrop <= time) {
 				this._nextActiveBrickDrop = time + this._activeBrickDropInterval;
 				this.activeBrick.dropOne();
 			}
@@ -51,12 +43,22 @@ export default class Field {
 		if (this.activeBrick.isStuck()) {
 			this._addToField(this.activeBrick.blocks, this.activeBrick.position);
 			this.addBrick(this.activeBrick);
-			this._generateNewBrick(time);
+			this._activeBrick = null;
 		}
 
-		// Pre-Draw
+		this.preDraw();
+	}
+
+	public preDraw(): void {
 		this._bricks.forEach(b => b.preDraw(this._drawOffset));
-		this.activeBrick.preDraw(this._drawOffset);
+
+		if (this.activeBrick) {
+			this.activeBrick.preDraw(this._drawOffset);
+		}
+	}
+
+	public addBrick(brick: Brick): void {
+		this._bricks.push(brick);
 	}
 	//endregion
 
@@ -89,8 +91,7 @@ export default class Field {
 
 	//region private methods
 	private _generateNewBrick(time: number): void {
-		this.activeBrick = this._brickFactory.newBrick(this);
-		this.activeBrick.field = this;
+		this._activeBrick = this._brickFactory.newBrick(this);
 		this._nextActiveBrickDrop = time + this._activeBrickDropInterval;
 	}
 

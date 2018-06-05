@@ -8,7 +8,7 @@ import Field from "tetris/field/field";
 import BrickChances from "tetris/brick/brickChances";
 
 interface BrickCreationFunction {
-	(blockAssetId: string, position: Vector2): Brick;
+	(blockAssetId: string, position: Vector2, field: Field): Brick;
 }
 
 export default class BrickFactory {
@@ -20,7 +20,7 @@ export default class BrickFactory {
 	public newBrick(field: Field): Brick {
 		const blockAssetId = this._selectBlockAssetId();
 		const bias = this._biasEngine.newBrickBias(field);
-		return this._newBrick(blockAssetId, bias.position, bias.chances);
+		return this._newBrick(blockAssetId, bias.position, bias.chances, field);
 	}
 	//endregion
 
@@ -63,12 +63,16 @@ export default class BrickFactory {
 		return this._blockAssetIds[index];
 	}
 
-	private _newBrick(blockAssetId: string, position: Vector2, chances: BrickChances): Brick {
+	private _newBrick(blockAssetId: string, position: Vector2, chances: BrickChances, field: Field): Brick {
 		if (chances.chances.length != this._brickCreationFunctions.length) {
 			throw new Error("cannot generate brick: #chances did not match #brick.");
 		}
 
 		const total = chances.chances.reduce((sum, chance) => sum + Math.abs(chance), 0);
+
+		if (total <= 0) {
+			throw new Error("cannot generate brick: total chances <= 0.");
+		}
 
 		let random = Math.random();
 		for (let i = 0; i < chances.chances.length; i++) {
@@ -79,7 +83,7 @@ export default class BrickFactory {
 				continue;
 			}
 
-			return this._brickCreationFunctions[i](blockAssetId, position);
+			return this._brickCreationFunctions[i](blockAssetId, position, field);
 		}
 
 		throw new Error("cannot generate brick: no chance was met (random = " + random + ").");
@@ -87,11 +91,12 @@ export default class BrickFactory {
 
 
 	private _createSprite(blockAssetId: string): Phaser.GameObjects.Sprite {
+		// TODO: move the constant string somewhere else
 		return this._scene.add.sprite(0, 0, "puzzleSpriteAtlas", blockAssetId);
 	}
 
-	private _newI(blockAssetId: string, position: Vector2): Brick {
-		const brick = new Brick(position);
+	private _newI(blockAssetId: string, position: Vector2, field: Field): Brick {
+		const brick = new Brick(position, field);
 
 		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 0));
 		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 1));
@@ -101,8 +106,8 @@ export default class BrickFactory {
 		return brick;
 	}
 
-	private _newO(blockAssetId: string, position: Vector2): Brick {
-		const brick = new Brick(position);
+	private _newO(blockAssetId: string, position: Vector2, field: Field): Brick {
+		const brick = new Brick(position, field);
 
 		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 0));
 		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 0));
@@ -112,8 +117,8 @@ export default class BrickFactory {
 		return brick;
 	}
 
-	private _newL(blockAssetId: string, position: Vector2): Brick {
-		const brick = new Brick(position);
+	private _newL(blockAssetId: string, position: Vector2, field: Field): Brick {
+		const brick = new Brick(position, field);
 
 		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 0));
 		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 1));
@@ -123,8 +128,8 @@ export default class BrickFactory {
 		return brick;
 	}
 
-	private _newJ(blockAssetId: string, position: Vector2): Brick {
-		const brick = new Brick(position);
+	private _newJ(blockAssetId: string, position: Vector2, field: Field): Brick {
+		const brick = new Brick(position, field);
 
 		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 0));
 		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 1));
@@ -134,8 +139,8 @@ export default class BrickFactory {
 		return brick;
 	}
 
-	private _newT(blockAssetId: string, position: Vector2): Brick {
-		const brick = new Brick(position);
+	private _newT(blockAssetId: string, position: Vector2, field: Field): Brick {
+		const brick = new Brick(position, field);
 
 		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 0));
 		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 0));
@@ -145,8 +150,8 @@ export default class BrickFactory {
 		return brick;
 	}
 
-	private _newZ(blockAssetId: string, position: Vector2): Brick {
-		const brick = new Brick(position);
+	private _newZ(blockAssetId: string, position: Vector2, field: Field): Brick {
+		const brick = new Brick(position, field);
 
 		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 0));
 		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 0));
@@ -156,8 +161,8 @@ export default class BrickFactory {
 		return brick;
 	}
 
-	private _newS(blockAssetId: string, position: Vector2): Brick {
-		const brick = new Brick(position);
+	private _newS(blockAssetId: string, position: Vector2, field: Field): Brick {
+		const brick = new Brick(position, field);
 
 		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 0));
 		brick.addBlock(this._createSprite(blockAssetId), new Vector2(2, 0));

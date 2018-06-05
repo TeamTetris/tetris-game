@@ -22,7 +22,17 @@ export default class Block {
 	
 	public preDraw(brickPosition: Vector2, fieldOffset: Vector2) {
 		const fieldPosition = brickPosition.clone().add(this._position);
-		const pixelPosition = fieldPosition.clone().scale(this._sprite.frame.cutHeight).add(new Vector2(this._sprite.frame.cutWidth, this._sprite.frame.cutHeight).scale(0.5)).add(fieldOffset);
+		const blockCenter = new Vector2(this._sprite.frame.cutWidth, this._sprite.frame.cutHeight).scale(0.5);
+
+		// convert from blocks to pixels
+		let pixelPosition = fieldPosition.clone().scale(this._sprite.frame.cutHeight);
+
+		// get center position
+		pixelPosition = pixelPosition.add(blockCenter);
+
+		// move to field position
+		pixelPosition = pixelPosition.add(fieldOffset);
+
 		this._sprite.setPosition(pixelPosition.x, pixelPosition.y);
 	}
 	

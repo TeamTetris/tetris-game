@@ -59,10 +59,6 @@ export default class LocalPlayer extends Player {
 	//endregion
 
 	//region private methods
-	private _isPressed(key: Phaser.Input.Keyboard.Key): boolean {
-		return key.isDown;
-	}
-
 	private _applyDuplicateInputBias(moveOperation: () => void) {
 		if (!this._biasEventReceiver.has(BiasEventType.DuplicateInput)) {
 			return;
