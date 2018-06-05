@@ -1,5 +1,9 @@
 import Profile from 'tetris/profiler/profile';
-import { PROTOCOL_COMMAND_START, PROTOCOL_MESSAGE_KEYWORD} from 'tetris/profiler/webWorkerProtocol';
+import {
+	PROTOCOL_COMMAND_START,
+	PROTOCOL_ERROR_KEYWORD,
+	PROTOCOL_MESSAGE_KEYWORD
+} from 'tetris/profiler/webWorkerProtocol';
 
 export default class Profiler {
 
@@ -9,8 +13,12 @@ export default class Profiler {
 	//region public methods
 	public add(name: string) {
 		const worker = this._createWorker(name);
-		this._startWorker(worker);
+		Profiler._startWorker(worker);
 		this._registerResponseHandler(worker);
+	}
+
+	public terminateProfiler() {
+		this._workers.forEach(worker => worker.terminate());
 	}
 	//endregion
 
@@ -32,16 +40,23 @@ export default class Profiler {
 		return worker;
 	}
 
-	private _startWorker(worker: Worker): void {
+	private static _startWorker(worker: Worker): void {
 		worker.postMessage(PROTOCOL_COMMAND_START);
 	}
 
 	private _registerResponseHandler(worker: Worker) {
 		worker.addEventListener(PROTOCOL_MESSAGE_KEYWORD, this._handleWorkerResponse);
+		worker.addEventListener(PROTOCOL_ERROR_KEYWORD, Profiler._handleWorkerError);
 	}
 
 	private _handleWorkerResponse(event: MessageEvent) {
 		this._profile.add(name, event.data);
+	}
+
+	private static _handleWorkerError(error: ErrorEvent) {
+		console.log('Line: ' + error.lineno);
+		console.log('In: ' + error.filename);
+		console.log('Message: ' + error.message);
 	}
 
 	//endregion
