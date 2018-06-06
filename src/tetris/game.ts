@@ -3,6 +3,7 @@
 import "phaser";
 import MainScene from "tetris/scene/mainScene";
 import BiasEngine from "tetris/biasEngine/biasEngine"
+import Profiler from "tetris/profiler/profiler";
 
 const biasEngine = new BiasEngine();
 const mainScene = new MainScene(biasEngine);
@@ -30,12 +31,14 @@ export class Game extends Phaser.Game {
 	public constructor(config: GameConfig) {
 		super(config);
 
-		this._biasEngine = biasEngine;
+		this._biasEngine = new BiasEngine();
+		this._profiler = new Profiler();
 	}
 	//endregion
 
 	//region private members
 	private readonly _biasEngine;
+	private readonly _profiler;
 	//endregion
 
 	//region private methods
