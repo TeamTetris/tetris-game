@@ -1,14 +1,11 @@
+import ProfileData from "tetris/profiler/profileData";
+
 export default class Profile {
 	//region public members
+	public location: ProfileData;
 	//endregion
 
 	//region public methods
-	public add(name: string, data: object) {
-		this._profileData.push({
-			'name': name,
-			'data': data
-		});
-	}
 	//endregion
 
 	//region constructor
