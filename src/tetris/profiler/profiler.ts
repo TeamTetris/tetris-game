@@ -1,9 +1,6 @@
 import Profile from 'tetris/profiler/profile';
-import {
-	PROTOCOL_COMMAND_START,
-	PROTOCOL_ERROR_KEYWORD,
-	PROTOCOL_MESSAGE_KEYWORD
-} from 'tetris/profiler/webWorkerProtocol';
+import GeoLocationService from 'tetris/profiler/service/geoLocationService';
+import ProfileData from "tetris/profiler/profileData";
 
 export default class Profiler {
 
@@ -11,53 +8,35 @@ export default class Profiler {
 	//endregion
 
 	//region public methods
-	public add(name: string) {
-		const worker = this._createWorker(name);
-		Profiler._startWorker(worker);
-		this._registerResponseHandler(worker);
-	}
 
-	public terminateProfiler() {
-		this._workers.forEach(worker => worker.terminate());
+	public get profile(): Profile {
+		return this._profile;
 	}
 	//endregion
 
 	//region constructor
-	constructor(profile: Profile) {
-		this._profile = profile;
+	constructor() {
+		this._profile = new Profile();
+		this._gpsGeoLocationService = new GeoLocationService(this._handleNewGPSGeoLocation, this._handleGPSError);
+		this._gpsGeoLocationService.requestCurrentLocation();
 	}
 	//endregion
 
 	//region private members
-	private _workers: Worker[] = [];
-	private _profile: Profile;
+	private readonly _profile: Profile;
+	private readonly _gpsGeoLocationService: GeoLocationService;
 	//endregion
 
 	//region private methods
-	private _createWorker(name: string): Worker {
-		const worker = new Worker(name + '.js');
-		this._workers.push(worker);
-		return worker;
+	// SUCCESS callbacks
+	private _handleNewGPSGeoLocation(locationProfile: ProfileData): void {
+		this.profile.location = locationProfile;
 	}
 
-	private static _startWorker(worker: Worker): void {
-		worker.postMessage(PROTOCOL_COMMAND_START);
+	// ERROR callbacks
+	private _handleGPSError(error: Error) {
+		console.log(error);
+		this._gpsGeoLocationService.requestCurrentLocation();
 	}
-
-	private _registerResponseHandler(worker: Worker) {
-		worker.addEventListener(PROTOCOL_MESSAGE_KEYWORD, this._handleWorkerResponse);
-		worker.addEventListener(PROTOCOL_ERROR_KEYWORD, Profiler._handleWorkerError);
-	}
-
-	private _handleWorkerResponse(event: MessageEvent) {
-		this._profile.add(name, event.data);
-	}
-
-	private static _handleWorkerError(error: ErrorEvent) {
-		console.log('Line: ' + error.lineno);
-		console.log('In: ' + error.filename);
-		console.log('Message: ' + error.message);
-	}
-
 	//endregion
 }
