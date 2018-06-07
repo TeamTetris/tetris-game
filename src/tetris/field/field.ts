@@ -3,18 +3,11 @@
 import Brick from 'tetris/brick/brick';
 import Block from 'tetris/brick/block';
 import BrickFactory from 'tetris/brick/brickFactory';
+import Vector2 = Phaser.Math.Vector2;
 
 export default class Field {
 
 	//region public members
-	public addBrick(brick: Brick): void {
-		this._bricks.push(brick);
-	}
-
-	public set activeBrick(brick: Brick) {
-		this._activeBrick = brick;
-	}
-
 	public get activeBrick(): Brick {
 		return this._activeBrick;
 	}
@@ -39,22 +32,41 @@ export default class Field {
 	//region public methods
 	public update(time: number, delta: number): void {
 		if (!this.activeBrick) {
-			this.activeBrick = this._brickFactory.newBrick(this);
+			this._generateNewBrick(time);
 		} else {
-			this._activeBrick.update(time, delta);
+			if (this._nextActiveBrickDrop <= time) {
+				this._nextActiveBrickDrop = time + this._activeBrickDropInterval;
+				this.activeBrick.dropOne();
+			}
+			this.activeBrick.update(time, delta);
 		}
 		if (this.activeBrick.isStuck()) {
-			this._addToField(this._activeBrick.blocks);
+			this._addToField(this.activeBrick.blocks, this.activeBrick.position);
 			this.addBrick(this.activeBrick);
-			this.activeBrick = null;
+			this._activeBrick = null;
 		}
+
+		this.preDraw();
+	}
+
+	public preDraw(): void {
+		this._bricks.forEach(b => b.preDraw(this._drawOffset));
+
+		if (this.activeBrick) {
+			this.activeBrick.preDraw(this._drawOffset);
+		}
+	}
+
+	public addBrick(brick: Brick): void {
+		this._bricks.push(brick);
 	}
 	//endregion
 
 	//region constructor
-	public constructor(width: number, height: number, brickFactory: BrickFactory) {
+	public constructor(width: number, height: number, drawOffset: Vector2, brickFactory: BrickFactory) {
 		this._width = width;
 		this._height = height;
+		this._drawOffset = drawOffset;
 		this._bricks = [];
 		this._brickFactory = brickFactory;
 		this._state = new Array(this._height);
@@ -66,7 +78,11 @@ export default class Field {
 	private _activeBrick: Brick;
 	private readonly _width: integer;
 	private readonly _height: integer;
+	private readonly _drawOffset: Vector2;
 	private readonly _brickFactory: BrickFactory;
+
+	private _nextActiveBrickDrop: number;
+	private _activeBrickDropInterval: number = 400;
 
 	// contains only stuck bricks
 	private readonly _bricks: Brick[];
@@ -74,6 +90,11 @@ export default class Field {
 	//endregion
 
 	//region private methods
+	private _generateNewBrick(time: number): void {
+		this._activeBrick = this._brickFactory.newBrick(this);
+		this._nextActiveBrickDrop = time + this._activeBrickDropInterval;
+	}
+
 	private _setupField(): void {
 		const iterator = this._state.keys();
 		for (let key of iterator) {
@@ -81,9 +102,9 @@ export default class Field {
 		}
 	}
 
-	private _addToField(blocks: Block[]): void {
+	private _addToField(blocks: Block[], brickOffset: Vector2): void {
 		blocks.forEach(block => {
-			this._state[block.position.x][block.position.y] = true;
+			this._state[brickOffset.x + block.position.x][brickOffset.y + block.position.y] = true;
 		});
 	}
 	//endregion

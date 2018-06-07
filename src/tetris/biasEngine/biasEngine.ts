@@ -41,7 +41,7 @@ export default class BiasEngine {
 	//region private members
 	private static POSSIBLE_EVENTS: BiasEventType[];
 	private _lastBiasEvent: number = 0;
-	private _biasEventInterval : number = 1000;
+	private _biasEventInterval: number = 10000;
 	private _eventReceivers: BiasEventReceiver[] = [];
 	/** private profiler: Profiler;*/
 	//endregion

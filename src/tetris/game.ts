@@ -4,13 +4,16 @@ import "phaser";
 import MainScene from "tetris/scene/mainScene";
 import BiasEngine from "tetris/biasEngine/biasEngine"
 
+const biasEngine = new BiasEngine();
+const mainScene = new MainScene(biasEngine);
+
 // main game configuration
 const config: GameConfig = {
   width: 800,
   height: 600,
   type: Phaser.AUTO,
   parent: "game",
-  scene: MainScene,
+  scene: mainScene,
   physics: {
     default: "arcade",
     arcade: {
@@ -31,8 +34,8 @@ export class Game extends Phaser.Game {
 	//region constructor
 	public constructor(config: GameConfig) {
 		super(config);
-
-		this._biasEngine = new BiasEngine();
+		
+		this._biasEngine = biasEngine;
 	}
 	//endregion
 

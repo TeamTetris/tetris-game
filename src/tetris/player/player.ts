@@ -24,22 +24,42 @@ export default abstract class Player {
 
 	//region protected methods
 	protected moveLeft(): void {
+		if (!this._field.activeBrick) {
+			return;
+		}
+
 		this._field.activeBrick.moveLeft();
 	}
 
 	protected moveRight(): void {
+		if (!this._field.activeBrick) {
+			return;
+		}
+
 		this._field.activeBrick.moveRight();
 	}
 
 	protected moveDown(): void {
+		if (!this._field.activeBrick) {
+			return;
+		}
+
 		this._field.activeBrick.moveDown();
 	}
 
-	protected drop(): void {
-		this._field.activeBrick.drop();
+	protected dropToFloor(): void {
+		if (!this._field.activeBrick) {
+			return;
+		}
+
+		this._field.activeBrick.dropToFloor();
 	}
 
 	protected rotate(): void {
+		if (!this._field.activeBrick) {
+			return;
+		}
+		
 		this._field.activeBrick.rotate();
 	}
 	//endregion
