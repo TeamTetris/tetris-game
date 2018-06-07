@@ -36,7 +36,7 @@ export default class Brick {
 	}
 	
 	public dropToFloor(): void {
-		
+		while (this._tryToMove(new Vector2(0, 1), true)) { }
 	}
 
 	public rotate(): void {
@@ -81,11 +81,13 @@ export default class Brick {
 	//endregion
 
 	//region private methods
-	private _tryToMove(move: Vector2, stuckIfFails: boolean = false): void {
+	private _tryToMove(move: Vector2, stuckIfFails: boolean = false): boolean {
 		if (this._isMovePossible(move)) {
-			this.position.add(move);		
+			this.position.add(move);
+			return true;		
 		} else if (stuckIfFails) {
 			this._stuck = true;
+			return false;
 		}
 	}
 	
@@ -97,7 +99,7 @@ export default class Brick {
 				|| targetPosition.y < 0
 				|| targetPosition.x >= this._field.width
 				|| targetPosition.y >= this._field.height
-				|| this._field.state[targetPosition.x][targetPosition.y]) {
+				|| this._field.blocks[targetPosition.x][targetPosition.y]) {
 				possible = false;
 			}
 		});
@@ -131,7 +133,7 @@ export default class Brick {
 				|| targetPosition.y < 0
 				|| targetPosition.x >= this._field.width
 				|| targetPosition.y >= this._field.height
-				|| this._field.state[targetPosition.x][targetPosition.y]) {
+				|| this._field.blocks[targetPosition.x][targetPosition.y]) {
 				possible = false;
 			}
 		});
