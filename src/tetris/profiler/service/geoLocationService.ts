@@ -1,5 +1,4 @@
-import ProfileData from "tetris/profiler/profileData";
-import GeoLocationData from "tetris/profiler/geoLocationData";
+import GeoLocation from "tetris/profiler/profileValues/geoLocation";
 import InverseGeoCordingService from "tetris/profiler/service/inverseGeoCordingService";
 
 const IP_GEO_SERVICE = 'https://ipapi.co/json/';
@@ -51,7 +50,8 @@ export default class GeoLocationService {
 	//endregion
 
 	//region constructor
-	constructor(successCallback: (ProfileData) => void, errorCallback: (Error) => void) {
+	public constructor(successCallback: (_: GeoLocation) => void,
+					   errorCallback: (_: Error) => void) {
 		this._successCallback = successCallback;
 		this._errorCallback = errorCallback;
 		this._inverseGeoCordingService = new InverseGeoCordingService();
@@ -60,8 +60,8 @@ export default class GeoLocationService {
 
 	//region private members
 	private _monitoringId: number;
-	private readonly _successCallback: (_:ProfileData) => void;
-	private readonly _errorCallback: (_:Error) => void;
+	private readonly _successCallback: (_: GeoLocation) => void;
+	private readonly _errorCallback: (_: Error) => void;
 	private readonly _inverseGeoCordingService: InverseGeoCordingService;
 	//endregion
 
@@ -81,14 +81,14 @@ export default class GeoLocationService {
 			if (component['types'].contains('postal_code')) {
 				zip = component['long_name']
 			}
-			if (component['types'].contains('country')) {
+			if (component['types'].contains('_country')) {
 				country = component['long_name']
 			}
 			if (component['types'].contains('locality')) {
 				city = component['long_name']
 			}
 		});
-		this._successCallback(new ProfileData(new GeoLocationData(zip, city, country)));
+		this._successCallback(new GeoLocation(zip, city, country));
 	}
 
 	private _receivePeriodicLocation(position: Position): void {
@@ -116,7 +116,7 @@ export default class GeoLocationService {
 	}
 
 	private _receiveIPLocation(zip: number, city: string, country: string): void {
-		this._successCallback(new ProfileData(new GeoLocationData(zip, city, country)));
+		this._successCallback(new GeoLocation(zip, city, country));
 	}
 
 	private _handleIPLocationError(error: Error) {
