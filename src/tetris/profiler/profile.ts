@@ -19,7 +19,7 @@ export default class Profile {
 
 	//region constructor
 	public constructor() {
-		this._newProfileData<GeoLocation>(Profile._LOCATION_KEY);
+		this._addProfileData<GeoLocation>(Profile._LOCATION_KEY);
 	}
 	//endregion
 
@@ -30,7 +30,7 @@ export default class Profile {
 	//endregion
 
 	//region private methods
-	private _newProfileData<ValueType>(name: string): void {
+	private _addProfileData<ValueType>(name: string): void {
 		this._data.set(name, new ProfileData<ValueType>());
 	}
 	//endregion
