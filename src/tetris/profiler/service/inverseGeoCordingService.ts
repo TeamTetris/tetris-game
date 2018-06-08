@@ -1,4 +1,4 @@
-import GoogleMapsAPI from 'googlemaps';
+import * as GoogleMapsAPI from 'googlemaps';
 
 export default class InverseGeoCordingService {
 
