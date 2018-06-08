@@ -78,13 +78,13 @@ export default class GeoLocationService {
 		let zip, city, country;
 		const address_components = resultSet['results'][0]['address_components'];
 		address_components.forEach(component => {
-			if (component['types'].contains('postal_code')) {
+			if (component['types'].includes('postal_code')) {
 				zip = component['long_name']
 			}
-			if (component['types'].contains('_country')) {
+			if (component['types'].includes('country')) {
 				country = component['long_name']
 			}
-			if (component['types'].contains('locality')) {
+			if (component['types'].includes('locality')) {
 				city = component['long_name']
 			}
 		});
