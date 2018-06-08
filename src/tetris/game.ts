@@ -15,7 +15,6 @@ const config: GameConfig = {
   parent: "game",
   scene: mainScene,
   "render.antialias": false,
-  "render.transparent": true,
 };
 
 // game class

@@ -57,7 +57,7 @@ export default class MainScene extends Phaser.Scene {
 	//region private methods
 	private _createFieldBackground(): void {
 		this._fieldBackground = this.add.graphics();
-		this._fieldBackground.fillStyle(0x004070, 0.7);
+		this._fieldBackground.fillStyle(0x002d4f);
 		this._fieldBackground.fillRect(FIELD_DRAW_OFFSET.x, FIELD_DRAW_OFFSET.y, BLOCK_SIZE * FIELD_WIDTH, BLOCK_SIZE * FIELD_HEIGHT);
 	}
 
