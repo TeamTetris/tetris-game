@@ -120,7 +120,7 @@ export default class Field {
 	private _setupField(): void {
 		const iterator = this._blocks.keys();
 		for (let key of iterator) {
-			this._blocks[key] = new Array(this._width).fill(false);
+			this._blocks[key] = new Array(this._width).fill(null);
 		}
 	}
 

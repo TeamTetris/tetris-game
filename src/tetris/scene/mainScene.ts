@@ -9,7 +9,7 @@ import Vector2 = Phaser.Math.Vector2;
 
 const FIELD_WIDTH: number = 10;
 const FIELD_HEIGHT: number = 18;
-const FIELD_DRAW_OFFSET: Vector2 = new Vector2(240, 0);
+const FIELD_DRAW_OFFSET: Vector2 = new Vector2(0, 0);
 const BLOCK_SIZE: number = 32;
 const FONT_STYLE: object = {font: "20px Kenney Mini Square", fill: "#fff"};
 
@@ -57,7 +57,7 @@ export default class MainScene extends Phaser.Scene {
 	//region private methods
 	private _createFieldBackground(): void {
 		this._fieldBackground = this.add.graphics();
-		this._fieldBackground.fillStyle(0x004070);
+		this._fieldBackground.fillStyle(0x002d4f);
 		this._fieldBackground.fillRect(FIELD_DRAW_OFFSET.x, FIELD_DRAW_OFFSET.y, BLOCK_SIZE * FIELD_WIDTH, BLOCK_SIZE * FIELD_HEIGHT);
 	}
 

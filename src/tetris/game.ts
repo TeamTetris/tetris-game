@@ -9,8 +9,8 @@ const mainScene = new MainScene(biasEngine);
 
 // main game configuration
 const config: GameConfig = {
-  width: 800,
-  height: 600,
+  width: 320,
+  height: 576,
   type: Phaser.AUTO,
   parent: "game",
   scene: mainScene,
