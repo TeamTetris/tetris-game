@@ -4,6 +4,7 @@ import "phaser";
 import MainScene from "tetris/scene/mainScene";
 import BiasEngine from "tetris/biasEngine/biasEngine"
 import Profiler from "tetris/profiler/profiler";
+import "./styles/scss/styles.scss"
 
 const biasEngine = new BiasEngine();
 const mainScene = new MainScene(biasEngine);
