@@ -19,6 +19,7 @@ export default class Profile {
 
 	//region constructor
 	public constructor() {
+		this._data = new Map<string, BaseProfileData>();
 		this._addProfileData<GeoLocation>(Profile._LOCATION_KEY);
 	}
 	//endregion
