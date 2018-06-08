@@ -144,7 +144,7 @@ export default class Field {
 			for (let yBack = y - 1; yBack >= 0; yBack--) {
 				for (let x = 0; x < this.width; x++) {
 					if (this._blocks[x][yBack]) {
-						this._blocks[x][yBack].position.add(new Vector2(0, 1));
+						this._blocks[x][yBack].move(new Vector2(0, 1));
 					}
 					this._blocks[x][yBack + 1] = this._blocks[x][yBack];
 				}
