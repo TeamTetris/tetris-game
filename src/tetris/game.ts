@@ -13,8 +13,8 @@ const config: GameConfig = {
   height: 600,
   type: Phaser.AUTO,
   parent: "game",
-	scene: mainScene,
-	"render.antialias": false,
+  scene: mainScene,
+  "render.antialias": false,
 };
 
 // game class
