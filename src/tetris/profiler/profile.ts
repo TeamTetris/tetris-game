@@ -10,7 +10,7 @@ export default class Profile {
 			throw new Error("cannot read location data from profile!")
 		}
 
-		return this._data[Profile._LOCATION_KEY] as ProfileData<GeoLocation>;
+		return this._data.get(Profile._LOCATION_KEY) as ProfileData<GeoLocation>;
 	}
 	//endregion
 
