@@ -24,7 +24,10 @@ export default class Profiler {
 	public constructor() {
 		this._profile = new Profile();
 		this._profileChangedListener = [];
-		this._gpsGeoLocationService = new GeoLocationService(this._handleNewGPSGeoLocation, this._handleGPSError);
+		this._gpsGeoLocationService = new GeoLocationService(
+			this._handleNewGPSGeoLocation.bind(this),
+			this._handleGPSError.bind(this)
+		);
 		this._gpsGeoLocationService.requestCurrentLocation();
 	}
 	//endregion

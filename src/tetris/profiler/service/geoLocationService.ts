@@ -17,8 +17,8 @@ export default class GeoLocationService {
 		navigator.geolocation.getCurrentPosition(
 			this._inverseGeoCordingService.convert.bind(
 				this._inverseGeoCordingService,
-				this._receiveLocation,
-				this._receiveLocationError
+				this._receiveLocation.bind(this),
+				this._receiveLocationError.bind(this)
 			),
 			this._receiveLocationError
 		);
@@ -32,8 +32,8 @@ export default class GeoLocationService {
 		navigator.geolocation.watchPosition(
 			this._inverseGeoCordingService.convert.bind(
 				this._inverseGeoCordingService,
-				this._receivePeriodicLocation,
-				this._receiveLocationError
+				this._receivePeriodicLocation.bind(this),
+				this._receiveLocationError.bind(this)
 			),
 			this._receiveLocationError
 		);
