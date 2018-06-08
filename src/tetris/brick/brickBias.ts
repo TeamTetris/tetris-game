@@ -29,7 +29,7 @@ export default class BrickBias {
 	public static newDefault(field: Field): BrickBias {
 		const bias = new BrickBias();
 		bias.chances = BrickChances.newEqualChances();
-		bias.position = new Vector2(field.width / 2, 0);
+		bias.position = new Vector2(field.width / 2 - 1, -2);
 
 		return bias;
 	}

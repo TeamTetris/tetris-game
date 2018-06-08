@@ -56,12 +56,23 @@ export default class Brick {
 		return this._stuck;
 	}
 
+	public checkIfStuck(): boolean {
+		this._tryToMove(new Vector2(0, 0), true);
+		return this.isStuck();
+	}
+
 	public update(time: number, delta: number): void {
 		this._blocks.forEach(b => b.update());
 	}
 
 	public preDraw(fieldDrawOffset: Vector2) {
 		this._blocks.forEach(b => b.preDraw(fieldDrawOffset));		
+	}
+
+	public destroy() {
+		this._field = null;
+		this._blocks.forEach(b => b.destroy());
+		this._blocks = null;
 	}
 	//endregion
 
@@ -97,7 +108,6 @@ export default class Brick {
 		this._blocks.forEach(b => {
 			const targetPosition = b.clone().move(move);
 			if (targetPosition.x < 0
-				|| targetPosition.y < 0
 				|| targetPosition.x >= this._field.width
 				|| targetPosition.y >= this._field.height
 				|| this._field.blocks[targetPosition.x][targetPosition.y]) {
@@ -126,7 +136,6 @@ export default class Brick {
 		rotatedBlocks.forEach(b => {
 			const targetPosition = b.currentPosition;
 			if (targetPosition.x < 0
-				|| targetPosition.y < 0
 				|| targetPosition.x >= this._field.width
 				|| targetPosition.y >= this._field.height
 				|| this._field.blocks[targetPosition.x][targetPosition.y]) {

@@ -4,6 +4,7 @@ import Brick from 'tetris/brick/brick';
 import Block from 'tetris/brick/block';
 import BrickFactory from 'tetris/brick/brickFactory';
 import Vector2 = Phaser.Math.Vector2;
+import FieldState from 'tetris/field/fieldState';
 
 export default class Field {
 
@@ -31,6 +32,10 @@ export default class Field {
 
 	//region public methods
 	public update(time: number, delta: number): void {
+		if (this._fieldState != FieldState.Playing) {
+			return;
+		}
+
 		if (!this.activeBrick) {
 			this._generateNewBrick(time);
 		} else {
@@ -96,6 +101,8 @@ export default class Field {
 	private _activeBrickDropInterval: number = 400;
 	private _score: number = 0;
 
+	private _fieldState: FieldState = FieldState.Playing;
+
 	// contains only stuck bricks
 	private readonly _bricks: Brick[];
 	private readonly _blocks: Block[][];
@@ -105,6 +112,9 @@ export default class Field {
 	private _generateNewBrick(time: number): void {
 		this._activeBrick = this._brickFactory.newBrick(this);
 		this._nextActiveBrickDrop = time + this._activeBrickDropInterval;
+		if (this._activeBrick.checkIfStuck()) {
+			this._fieldState = FieldState.Loss;
+		}
 	}
 
 	private _setupField(): void {
