@@ -48,7 +48,6 @@ export default class Field {
 			const deletedRows = this._deleteCompletedRows();
 			if (deletedRows > 0) {
 				this._increaseScore(deletedRows);
-
 			}
 		}
 
