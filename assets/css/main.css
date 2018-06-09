@@ -3,3 +3,8 @@ body {
     background-repeat: repeat;
     margin: 0;
 }
+
+div#game {
+    margin: auto;
+    text-align: center;
+}
