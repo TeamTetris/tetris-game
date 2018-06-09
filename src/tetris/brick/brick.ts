@@ -80,7 +80,7 @@ export default class Brick {
 	public constructor(position: Vector2, field: Field) {
 		this.position = position;
 		this._field = field;
-		this._blocks = [];	
+		this._blocks = [];
 	}
 	//endregion
 
