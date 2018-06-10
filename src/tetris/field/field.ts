@@ -14,7 +14,7 @@ export default class Field {
 	}
 
 	public get blocks(): Block[][] {
-		return this._blocks;
+		return this._blockRows;
 	}
 
 	public get bricks(): Brick[] {
@@ -96,7 +96,7 @@ export default class Field {
 		this._bricks = [];
 		this._scoreText = scoreText;
 		this._brickFactory = brickFactory;
-		this._blocks = new Array(this._height);
+		this._blockRows = new Array(this._height);
 		this._setupField();
 	}
 	//endregion
@@ -117,7 +117,7 @@ export default class Field {
 
 	// contains only stuck bricks
 	private readonly _bricks: Brick[];
-	private readonly _blocks: Block[][];
+	private readonly _blockRows: Block[][];
 	//endregion
 
 	//region private methods
@@ -130,9 +130,9 @@ export default class Field {
 	}
 
 	private _setupField(): void {
-		const iterator = this._blocks.keys();
+		const iterator = this._blockRows.keys();
 		for (let key of iterator) {
-			this._blocks[key] = new Array(this._height).fill(null);
+			this._blockRows[key] = new Array(this._width).fill(null);
 		}
 	}
 
@@ -141,39 +141,37 @@ export default class Field {
 			if (this.isPositionOutOfBounds(block.currentPosition, true)) {
 				return;
 			}
-			this._blocks[block.currentPosition.y][block.currentPosition.x] = block;
+			this._blockRows[block.currentPosition.y][block.currentPosition.x] = block;
 		});
 	}
 
 	private _deleteCompletedRows(): number {
 		let rowsDeleted = 0;
-		for (let y = 0; y < this.height; y++) {
-			let rowCompleted = true;
-			for (let x = 0; x < this.width; x++) {
-				if (!this._blocks[y][x]) {
-					rowCompleted = false;
-					break;
-				}
-			}
+		this._blockRows.forEach((row, rowIndex) => {
+			let rowCompleted = row.every(block => block !== null);
 
 			if (!rowCompleted) {
-				continue;
+				return;
 			}
+
 			rowsDeleted += 1;
 
-			for (let x = 0; x < this.width; x++) {
-				this._blocks[y][x].destroy();
-				this._blocks[y][x] = null;
-			}
-			for (let yBack = y - 1; yBack >= 0; yBack--) {
-				for (let x = 0; x < this.width; x++) {
-					if (this._blocks[yBack][x]) {
-						this._blocks[yBack][x].move(new Vector2(0, 1));
+			row.forEach((block, blockIndex) => { 
+				block.destroy(); 
+				row[blockIndex] = null;
+			});
+
+			for (let backtrackedRowIndex = rowIndex; backtrackedRowIndex >= 0; backtrackedRowIndex--) {
+				this._blockRows[backtrackedRowIndex].forEach((block, blockIndex) => {
+					if (block !== null) {
+						block.move(new Vector2(0, 1));
+						this._blockRows[backtrackedRowIndex + 1][blockIndex] = block;
+						this._blockRows[backtrackedRowIndex][blockIndex] = null;
 					}
-					this._blocks[yBack + 1][x] = this._blocks[yBack][x];
-				}
+				})
 			}
-		}
+		})
+			
 
 		return rowsDeleted;
 	}
