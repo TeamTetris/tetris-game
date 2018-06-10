@@ -162,18 +162,21 @@ export default class Field {
 			});
 
 			for (let backtrackedRowIndex = rowIndex; backtrackedRowIndex >= 0; backtrackedRowIndex--) {
-				this._blockRows[backtrackedRowIndex].forEach((block, blockIndex) => {
-					if (block !== null) {
-						block.move(new Vector2(0, 1));
-						this._blockRows[backtrackedRowIndex + 1][blockIndex] = block;
-						this._blockRows[backtrackedRowIndex][blockIndex] = null;
-					}
-				})
+				this._dropRow(backtrackedRowIndex);
 			}
-		})
-			
+		})	
 
 		return rowsDeleted;
+	}
+
+	private _dropRow(rowIndex: number) {
+		this._blockRows[rowIndex].forEach((block, blockIndex) => {
+			if (block !== null) {
+				block.move(new Vector2(0, 1));
+				this._blockRows[rowIndex + 1][blockIndex] = block;
+				this._blockRows[rowIndex][blockIndex] = null;
+			}
+		})
 	}
 
 	private _increaseScore(deletedRows: number): void {
