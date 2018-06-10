@@ -107,10 +107,7 @@ export default class Brick {
 		let possible = true;
 		this._blocks.forEach(b => {
 			const targetPosition = b.clone().move(move);
-			if (targetPosition.x < 0
-				|| targetPosition.x >= this._field.width
-				|| targetPosition.y >= this._field.height
-				|| this._field.blocks[targetPosition.x][targetPosition.y]) {
+			if (this._field.isPositionBlocked(targetPosition)) {
 				possible = false;
 			}
 		});
@@ -135,10 +132,7 @@ export default class Brick {
 		let possible = true;
 		rotatedBlocks.forEach(b => {
 			const targetPosition = b.currentPosition;
-			if (targetPosition.x < 0
-				|| targetPosition.x >= this._field.width
-				|| targetPosition.y >= this._field.height
-				|| this._field.blocks[targetPosition.x][targetPosition.y]) {
+			if (this._field.isPositionBlocked(targetPosition)) {
 				possible = false;
 			}
 		});

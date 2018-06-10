@@ -46,7 +46,7 @@ export default class Field {
 			this.activeBrick.update(time, delta);
 		}
 		if (this.activeBrick.isStuck()) {
-			this._addToField(this.activeBrick.blocks, this.activeBrick.position);
+			this._addToField(this.activeBrick.blocks);
 			this.addBrick(this.activeBrick);
 			this._activeBrick = null;
 
@@ -69,6 +69,18 @@ export default class Field {
 
 	public addBrick(brick: Brick): void {
 		this._bricks.push(brick);
+	}
+	
+	public isPositionBlocked(position: Vector2): boolean {
+		return (this.isPositionOutOfBounds(position, false)
+			|| (position.y >= 0 && !!this.blocks[position.y][position.x]));
+	}
+
+	public isPositionOutOfBounds(position: Vector2, checkCeiling: boolean): boolean {
+		return (position.x < 0
+			|| (checkCeiling && position.y < 0)
+			|| position.x >= this.width
+			|| position.y >= this.height);
 	}
 	//endregion
 
@@ -120,13 +132,16 @@ export default class Field {
 	private _setupField(): void {
 		const iterator = this._blocks.keys();
 		for (let key of iterator) {
-			this._blocks[key] = new Array(this._width).fill(null);
+			this._blocks[key] = new Array(this._height).fill(null);
 		}
 	}
 
-	private _addToField(blocks: Block[], brickOffset: Vector2): void {
+	private _addToField(blocks: Block[]): void {
 		blocks.forEach(block => {
-			this._blocks[block.currentPosition.x][block.currentPosition.y] = block;
+			if (this.isPositionOutOfBounds(block.currentPosition, true)) {
+				return;
+			}
+			this._blocks[block.currentPosition.y][block.currentPosition.x] = block;
 		});
 	}
 
@@ -135,7 +150,7 @@ export default class Field {
 		for (let y = 0; y < this.height; y++) {
 			let rowCompleted = true;
 			for (let x = 0; x < this.width; x++) {
-				if (!this._blocks[x][y]) {
+				if (!this._blocks[y][x]) {
 					rowCompleted = false;
 					break;
 				}
@@ -147,15 +162,15 @@ export default class Field {
 			rowsDeleted += 1;
 
 			for (let x = 0; x < this.width; x++) {
-				this._blocks[x][y].destroy();
-				this._blocks[x][y] = null;
+				this._blocks[y][x].destroy();
+				this._blocks[y][x] = null;
 			}
 			for (let yBack = y - 1; yBack >= 0; yBack--) {
 				for (let x = 0; x < this.width; x++) {
-					if (this._blocks[x][yBack]) {
-						this._blocks[x][yBack].move(new Vector2(0, 1));
+					if (this._blocks[yBack][x]) {
+						this._blocks[yBack][x].move(new Vector2(0, 1));
 					}
-					this._blocks[x][yBack + 1] = this._blocks[x][yBack];
+					this._blocks[yBack + 1][x] = this._blocks[yBack][x];
 				}
 			}
 		}
