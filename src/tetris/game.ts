@@ -26,6 +26,11 @@ export class Game extends Phaser.Game {
 	//endregion
 
 	//region public methods
+	public step(time: number, delta: number) {
+		super.step(time, delta);
+		this._profiler.update(time, delta);
+		this._biasEngine.update(time, delta);
+	}
 	//endregion
 
 	//region constructor

@@ -4,6 +4,7 @@ import GeoLocation from "tetris/profiler/profileValues/geoLocation";
 import BaseService from "tetris/profiler/service/baseService";
 import Measurement from "tetris/profiler/measurement/measurement";
 import BaseMeasurement from "tetris/profiler/measurement/baseMeasurement";
+import FaceAnalysisService from 'tetris/profiler/service/faceAnalysisService';
 
 interface ProfileChangedEventHandler {
 	(profile: Profile): void;
@@ -18,8 +19,15 @@ export default class Profiler {
 	//endregion
 
 	//region public methods
-	public onProfileChanged(handler: ProfileChangedEventHandler): void {
+	public registerProfileChangedEventHandler(handler: ProfileChangedEventHandler): void {
 		this._profileChangedListeners.push(handler);
+	}
+
+	public update(time: number, delta: number) {
+		if (time > this._lastFaceCheck + this._faceCheckInterval) {
+			this._lastFaceCheck = time;
+			this._faceAnalysisService.run(this._handleNewFace.bind(this));
+		}
 	}
 	//endregion
 
@@ -28,10 +36,9 @@ export default class Profiler {
 		this._profile = new Profile();
 		this._profileChangedListeners = [];
 		this._measurementHistory = [];
-		this._gpsGeoLocationService = new GeoLocationService(
-			Profiler._handleServiceError
-		);
+		this._gpsGeoLocationService = new GeoLocationService(Profiler._handleServiceError);
 		this._gpsGeoLocationService.run(this._handleNewLocation.bind(this));
+		this._faceAnalysisService = new FaceAnalysisService(Profiler._handleServiceError);
 	}
 	//endregion
 
@@ -40,6 +47,10 @@ export default class Profiler {
 	private readonly _profileChangedListeners: ProfileChangedEventHandler[];
 	private readonly _measurementHistory: BaseMeasurement[];
 	private readonly _gpsGeoLocationService: GeoLocationService;
+
+	private readonly _faceAnalysisService: FaceAnalysisService;
+	private _lastFaceCheck: number = 0;
+	private _faceCheckInterval: number = 1000;
 	//endregion
 
 	//region private methods
@@ -52,6 +63,11 @@ export default class Profiler {
 	// SUCCESS callbacks
 	private _handleNewLocation(sender: GeoLocationService, measurement: Measurement<GeoLocation>): void {
 		this._measurementHistory.push(measurement);
+		// TODO: handle new measurement
+		this._profileChanged();
+	}
+
+	private _handleNewFace(sender: FaceAnalysisService, measurement: Measurement<Object>): void {
 		// TODO: handle new measurement
 		this._profileChanged();
 	}
