@@ -5,6 +5,7 @@ import BiasEventType from "tetris/biasEngine/biasEventType";
 import BiasEventReceiver from "tetris/biasEngine/biasEventReceiver";
 import Field from "tetris/field/field";
 import BrickBias from "tetris/brick/brickBias";
+import Profiler from "tetris/profiler/profiler";
 
 export default class BiasEngine {
 
@@ -32,8 +33,8 @@ export default class BiasEngine {
 	//endregion
 
 	//region constructor
-	public constructor(/** TODO: profiler: Profiler */) {
-		/** this.profiler = profiler; */
+	public constructor(profiler: Profiler) {
+		this._profiler = profiler;
 	}
 	//endregion
 
@@ -42,8 +43,14 @@ export default class BiasEngine {
 	private _lastBiasEvent: number = 0;
 	private _biasEventInterval: number = 10000;
 	private _eventReceivers: BiasEventReceiver[] = [];
-	private _currentBiasValue: number = 1.0;
-	/** private profiler: Profiler;*/
+	/*
+		Bias Value:
+		-1.0: Maximum negatively biased game experience
+		 0.0: Normal game experience
+		 1.0: Maximum positively biased game experience
+	*/
+	private _currentBiasValue: number = 1.0; 
+	private _profiler: Profiler;
 	//endregion
 
 	//region private methods

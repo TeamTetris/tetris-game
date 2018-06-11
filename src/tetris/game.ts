@@ -5,7 +5,8 @@ import MainScene from "tetris/scene/mainScene";
 import BiasEngine from "tetris/biasEngine/biasEngine"
 import Profiler from "tetris/profiler/profiler";
 
-const biasEngine = new BiasEngine();
+const profiler = new Profiler();
+const biasEngine = new BiasEngine(profiler);
 const mainScene = new MainScene(biasEngine);
 
 // main game configuration
