@@ -206,11 +206,13 @@ document.addEventListener('DOMContentLoaded', function () {
             var jsonResponse = JSON.parse(response);
             if (jsonResponse.faces.length && jsonResponse.faces.length > 0) {
                 window.TETRIS_currentFaceValue = jsonResponse.faces[0].attributes;
+                console.log('[faceAnalysis] Face analysis successful.');
+            } else {
+                console.log('[faceAnalysis] No faces recognized.');
             }
-            console.log('[faceAnalysis] Face analysis successful.');
             //console.log(JSON.stringify(jsonResponse, null, 4));            
         } catch (error) {
-            console.log('[faceAnalysis] Invalid response from server :(');            
+            console.log('[faceAnalysis] Invalid response from server.');            
         }
 
     }
