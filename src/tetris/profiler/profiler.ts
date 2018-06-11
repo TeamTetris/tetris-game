@@ -16,14 +16,14 @@ export default class Profiler {
 
 	//region public methods
 	public onProfileChanged(handler: ProfileChangedEventHandler): void {
-		this._profileChangedListener = this._profileChangedListener.concat(handler);
+		this._profileChangedListeners.push(handler);
 	}
 	//endregion
 
 	//region constructor
 	public constructor() {
 		this._profile = new Profile();
-		this._profileChangedListener = [];
+		this._profileChangedListeners = [];
 		this._gpsGeoLocationService = new GeoLocationService(
 			this._handleNewGPSGeoLocation.bind(this),
 			this._handleGPSError.bind(this)
@@ -34,13 +34,13 @@ export default class Profiler {
 
 	//region private members
 	private readonly _profile: Profile;
-	private _profileChangedListener: ProfileChangedEventHandler[];
+	private _profileChangedListeners: ProfileChangedEventHandler[];
 	private readonly _gpsGeoLocationService: GeoLocationService;
 	//endregion
 
 	//region private methods
 	private _profileChanged(): void {
-		this._profileChangedListener.forEach(handler => {
+		this._profileChangedListeners.forEach(handler => {
 			handler(this.profile);
 		});
 	}
@@ -55,7 +55,6 @@ export default class Profiler {
 	// ERROR callbacks
 	private _handleGPSError(error: Error): void {
 		console.log(error);
-		this._gpsGeoLocationService.requestCurrentLocation();
 	}
 	//endregion
 }
