@@ -96,7 +96,7 @@ export default class GeoLocationService {
 		this._receiveLocation(position);
 	}
 
-	private _receiveLocationError(locationError: PositionError) {
+	private _receiveLocationError(locationError: PositionError): void {
 		console.log(locationError);
 		// fallback handling: Try to get position based on IP
 		this._calculateLocationBasedOnIP();
@@ -119,7 +119,7 @@ export default class GeoLocationService {
 		this._successCallback(new GeoLocation(zip, city, country));
 	}
 
-	private _handleIPLocationError(error: Error) {
+	private _handleIPLocationError(error: Error): void {
 		console.log(error);
 		this._errorCallback(error);
 	}

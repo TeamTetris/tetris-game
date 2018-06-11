@@ -15,7 +15,7 @@ export default class Profiler {
 	//endregion
 
 	//region public methods
-	public onProfileChanged(handler: ProfileChangedEventHandler) {
+	public onProfileChanged(handler: ProfileChangedEventHandler): void {
 		this._profileChangedListener = this._profileChangedListener.concat(handler);
 	}
 	//endregion
@@ -53,7 +53,7 @@ export default class Profiler {
 	}
 
 	// ERROR callbacks
-	private _handleGPSError(error: Error) {
+	private _handleGPSError(error: Error): void {
 		console.log(error);
 		this._gpsGeoLocationService.requestCurrentLocation();
 	}
