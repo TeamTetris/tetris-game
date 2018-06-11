@@ -6,6 +6,7 @@ import BiasEventReceiver from "tetris/biasEngine/biasEventReceiver";
 import Field from "tetris/field/field";
 import BrickBias from "tetris/brick/brickBias";
 import Profiler from "tetris/profiler/profiler";
+import Profile from "tetris/profiler/profile";
 
 export default class BiasEngine {
 
@@ -35,6 +36,7 @@ export default class BiasEngine {
 	//region constructor
 	public constructor(profiler: Profiler) {
 		this._profiler = profiler;
+		this._profiler.registerProfileChangedEventHandler(this._onProfileUpdate);
 	}
 	//endregion
 
@@ -54,6 +56,10 @@ export default class BiasEngine {
 	//endregion
 
 	//region private methods
+	private _onProfileUpdate(profile: Profile): void {
+		/**this._currentBiasValue = profile.age etc. */
+	}
+
 	private _sendBiasEvent(event: BiasEvent): void {
 		this._eventReceivers.forEach((eventReceiver) => eventReceiver.receiveEvent(event));
 	}
