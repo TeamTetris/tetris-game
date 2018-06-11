@@ -1,0 +1,15 @@
+@font-face {
+    font-family: "Kenney Mini Square";
+    font-style: normal;
+    font-weight: 400;
+    src:
+            url("../font/kenney_mini_square-webfont.ttf") format("truetype"),
+            url("../font/kenney_mini_square-webfont.woff") format("woff");
+}
+
+div#font-hack {
+    font-family: 'Kenney Mini Square';
+    position: absolute;
+    left: -100px;
+    top: 0px
+}

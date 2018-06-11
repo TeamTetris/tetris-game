@@ -9,17 +9,12 @@ const mainScene = new MainScene(biasEngine);
 
 // main game configuration
 const config: GameConfig = {
-  width: 800,
-  height: 600,
+  width: 320,
+  height: 576,
   type: Phaser.AUTO,
   parent: "game",
   scene: mainScene,
-  physics: {
-    default: "arcade",
-    arcade: {
-      gravity: { y: 200 }
-    }
-  }
+  "render.antialias": false,
 };
 
 // game class
@@ -34,7 +29,7 @@ export class Game extends Phaser.Game {
 	//region constructor
 	public constructor(config: GameConfig) {
 		super(config);
-		
+
 		this._biasEngine = biasEngine;
 	}
 	//endregion

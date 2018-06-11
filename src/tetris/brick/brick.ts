@@ -36,7 +36,7 @@ export default class Brick {
 	}
 	
 	public dropToFloor(): void {
-		
+		while (this._tryToMove(new Vector2(0, 1), true)) { }
 	}
 
 	public rotate(): void {
@@ -47,21 +47,32 @@ export default class Brick {
 		this._tryToMove(new Vector2(0, 1), true);
 	}
 
-	public addBlock(sprite: Phaser.GameObjects.Sprite, relativePosition: Vector2): void {
-		const block = new Block(sprite, relativePosition);
-		this._blocks = this.blocks.concat(block);
+	public addBlock(sprite: Phaser.GameObjects.Sprite, positions: Vector2[]): void {
+		const block = new Block(sprite, positions.map(p => p.add(this._position)), this);
+		this.blocks.push(block);
 	}
 
 	public isStuck(): boolean {
 		return this._stuck;
 	}
 
+	public checkIfStuck(): boolean {
+		this._tryToMove(new Vector2(0, 0), true);
+		return this.isStuck();
+	}
+
 	public update(time: number, delta: number): void {
 		this._blocks.forEach(b => b.update());
 	}
 
-	public preDraw(fieldOffset: Vector2) {
-		this._blocks.forEach(b => b.preDraw(this._position, fieldOffset));		
+	public preDraw(fieldDrawOffset: Vector2) {
+		this._blocks.forEach(b => b.preDraw(fieldDrawOffset));		
+	}
+
+	public destroy() {
+		this._field = null;
+		this._blocks.forEach(b => b.destroy());
+		this._blocks = null;
 	}
 	//endregion
 
@@ -81,23 +92,22 @@ export default class Brick {
 	//endregion
 
 	//region private methods
-	private _tryToMove(move: Vector2, stuckIfFails: boolean = false): void {
+	private _tryToMove(move: Vector2, stuckIfFails: boolean = false): boolean {
 		if (this._isMovePossible(move)) {
-			this.position.add(move);		
+			this._blocks.forEach(b => b.move(move));
+			this.position.add(move);
+			return true;		
 		} else if (stuckIfFails) {
 			this._stuck = true;
+			return false;
 		}
 	}
 	
 	private _isMovePossible(move: Vector2): boolean {
 		let possible = true;
 		this._blocks.forEach(b => {
-			const targetPosition = b.position.clone().add(move).add(this._position);
-			if (targetPosition.x < 0
-				|| targetPosition.y < 0
-				|| targetPosition.x >= this._field.width
-				|| targetPosition.y >= this._field.height
-				|| this._field.state[targetPosition.x][targetPosition.y]) {
+			const targetPosition = b.clone().move(move);
+			if (this._field.isPositionBlocked(targetPosition)) {
 				possible = false;
 			}
 		});
@@ -108,16 +118,11 @@ export default class Brick {
 		const rotatedBlocks = this._blocks.map(originalBlock => {
 			let rotatedBlock = originalBlock.clone();
 
-			if (clockwise) {
-				rotatedBlock.position = new Vector2(-rotatedBlock.position.y, rotatedBlock.position.x);
-			} else {
-				rotatedBlock.position = new Vector2(rotatedBlock.position.y, -rotatedBlock.position.x);
-			}
-
+			rotatedBlock.rotate(clockwise);
+			
 			return rotatedBlock; 
 		});
-		const rotationOffset = new Vector2(Math.abs(Math.min(...rotatedBlocks.map(b => b.position.x))), Math.abs(Math.min(...rotatedBlocks.map(b => b.position.y))));
-		rotatedBlocks.forEach(b => b.position.add(rotationOffset) );
+
 		if (this._isRotationPossible(rotatedBlocks)) {
 			this._blocks = rotatedBlocks;
 		}
@@ -126,12 +131,8 @@ export default class Brick {
 	private _isRotationPossible(rotatedBlocks: Block[]): boolean {
 		let possible = true;
 		rotatedBlocks.forEach(b => {
-			const targetPosition = b.position.clone().add(this._position);
-			if (targetPosition.x < 0
-				|| targetPosition.y < 0
-				|| targetPosition.x >= this._field.width
-				|| targetPosition.y >= this._field.height
-				|| this._field.state[targetPosition.x][targetPosition.y]) {
+			const targetPosition = b.currentPosition;
+			if (this._field.isPositionBlocked(targetPosition)) {
 				possible = false;
 			}
 		});

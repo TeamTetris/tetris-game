@@ -98,10 +98,10 @@ export default class BrickFactory {
 	private _newI(blockAssetId: string, position: Vector2, field: Field): Brick {
 		const brick = new Brick(position, field);
 
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 0));
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 1));
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 2));
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 3));
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(0, -2), new Vector2(-1, -1) ]);
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(0, -1) ]);
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(0, 0), new Vector2(1, -1) ]);
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(0, 1), new Vector2(2, -1) ]);
 
 		return brick;
 	}
@@ -109,10 +109,10 @@ export default class BrickFactory {
 	private _newO(blockAssetId: string, position: Vector2, field: Field): Brick {
 		const brick = new Brick(position, field);
 
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 0));
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 0));
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 1));
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 1));
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(0, 0) ]);
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(1, 0) ]);
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(0, 1) ]);
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(1, 1) ]);
 
 		return brick;
 	}
@@ -120,10 +120,10 @@ export default class BrickFactory {
 	private _newL(blockAssetId: string, position: Vector2, field: Field): Brick {
 		const brick = new Brick(position, field);
 
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 0));
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 1));
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 2));
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 2));
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(0, -1), new Vector2(1, 0), new Vector2(0, 1), new Vector2(-1, 0) ]);
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(0, 0) ]);
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(0, 1), new Vector2(-1, 0), new Vector2(0, -1), new Vector2(1, 0) ]);
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(1, 1), new Vector2(-1, 1), new Vector2(-1, -1), new Vector2(1, -1) ]);
 
 		return brick;
 	}
@@ -131,10 +131,10 @@ export default class BrickFactory {
 	private _newJ(blockAssetId: string, position: Vector2, field: Field): Brick {
 		const brick = new Brick(position, field);
 
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 0));
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 1));
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 2));
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 2));
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(0, -1), new Vector2(1, 0), new Vector2(0, 1), new Vector2(-1, 0) ]);
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(0, 0) ]);
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(0, 1), new Vector2(-1, 0), new Vector2(0, -1), new Vector2(1, 0)  ]);
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(-1, 1), new Vector2(-1, -1), new Vector2(1, -1), new Vector2(1, 1) ]);
 
 		return brick;
 	}
@@ -142,10 +142,10 @@ export default class BrickFactory {
 	private _newT(blockAssetId: string, position: Vector2, field: Field): Brick {
 		const brick = new Brick(position, field);
 
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 0));
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 0));
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(2, 0));
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 1));
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(0, 0), new Vector2(1, -1), new Vector2(2, 0), new Vector2(1, 1) ]);
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(1, 0) ]);
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(2, 0), new Vector2(1, 1), new Vector2(0, 0), new Vector2(1, -1) ]);
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(1, 1), new Vector2(0, 0), new Vector2(1, -1), new Vector2(2, 0) ]);
 
 		return brick;
 	}
@@ -153,10 +153,10 @@ export default class BrickFactory {
 	private _newZ(blockAssetId: string, position: Vector2, field: Field): Brick {
 		const brick = new Brick(position, field);
 
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 0));
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 0));
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 1));
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(2, 1));
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(0, 0), new Vector2(2, -1) ]);
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(1, 0) ]);
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(1, 1) ]);
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(2, 1), new Vector2(2, 0) ]);
 
 		return brick;
 	}
@@ -164,10 +164,10 @@ export default class BrickFactory {
 	private _newS(blockAssetId: string, position: Vector2, field: Field): Brick {
 		const brick = new Brick(position, field);
 
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 0));
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(2, 0));
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(0, 1));
-		brick.addBlock(this._createSprite(blockAssetId), new Vector2(1, 1));
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(1, 0) ]);
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(2, 0) ]);
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(0, 1), new Vector2(1, -1) ]);
+		brick.addBlock(this._createSprite(blockAssetId), [ new Vector2(1, 1), new Vector2(2, 1) ]);
 
 		return brick;
 	}
