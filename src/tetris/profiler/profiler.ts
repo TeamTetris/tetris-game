@@ -1,6 +1,8 @@
 import Profile from 'tetris/profiler/profile';
 import GeoLocationService from 'tetris/profiler/service/geoLocationService';
 import GeoLocation from "tetris/profiler/profileValues/geoLocation";
+import BaseService from "tetris/profiler/service/baseService";
+import Measurement from "tetris/profiler/measurement/measurement";
 
 interface ProfileChangedEventHandler {
 	(profile: Profile): void;
@@ -25,10 +27,9 @@ export default class Profiler {
 		this._profile = new Profile();
 		this._profileChangedListeners = [];
 		this._gpsGeoLocationService = new GeoLocationService(
-			this._handleNewGPSGeoLocation.bind(this),
-			this._handleGPSError.bind(this)
+			Profiler._handleServiceError
 		);
-		this._gpsGeoLocationService.requestCurrentLocation();
+		this._gpsGeoLocationService.run(this._handleNewLocation.bind(this));
 	}
 	//endregion
 
@@ -46,15 +47,14 @@ export default class Profiler {
 	}
 
 	// SUCCESS callbacks
-	private _handleNewGPSGeoLocation(location: GeoLocation): void {
-		this.profile.location.value = location;
-
+	private _handleNewLocation(sender: GeoLocationService, measurement: Measurement<GeoLocation>): void {
+		// TODO: handle new measurement
 		this._profileChanged();
 	}
 
 	// ERROR callbacks
-	private _handleGPSError(error: Error): void {
-		console.log(error);
+	private static _handleServiceError(senderName: string, error: Error): void {
+		console.log(senderName + " :" + error);
 	}
 	//endregion
 }

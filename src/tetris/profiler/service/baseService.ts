@@ -15,7 +15,7 @@ export default abstract class BaseService<MeasurementType> {
 	//endregion
 
 	//region constructor
-	protected constructor(name: string, errorCallback: (sender: BaseService<MeasurementType>, error: Error) => void) {
+	protected constructor(name: string, errorCallback: (senderName: string, error: Error) => void) {
 		this._name = name;
 		this._errorCallback = errorCallback;
 	}
@@ -23,7 +23,7 @@ export default abstract class BaseService<MeasurementType> {
 
 	//region private members
 	private readonly _name: string;
-	protected readonly _errorCallback: (sender: BaseService<MeasurementType>, error: Error) => void;
+	protected readonly _errorCallback: (senderName: string, error: Error) => void;
 	//endregion
 
 	//region private methods

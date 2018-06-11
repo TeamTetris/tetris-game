@@ -1,68 +1,47 @@
 import GeoLocation from "tetris/profiler/profileValues/geoLocation";
-import InverseGeoCordingService from "tetris/profiler/service/inverseGeoCordingService";
+import BaseService from "tetris/profiler/service/baseService";
+import Measurement from "tetris/profiler/measurement/measurement";
+import * as GoogleMapsAPI from 'googlemaps';
 
+// TODO: Move to centralized config
 const IP_GEO_SERVICE = 'https://ipapi.co/json/';
+const GOOGLE_MAPS_API_KEY: string = '<INSERT-API-KEY>';
 
-export default class GeoLocationService {
+export default class GeoLocationService extends BaseService<GeoLocation> {
 
 	//region public members
 	//endregion
 
 	//region public methods
-	public requestCurrentLocation(): void {
+	public run(successCallback: (sender: BaseService<GeoLocation>, measurement: Measurement<GeoLocation>) => void) {
+		this._successCallback = successCallback;
 		if (!GeoLocationService._browserIsCompatible()) {
 			// fallback handling: Try to get position based on IP
 			this._calculateLocationBasedOnIP();
 		}
 		navigator.geolocation.getCurrentPosition(
-			this._inverseGeoCordingService.convert.bind(
-				this._inverseGeoCordingService,
-				this._receiveLocation.bind(this),
-				this._receiveLocationError.bind(this)
-			),
-			this._receiveLocationError
+			this._handleCoordinates.bind(this),
+			this._handleCoordinatesError.bind(this)
 		);
-	}
-
-	public monitorCurrentLocation(): void {
-		if (!GeoLocationService._browserIsCompatible()) {
-			// fallback handling: Try to get position based on IP
-			this._calculateLocationBasedOnIP();
-		}
-		navigator.geolocation.watchPosition(
-			this._inverseGeoCordingService.convert.bind(
-				this._inverseGeoCordingService,
-				this._receivePeriodicLocation.bind(this),
-				this._receiveLocationError.bind(this)
-			),
-			this._receiveLocationError
-		);
-	}
-
-	public stopMonitoring(): void {
-		if(this._monitoringId == null) {
-			console.log(Error('No monitoring active'));
-			return;
-		}
-		navigator.geolocation.clearWatch(this._monitoringId);
-		this._monitoringId = null;
 	}
 	//endregion
 
 	//region constructor
-	public constructor(successCallback: (_: GeoLocation) => void,
-					   errorCallback: (_: Error) => void) {
-		this._successCallback = successCallback;
-		this._errorCallback = errorCallback;
-		this._inverseGeoCordingService = new InverseGeoCordingService();
+	public constructor(errorCallback: (senderName: string, error: Error) => void) {
+		super('GeoLocationService', errorCallback);
+		const publicConfig = {
+			key: GOOGLE_MAPS_API_KEY,
+			stagger_time:       1000, // for elevationPath
+			encode_polylines:   false,
+			secure:             false // use https
+		};
+		this._googleMapsAPI = new GoogleMapsAPI(publicConfig);
 	}
 	//endregion
 
 	//region private members
-	private _monitoringId: number;
-	private readonly _successCallback: (_: GeoLocation) => void;
-	private readonly _errorCallback: (_: Error) => void;
-	private readonly _inverseGeoCordingService: InverseGeoCordingService;
+	private _successCallback: (sender: BaseService<GeoLocation>, measurement: Measurement<GeoLocation>) => void;
+	private _googleMapsAPI: GoogleMapsAPI;
 	//endregion
 
 	//region private methods
@@ -70,12 +49,37 @@ export default class GeoLocationService {
 		return !!navigator.geolocation;
 	}
 
+	private _handleCoordinates(position: Position): void {
+		const reverseGeocodeParams = {
+			"latlng":		position.coords.latitude + "," + position.coords.longitude,
+			"result_type":   "postal_code",
+			"language":      "en",
+			"location_type": "APPROXIMATE"
+		};
+
+		this._googleMapsAPI.reverseGeocode(reverseGeocodeParams, (error: Error, result: object) => {
+			if(!result) {
+				this._errorCallback(this.name, error);
+				return;
+			}
+			this._receiveLocation(result);
+		});
+	}
+
+	private _handleCoordinatesError(error: PositionError): void {
+		this._errorCallback(this.name, new Error(error.message));
+	}
+
+	private _serveResults(result: GeoLocation) {
+		this._successCallback(this, new Measurement<GeoLocation>(result, this.name));
+	}
+
 	private _receiveLocation(resultSet: object): void {
 		if(resultSet['results'].length < 1) {
 			this._calculateLocationBasedOnIP();
 			return;
 		}
-		let zip, city, country;
+		let zip = 0, city = '', country = '';
 		const address_components = resultSet['results'][0]['address_components'];
 		address_components.forEach(component => {
 			if (component['types'].includes('postal_code')) {
@@ -88,18 +92,7 @@ export default class GeoLocationService {
 				city = component['long_name']
 			}
 		});
-		this._successCallback(new GeoLocation(zip, city, country));
-	}
-
-	private _receivePeriodicLocation(position: Position): void {
-		// Implement different behavior for periodic position request
-		this._receiveLocation(position);
-	}
-
-	private _receiveLocationError(locationError: PositionError): void {
-		console.log(locationError);
-		// fallback handling: Try to get position based on IP
-		this._calculateLocationBasedOnIP();
+		this._serveResults(new GeoLocation(zip, city, country));
 	}
 
 	private _calculateLocationBasedOnIP(): void {
@@ -108,20 +101,11 @@ export default class GeoLocationService {
 				return response.json();
 			})
 			.then((data) => {
-				this._receiveIPLocation(data['postal'], data['city'], data['country_name']);
+				this._serveResults(new GeoLocation(data['postal'], data['city'], data['country_name']));
 			})
 			.catch((error) => {
-				this._handleIPLocationError(error);
+				this._errorCallback(this.name, error);
 			});
-	}
-
-	private _receiveIPLocation(zip: number, city: string, country: string): void {
-		this._successCallback(new GeoLocation(zip, city, country));
-	}
-
-	private _handleIPLocationError(error: Error): void {
-		console.log(error);
-		this._errorCallback(error);
 	}
 	//endregion
 }
