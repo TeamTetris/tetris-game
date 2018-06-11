@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
         image.onload = function() {
             requestFaceAnalysis(image, handleFaceAnalysisResponse);
-            console.log('Face analysis request send.');
+            console.log('[faceAnalysis] Face analysis request sent.');
         };
         // load image object
         image.src = snapSrc;
@@ -202,11 +202,17 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     
     function handleFaceAnalysisResponse(response) {
-        var jsonResponse = JSON.parse(response);
-        if (jsonResponse.faces.length && jsonResponse.faces.length > 0) {
-            window.TETRIS_currentFaceValue = jsonResponse.faces[0].attributes;
+        try {
+            var jsonResponse = JSON.parse(response);
+            if (jsonResponse.faces.length && jsonResponse.faces.length > 0) {
+                window.TETRIS_currentFaceValue = jsonResponse.faces[0].attributes;
+            }
+            console.log('[faceAnalysis] Face analysis successful.');
+            //console.log(JSON.stringify(jsonResponse, null, 4));            
+        } catch (error) {
+            console.log('[faceAnalysis] Invalid response from server :(');            
         }
-        console.log(JSON.stringify(jsonResponse, null, 4));
+
     }
     
     // Helper function to get base64 encoded image data
