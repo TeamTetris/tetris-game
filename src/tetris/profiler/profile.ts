@@ -2,15 +2,17 @@ import BaseProfileData from 'tetris/profiler/baseProfileData';
 import ProfileData from 'tetris/profiler/profileData';
 import GeoLocation from 'tetris/profiler/profileValues/geoLocation';
 
+const LOCATION_KEY = "location";
+
 export default class Profile {
 
 	//region public members
 	public get location(): ProfileData<GeoLocation> {
-		if (!this._data.has(Profile._LOCATION_KEY)) {
+		if (!this._data.has(LOCATION_KEY)) {
 			throw new Error("cannot read location data from profile!")
 		}
 
-		return this._data.get(Profile._LOCATION_KEY) as ProfileData<GeoLocation>;
+		return this._data.get(LOCATION_KEY) as ProfileData<GeoLocation>;
 	}
 	//endregion
 
@@ -20,13 +22,11 @@ export default class Profile {
 	//region constructor
 	public constructor() {
 		this._data = new Map<string, BaseProfileData>();
-		this._addProfileData<GeoLocation>(Profile._LOCATION_KEY);
+		this._addProfileData<GeoLocation>(LOCATION_KEY);
 	}
 	//endregion
 
 	//region private members
-	private static readonly _LOCATION_KEY = "location";
-
 	private readonly _data: Map<string, BaseProfileData>;
 	//endregion
 
