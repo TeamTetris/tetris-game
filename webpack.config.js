@@ -9,6 +9,9 @@ module.exports = {
 		filename: 'bundle.js',
 		path: path.resolve(__dirname, 'build')
 	},
+	node: {
+		fs: 'empty'
+	},
 	devServer: {
 		contentBase: path.resolve(__dirname, './'),
 		publicPath: '/build/',
@@ -17,7 +20,7 @@ module.exports = {
 		open: true
 	},
 	resolve: {
-		extensions: ['.ts', '.js'],
+		extensions: ['.ts', '.js', '.json'],
 		alias: {
 			'phaser': phaser,
 			'tetris': path.resolve(__dirname, 'src/tetris'),
