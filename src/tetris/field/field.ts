@@ -171,11 +171,12 @@ export default class Field {
 
 	private _dropRow(rowIndex: number) {
 		this._blockRows[rowIndex].forEach((block, blockIndex) => {
-			if (block !== null) {
-				block.move(new Vector2(0, 1));
-				this._blockRows[rowIndex + 1][blockIndex] = block;
-				this._blockRows[rowIndex][blockIndex] = null;
+			if (block === null) {
+				return;
 			}
+			block.move(new Vector2(0, 1));
+			this._blockRows[rowIndex + 1][blockIndex] = block;
+			this._blockRows[rowIndex][blockIndex] = null;
 		})
 	}
 
