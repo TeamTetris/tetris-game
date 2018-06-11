@@ -9,37 +9,37 @@ export default class BrickChances {
 
 	//region public methods
 	public setChanceI(chance: number): BrickChances {
-		this._chances[this._brickIndices["I"]] = chance;
+		this._chances[this._brickIndices.get("I")] = chance;
 		return this;
 	}
 
 	public setChanceO(chance: number): BrickChances {
-		this._chances[this._brickIndices["O"]] = chance;
+		this._chances[this._brickIndices.get("O")] = chance;
 		return this;
 	}
 
 	public setChanceL(chance: number): BrickChances {
-		this._chances[this._brickIndices["L"]] = chance;
+		this._chances[this._brickIndices.get("L")] = chance;
 		return this;
 	}
 
 	public setChanceJ(chance: number): BrickChances {
-		this._chances[this._brickIndices["J"]] = chance;
+		this._chances[this._brickIndices.get("J")] = chance;
 		return this;
 	}
 
 	public setChanceT(chance: number): BrickChances {
-		this._chances[this._brickIndices["T"]] = chance;
+		this._chances[this._brickIndices.get("T")] = chance;
 		return this;
 	}
 
 	public setChanceS(chance: number): BrickChances {
-		this._chances[this._brickIndices["S"]] = chance;
+		this._chances[this._brickIndices.get("S")] = chance;
 		return this;
 	}
 
 	public setChanceZ(chance: number): BrickChances {
-		this._chances[this._brickIndices["Z"]] = chance;
+		this._chances[this._brickIndices.get("Z")] = chance;
 		return this;
 	}
 	//endregion

@@ -27,8 +27,7 @@ export default class BiasEngine {
 	}
 
 	public newBrickBias(field: Field): BrickBias {
-		// TODO: implement biasing logic
-		return BrickBias.newDefault(field);
+		return BrickBias.newFromTierList(field, this._currentBiasValue);
 	}
 	//endregion
 
@@ -43,6 +42,7 @@ export default class BiasEngine {
 	private _lastBiasEvent: number = 0;
 	private _biasEventInterval: number = 10000;
 	private _eventReceivers: BiasEventReceiver[] = [];
+	private _currentBiasValue: number = 1.0;
 	/** private profiler: Profiler;*/
 	//endregion
 
