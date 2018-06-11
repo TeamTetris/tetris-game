@@ -5,9 +5,13 @@
   <meta charset="UTF-8" />
   <meta name="author" content="Christian Friedow, Johannes Schneider, Maximilian Söchting, Julian Weise">
   <title>TETRIS</title>
-  <!-- <link rel="stylesheet" type="text/css" href="styles/css/styles.css"> -->
+  <link rel="stylesheet" type="text/css" href="assets/css/modal.css"> 
+  <link rel="stylesheet" type="text/css" href="assets/css/camera.css"> 
   <link rel="stylesheet" type="text/css" href="assets/css/main.css">
   <link rel="stylesheet" type="text/css" href="assets/css/fontLoader.css">
+  <script src="assets/js/modal.js"></script>
+  <script src="assets/js/camera.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="build/bundle.js"></script>
 </head>
 
@@ -20,14 +24,12 @@
   </div>
   <button id="myBtn">Open Camera</button>
 
-  <pre id="output"></pre>
-
   <div id="myModal" class="modal">
     <!-- Modal content -->
     <div class="modal-content">
       <div class="modal-header">
         <span class="close">&times;</span>
-        <h2>Modal Header</h2>
+        <h2>Take A Selfie</h2>
       </div>
       <div class="modal-body">
         <div class="camera-container">
@@ -53,13 +55,12 @@
           </div>
         </div>
       </div>
-      <div class="modal-footer">
+      <!--<div class="modal-footer">
         <h3>Modal Footer</h3>
-      </div>
+      </div>-->
     </div>
   </div>
 
-</body>
 </body>
 
 </html>

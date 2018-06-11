@@ -109,11 +109,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function analyzeSnapshot(snapSrc, width, height) {
         var image = new Image(width,height);
-        var output = document.getElementById('output');
     
         image.onload = function() {
             requestFaceAnalysis(image, handleFaceAnalysisResponse);
-            output.textContent = 'Face analysis request send.';
+            console.log('Face analysis request send.');
         };
         // load image object
         image.src = snapSrc;
@@ -182,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function requestFaceAnalysis(image, callback) {
         var formData = new FormData();
         var xhr = new XMLHttpRequest();
-        var url = 'http://localhost:3000/api/face-analysis';
+        var url = 'https://proxyboy.herokuapp.com/fpp/detect';
         
         // Prepare form data
         formData.append("api_key", faceplusplus_api_key());
@@ -203,9 +202,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     
     function handleFaceAnalysisResponse(response) {
-        var output = document.getElementById('output');
         var jsonResponse = JSON.parse(response);
-        output.innerHTML = JSON.stringify(jsonResponse, null, 4);
+        console.log(JSON.stringify(jsonResponse, null, 4));
     }
     
     // Helper function to get base64 encoded image data
