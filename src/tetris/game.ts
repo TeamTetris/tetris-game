@@ -31,7 +31,7 @@ export class Game extends Phaser.Game {
 	public constructor(config: GameConfig) {
 		super(config);
 
-		this._biasEngine = new BiasEngine();
+		this._biasEngine = biasEngine;
 		this._profiler = new Profiler();
 	}
 	//endregion
