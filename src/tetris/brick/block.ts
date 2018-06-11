@@ -11,25 +11,25 @@ export default class Block {
 		this._currentPositionIndex = currentPositionIndex;
 	}
 	
-	public get currentPosition() {
+	public get currentPosition(): Vector2 {
 		return this._positions[this._currentPositionIndex];
 	}
 
-	public get positions() {
+	public get positions(): Vector2[] {
 		return this._positions;
 	}
 
-	public destroy() {
+	public destroy(): void {
 		this._brick.blocks.splice(this._brick.blocks.indexOf(this), 1);
 		this._sprite.setVisible(false);
 		this._sprite.destroy();
 	}
 
-	public rotate(clockwise: boolean) {
+	public rotate(clockwise: boolean): void {
 		this._currentPositionIndex = (this._currentPositionIndex + (clockwise ? 1 : -1 )) % this._positions.length;
 	}
 
-	public move(movement: Vector2) {
+	public move(movement: Vector2): Vector2 {
 		this._positions.forEach(p => p.add(movement));
 		return this.currentPosition;
 	}
@@ -39,7 +39,7 @@ export default class Block {
 	public update(): void {
 	}
 	
-	public preDraw(fieldDrawOffset: Vector2) {
+	public preDraw(fieldDrawOffset: Vector2): void {
 		// convert from blocks to pixels
 		let pixelPosition = this.currentPosition.clone().scale(this._sprite.frame.cutHeight);
 

@@ -164,7 +164,7 @@ export default class Field {
 			for (let backtrackedRowIndex = rowIndex; backtrackedRowIndex >= 0; backtrackedRowIndex--) {
 				this._dropRow(backtrackedRowIndex);
 			}
-		})	
+		})
 
 		return rowsDeleted;
 	}
