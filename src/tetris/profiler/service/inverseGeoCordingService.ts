@@ -1,5 +1,6 @@
 import * as GoogleMapsAPI from 'googlemaps';
 
+// TODO: Move to centralized config
 const GOOGLE_MAPS_API_KEY: string = '<INSERT-API-KEY>';
 
 export default class InverseGeoCordingService {
@@ -28,7 +29,7 @@ export default class InverseGeoCordingService {
 	//endregion
 
 	//region constructor
-	constructor() {
+	public constructor() {
 		const publicConfig = {
 			key: GOOGLE_MAPS_API_KEY,
 			stagger_time:       1000, // for elevationPath
