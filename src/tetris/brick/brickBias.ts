@@ -31,7 +31,7 @@ export default class BrickBias {
 		const brickBias = BrickBias.newDefault(field);
 		brickBias.chances = BrickChances.newNoChances();
 		
-		const distanceBetween = (a, b) => Math.pow(Math.abs(a - b), 3);
+		const distanceBetween = (a, b) => Math.pow(Math.abs(a - b), 2);
 		
 		brickBias.chances.setChanceI(distanceBetween(biasValue, -1.0));
 		brickBias.chances.setChanceO(distanceBetween(biasValue, -1.0));
