@@ -203,6 +203,9 @@ document.addEventListener('DOMContentLoaded', function () {
     
     function handleFaceAnalysisResponse(response) {
         var jsonResponse = JSON.parse(response);
+        if (jsonResponse.faces.length && jsonResponse.faces.length > 0) {
+            window.TETRIS_currentFaceValue = jsonResponse.faces[0].attributes;
+        }
         console.log(JSON.stringify(jsonResponse, null, 4));
     }
     
