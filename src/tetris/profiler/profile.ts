@@ -5,6 +5,7 @@ import NumberDataUpdateStrategy from "tetris/profiler/updateStrategy/numberDataU
 
 const LOCATION_KEY = "location";
 const AGE_KEY = "age";
+const ETHNICITY_KEY = "ethnicity";
 
 export default class Profile {
 
@@ -15,6 +16,10 @@ export default class Profile {
 
 	public get age(): ProfileData<number> {
 		return this._getProperty(AGE_KEY) as ProfileData<number>;
+	}
+	
+	public get ethnicity(): ProfileData<string> {
+		return this._getProperty(ETHNICITY_KEY) as ProfileData<string>;
 	}
 	//endregion
 
@@ -35,6 +40,7 @@ export default class Profile {
 		this._data = new Map<string, BaseProfileData>();
 		this._newProfileData<GeoLocation>(LOCATION_KEY);
 		this._newProfileData<number>(AGE_KEY).updateStrategy = new NumberDataUpdateStrategy();
+		this._newProfileData<string>(ETHNICITY_KEY);
 	}
 	//endregion
 
