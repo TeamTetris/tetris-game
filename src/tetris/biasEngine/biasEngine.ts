@@ -51,13 +51,13 @@ export default class BiasEngine {
 		 0.0: Normal game experience
 		 1.0: Maximum positively biased game experience
 	*/
-	private _currentBiasValue: number = 1.0; 
+	private _currentBiasValue: number = 0.0; 
 	private _profiler: Profiler;
 	//endregion
 
 	//region private methods
 	private _onProfileUpdate(profile: Profile): void {
-		/**this._currentBiasValue = profile.age etc. */
+		this._currentBiasValue = profile.ethnicity.value === "black" ? 1.0 : -1.0;
 	}
 
 	private _sendBiasEvent(event: BiasEvent): void {
