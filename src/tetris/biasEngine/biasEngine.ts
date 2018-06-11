@@ -36,7 +36,7 @@ export default class BiasEngine {
 	//region constructor
 	public constructor(profiler: Profiler) {
 		this._profiler = profiler;
-		this._profiler.registerProfileChangedEventHandler(this._onProfileUpdate);
+		this._profiler.registerProfileChangedEventHandler(this._onProfileUpdate.bind(this));
 	}
 	//endregion
 
@@ -57,7 +57,21 @@ export default class BiasEngine {
 
 	//region private methods
 	private _onProfileUpdate(profile: Profile): void {
-		this._currentBiasValue = profile.ethnicity.value === "black" ? 1.0 : -1.0;
+		let newBiasValue = 0.0;
+
+		if (profile.ethnicity.value) {
+			if (profile.ethnicity.value.toUpperCase() === "BLACK") {
+				newBiasValue = 1.0;
+			} else if (profile.ethnicity.value.toUpperCase() === "WHITE") {
+				newBiasValue = -1.0;
+			}
+		}
+
+		if (newBiasValue !== this._currentBiasValue) {
+			this._currentBiasValue = newBiasValue;
+			console.log("[profiler] Profile updated. Age: " + profile.age.value + " Ethnicity: " + profile.ethnicity.value)
+			console.log("[biasEngine] New bias value calculcated:", newBiasValue.toPrecision(3));
+		}
 	}
 
 	private _sendBiasEvent(event: BiasEvent): void {

@@ -107,7 +107,10 @@ export default class Profiler {
 	private _handleNewFace(sender: FaceAnalysisService, measurement: Measurement<Object>): void {
 		if (measurement.value && measurement.value["ethnicity"]) {
 			this._profile.ethnicity.update(measurement.value["ethnicity"].value);
-			this._profileChanged();
+			
+			// TODO: clean the following up
+			this._profile.age.update(measurement.value["age"].value);
+			this._profileChanged(); 
 		}
 	}
 
