@@ -20,6 +20,10 @@ export default class BaseProfileData {
 	public get confidence(): number {
 		return this._confidence;
 	}
+
+	public set confidence(confidence: number) {
+		this._confidence = Math.min(BaseProfileData.MAX_CONFIDENCE, Math.max(BaseProfileData.MIN_CONFIDENCE, Math.abs(confidence)));
+	}
 	//endregion
 
 	//region public methods
