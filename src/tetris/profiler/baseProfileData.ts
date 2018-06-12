@@ -1,3 +1,5 @@
+import ProfileDataConfidenceStrategy from "tetris/profiler/confidenceStrategy/profileDataConfidenceStrategy";
+
 export default class BaseProfileData {
 
 	//region public members
@@ -27,6 +29,9 @@ export default class BaseProfileData {
 	//endregion
 
 	//region public methods
+	public update(time: number, delta: number): void {
+		this._confidenceStrategy.update(this, delta);
+	}
 	//endregion
 
 	//region constructor
@@ -36,6 +41,7 @@ export default class BaseProfileData {
 	//endregion
 
 	//region private members
+	protected _confidenceStrategy: ProfileDataConfidenceStrategy;
 	//endregion
 
 	//region private methods
