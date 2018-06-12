@@ -1,5 +1,6 @@
 import BaseProfileData from 'tetris/profiler/baseProfileData';
 import ProfileDataUpdateStrategy from "tetris/profiler/updateStrategy/profileDataUpdateStrategy";
+import ProfileDataConfidenceStrategy from "tetris/profiler/confidenceStrategy/profileDataConfidenceStrategy";
 
 export default class ProfileData<ValueType> extends BaseProfileData {
 
@@ -16,13 +17,21 @@ export default class ProfileData<ValueType> extends BaseProfileData {
 		this._updateStrategy = strategy;
 	}
 
+	public get confidenceStrategy(): ProfileDataConfidenceStrategy {
+		return this._confidenceStrategy;
+	}
+
+	public set confidenceStrategy(strategy: ProfileDataConfidenceStrategy) {
+		this._confidenceStrategy = strategy;
+	}
+
 	public get valueHistory(): Map<number, ValueType> {
 		return this._valueHistory;
 	}
 	//endregion
 
 	//region public methods
-	public update(value: ValueType): void {
+	public updateValue(value: ValueType): void {
 		this._value = this._updateStrategy.accumulate(this, value);
 		this._isDefined = true;
 		this._addMeasurement(value);
@@ -35,6 +44,7 @@ export default class ProfileData<ValueType> extends BaseProfileData {
 
 		this._valueHistory = new Map<number, ValueType>();
 		this._updateStrategy = new ProfileDataUpdateStrategy<ValueType>();
+		this._confidenceStrategy = new ProfileDataConfidenceStrategy();
 	}
 	//endregion
 
