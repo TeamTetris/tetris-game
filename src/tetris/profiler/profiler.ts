@@ -20,6 +20,10 @@ export default class Profiler {
 	public onProfileChanged(handler: ProfileChangedEventHandler): void {
 		this._profileChangedListeners.push(handler);
 	}
+
+	public update(time: number, delta: number): void {
+		this._profile.update(time, delta);
+	}
 	//endregion
 
 	//region constructor

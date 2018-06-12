@@ -19,6 +19,11 @@ export default class Profile {
 	//endregion
 
 	//region public methods
+	public update(time: number, delta: number): void {
+		this._data.forEach((profileData: BaseProfileData) => {
+			profileData.update(time, delta);
+		});
+	}
 	//endregion
 
 	//region constructor
