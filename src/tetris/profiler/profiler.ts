@@ -1,7 +1,6 @@
 import Profile from 'tetris/profiler/profile';
 import GeoLocationService from 'tetris/profiler/service/geoLocationService';
 import GeoLocation from "tetris/profiler/profileValues/geoLocation";
-import BaseService from "tetris/profiler/service/baseService";
 import Measurement from "tetris/profiler/measurement/measurement";
 import BaseMeasurement from "tetris/profiler/measurement/baseMeasurement";
 
