@@ -3,9 +3,21 @@ import GeoLocationService from 'tetris/profiler/service/geoLocationService';
 import GeoLocation from "tetris/profiler/profileValues/geoLocation";
 import Measurement from "tetris/profiler/measurement/measurement";
 import BaseMeasurement from "tetris/profiler/measurement/baseMeasurement";
+import BaseService from "tetris/profiler/service/baseService";
+import BaseProfileData from "tetris/profiler/baseProfileData";
+
+const CONFIDENCE_THRESHOLD = 0.25;
 
 interface ProfileChangedEventHandler {
 	(profile: Profile): void;
+}
+
+interface BaseServiceConsumer {
+	(profile: Profile, measurement: BaseMeasurement): void
+}
+
+interface ServiceConsumer<MeasurementType> extends BaseServiceConsumer {
+	(profile: Profile, measurement: Measurement<MeasurementType>): void
 }
 
 export default class Profiler {
@@ -23,26 +35,40 @@ export default class Profiler {
 
 	public update(time: number, delta: number): void {
 		this._profile.update(time, delta);
+		this._profile.forEachProperty((property: BaseProfileData) => {
+			if (property.confidence > CONFIDENCE_THRESHOLD * BaseProfileData.CONFIDENCE_RANGE) {
+				return;
+			}
+			this._callServices(Array.from(property.dataSources.values()));
+		});
 	}
 	//endregion
 
 	//region constructor
 	public constructor() {
 		this._profile = new Profile();
+		this._services = new Map();
+		this._serviceConsumers = new Map();
 		this._profileChangedListeners = [];
 		this._measurementHistory = [];
-		this._gpsGeoLocationService = new GeoLocationService(
+
+		const geoLocationService = new GeoLocationService(
 			Profiler._handleServiceError
 		);
-		this._gpsGeoLocationService.run(this._handleNewLocation.bind(this));
+		this._addService(geoLocationService,
+			(profile: Profile, measurement: Measurement<GeoLocation>) =>
+				profile.location.updateValue(geoLocationService.name, measurement.value)
+		);
+		geoLocationService.run(this._consumeService.bind(this));
 	}
 	//endregion
 
 	//region private members
 	private readonly _profile: Profile;
+	private readonly _services: Map<string, BaseService>;
+	private readonly _serviceConsumers: Map<string, BaseServiceConsumer[]>;
 	private readonly _profileChangedListeners: ProfileChangedEventHandler[];
 	private readonly _measurementHistory: BaseMeasurement[];
-	private readonly _gpsGeoLocationService: GeoLocationService;
 	//endregion
 
 	//region private methods
@@ -52,10 +78,27 @@ export default class Profiler {
 		});
 	}
 
-	// SUCCESS callbacks
-	private _handleNewLocation(sender: GeoLocationService, measurement: Measurement<GeoLocation>): void {
+	private _callServices(serviceNames: string[]): void {
+		serviceNames.forEach((serviceName: string) => {
+			this._services.get(serviceName).run(this._consumeService.bind(this));
+		});
+	}
+
+	private _addService<MeasurementType>(service: BaseService,
+										 ...consumers: ServiceConsumer<MeasurementType>[]): void {
+		this._services.set(service.name, service);
+		this._serviceConsumers.set(service.name, consumers);
+	}
+
+	private _consumeService<MeasurementType>(serviceName: string,
+													measurement: Measurement<MeasurementType>): void {
 		this._measurementHistory.push(measurement);
-		// TODO: handle new measurement
+		if (!this._serviceConsumers.has(serviceName)) {
+			throw new Error('Cannot consume service: ' + serviceName);
+		}
+		this._serviceConsumers.get(serviceName).forEach(
+			(consumer: ServiceConsumer<MeasurementType>) => consumer(this.profile, measurement)
+		);
 		this._profileChanged();
 	}
 
