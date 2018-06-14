@@ -38,6 +38,10 @@ export default class BaseProfileData {
 	public set confidenceStrategy(strategy: ProfileDataConfidenceStrategy) {
 		this._confidenceStrategy = strategy;
 	}
+
+	public get dataSources(): Set<string> {
+		return this._dataSources;
+	}
 	//endregion
 
 	//region public methods
@@ -50,6 +54,7 @@ export default class BaseProfileData {
 	protected constructor() {
 		this._confidence = BaseProfileData.MIN_CONFIDENCE;
 		this._confidenceStrategy = ProfileDataConfidenceStrategy.default();
+		this._dataSources = new Set<string>();
 	}
 	//endregion
 
@@ -64,7 +69,7 @@ export default class BaseProfileData {
 	//region protected members
 	protected _isDefined: boolean = false;
 	protected _latestMeasurement: number = 0;
-	protected _confidence: number;
+	protected readonly _dataSources: Set<string>;
 	//endregion
 
 }
