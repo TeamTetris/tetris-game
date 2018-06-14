@@ -24,6 +24,10 @@ export default class Profile {
 			profileData.update(time, delta);
 		});
 	}
+
+	public forEachProperty(callback: (BaseProfileData) => void): void {
+		this._data.forEach(callback);
+	}
 	//endregion
 
 	//region constructor
