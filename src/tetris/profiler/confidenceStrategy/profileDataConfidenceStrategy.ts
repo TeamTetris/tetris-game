@@ -7,29 +7,33 @@ export default class ProfileDataConfidenceStrategy {
 
 	//region public methods
 	public update(profileData: BaseProfileData, delta: number): void {
-		this._deltaSinceLatestConfidenceUpdate =+ delta;
-		if (this._deltaSinceLatestConfidenceUpdate < this._deltaUntilConfidenceUpdate) {
-			return;
-		}
-		profileData.confidence = Math.max(
-			BaseProfileData.MIN_CONFIDENCE,
-			profileData.confidence - this._periodicDecrementValue
-		);
-		this._deltaSinceLatestConfidenceUpdate = 0;
+		profileData.confidence -= this._decreasePerSecond * (delta / 1000) * BaseProfileData.CONFIDENCE_RANGE;
 	}
 	//endregion
 
 	//region constructor
-	constructor(periodicDecrementValue: number = 0.01, deltaUntilConfidenceUpdate: number = 30000) {
-		this._periodicDecrementValue = periodicDecrementValue;
-		this._deltaUntilConfidenceUpdate = deltaUntilConfidenceUpdate;
+	private constructor(periodicDecrementValuePerSecond: number) {
+		this._decreasePerSecond = periodicDecrementValuePerSecond;
+	}
+
+	public static slow() {
+		return ProfileDataConfidenceStrategy._slowDecrease;
+	}
+
+	public static default() {
+		return ProfileDataConfidenceStrategy._defaultDecrease;
+	}
+
+	public static fast() {
+		return ProfileDataConfidenceStrategy._fastDecrease;
 	}
 	//endregion
 
 	//region private members
-	private readonly _periodicDecrementValue: number;
-	private readonly _deltaUntilConfidenceUpdate: number;
-	private _deltaSinceLatestConfidenceUpdate: number = 0;
+	private static readonly _slowDecrease: ProfileDataConfidenceStrategy = new ProfileDataConfidenceStrategy(0.01 / 30);
+	private static readonly _defaultDecrease: ProfileDataConfidenceStrategy = new ProfileDataConfidenceStrategy(0.01 / 15);
+	private static readonly _fastDecrease: ProfileDataConfidenceStrategy = new ProfileDataConfidenceStrategy(0.01 / 5);
+	private readonly _decreasePerSecond: number;
 	//endregion
 
 	//region private methods
