@@ -17,14 +17,6 @@ export default class ProfileData<ValueType> extends BaseProfileData {
 		this._updateStrategy = strategy;
 	}
 
-	public get confidenceStrategy(): ProfileDataConfidenceStrategy {
-		return this._confidenceStrategy;
-	}
-
-	public set confidenceStrategy(strategy: ProfileDataConfidenceStrategy) {
-		this._confidenceStrategy = strategy;
-	}
-
 	public get valueHistory(): Map<number, ValueType> {
 		return this._valueHistory;
 	}
@@ -44,7 +36,6 @@ export default class ProfileData<ValueType> extends BaseProfileData {
 
 		this._valueHistory = new Map<number, ValueType>();
 		this._updateStrategy = new ProfileDataUpdateStrategy<ValueType>();
-		this._confidenceStrategy = new ProfileDataConfidenceStrategy();
 	}
 	//endregion
 

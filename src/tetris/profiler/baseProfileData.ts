@@ -25,6 +25,13 @@ export default class BaseProfileData {
 
 	public set confidence(confidence: number) {
 		this._confidence = Math.min(BaseProfileData.MAX_CONFIDENCE, Math.max(BaseProfileData.MIN_CONFIDENCE, Math.abs(confidence)));
+
+	public get confidenceStrategy(): ProfileDataConfidenceStrategy {
+		return this._confidenceStrategy;
+	}
+
+	public set confidenceStrategy(strategy: ProfileDataConfidenceStrategy) {
+		this._confidenceStrategy = strategy;
 	}
 	//endregion
 
@@ -37,11 +44,13 @@ export default class BaseProfileData {
 	//region constructor
 	protected constructor() {
 		this._confidence = BaseProfileData.MIN_CONFIDENCE;
+		this._confidenceStrategy = ProfileDataConfidenceStrategy.default();
 	}
 	//endregion
 
 	//region private members
-	protected _confidenceStrategy: ProfileDataConfidenceStrategy;
+	private _confidenceStrategy: ProfileDataConfidenceStrategy;
+	private _confidence: number;
 	//endregion
 
 	//region private methods
