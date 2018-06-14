@@ -7,23 +7,12 @@ import * as GoogleMapsAPI from 'googlemaps';
 const IP_GEO_SERVICE = 'https://ipapi.co/json/';
 const GOOGLE_MAPS_API_KEY: string = '<INSERT-API-KEY>';
 
-export default class GeoLocationService extends BaseService<GeoLocation> {
+export default class GeoLocationService extends BaseService {
 
 	//region public members
 	//endregion
 
 	//region public methods
-	public run(successCallback: (sender: BaseService<GeoLocation>, measurement: Measurement<GeoLocation>) => void) {
-		this._successCallback = successCallback;
-		if (!GeoLocationService._browserIsCompatible()) {
-			// fallback handling: Try to get position based on IP
-			this._calculateLocationBasedOnIP();
-		}
-		navigator.geolocation.getCurrentPosition(
-			this._handleCoordinates.bind(this),
-			this._handleCoordinatesError.bind(this)
-		);
-	}
 	//endregion
 
 	//region constructor
@@ -40,7 +29,7 @@ export default class GeoLocationService extends BaseService<GeoLocation> {
 	//endregion
 
 	//region private members
-	private _successCallback: (sender: BaseService<GeoLocation>, measurement: Measurement<GeoLocation>) => void;
+	private _successCallback: (senderName: string, measurement: Measurement<GeoLocation>) => void;
 	private _googleMapsAPI: GoogleMapsAPI;
 	//endregion
 
@@ -71,7 +60,8 @@ export default class GeoLocationService extends BaseService<GeoLocation> {
 	}
 
 	private _serveResults(result: GeoLocation) {
-		this._successCallback(this, new Measurement<GeoLocation>(result, this.name));
+		this._successCallback(this.name, new Measurement<GeoLocation>(result, this.name));
+		this._postRun();
 	}
 
 	private _receiveLocation(resultSet: object): void {
@@ -106,6 +96,20 @@ export default class GeoLocationService extends BaseService<GeoLocation> {
 			.catch((error) => {
 				this._errorCallback(this.name, error);
 			});
+	}
+	//endregion
+
+	//region protected methods
+	protected _run(successCallback: (senderName: string, measurement: Measurement<GeoLocation>) => void) {
+		this._successCallback = successCallback;
+		if (!GeoLocationService._browserIsCompatible()) {
+			// fallback handling: Try to get position based on IP
+			this._calculateLocationBasedOnIP();
+		}
+		navigator.geolocation.getCurrentPosition(
+			this._handleCoordinates.bind(this),
+			this._handleCoordinatesError.bind(this)
+		);
 	}
 	//endregion
 }
