@@ -2,12 +2,11 @@
 
 import "phaser";
 import MainScene from "tetris/scene/mainScene";
+import MenuScene from "tetris/scene/menuScene";
 import BiasEngine from "tetris/biasEngine/biasEngine"
 import Profiler from "tetris/profiler/profiler";
-// import "tetris/styles/scss/styles.scss"
+import "tetris/styles/scss/styles.scss"
 
-const profiler = new Profiler();
-const biasEngine = new BiasEngine(profiler);
 
 // main game configuration
 const config: GameConfig = {
@@ -15,9 +14,9 @@ const config: GameConfig = {
   height: 576,
   type: Phaser.AUTO,
   parent: "game",
-  scene: new MainScene(biasEngine),
   "render.antialias": false,
 };
+
 
 // game class
 export class Game extends Phaser.Game {
@@ -26,6 +25,16 @@ export class Game extends Phaser.Game {
 	//endregion
 
 	//region public methods
+	public start() {
+		super.start();
+		const menuScene = new MenuScene(this.changeScene);
+		const mainScene = new MainScene(this._biasEngine);
+		this.scene.add('MenuScene', menuScene, true);
+		this._activeScene = 'MenuScene';
+		this.scene.add('MainScene', mainScene, true);
+		this.changeScene('MenuScene');
+	}
+	
 	public step(time: number, delta: number) {
 		super.step(time, delta);
 		this._profiler.update(time, delta);
@@ -36,18 +45,23 @@ export class Game extends Phaser.Game {
 	//region constructor
 	public constructor(config: GameConfig) {
 		super(config);
-
-		this._biasEngine = biasEngine;
-		this._profiler = profiler;
+		this._profiler = new Profiler();
+		this._biasEngine = new BiasEngine(profiler);
 	}
 	//endregion
 
 	//region private members
 	private readonly _biasEngine;
 	private readonly _profiler;
+	private _activeScene;
 	//endregion
 
 	//region private methods
+	private changeScene(key: string) {
+		this.scene.pause(this._activeScene);
+		this.scene.bringToTop(key);
+		this.scene.resume(key);
+	}	
 	//endregion
 }
 
