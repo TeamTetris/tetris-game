@@ -16,11 +16,9 @@ export default class NumberDataUpdateStrategy extends ProfileDataUpdateStrategy<
 
 	//region public methods
 	public accumulate(profileData: ProfileData<number>, latestValue: number): number {
-		const confidenceRange = BaseProfileData.MAX_CONFIDENCE - BaseProfileData.MIN_CONFIDENCE;
-
 		// check, whether this is the first value ever
 		if (!profileData.isDefined) {
-			profileData.confidence = 0.5 * confidenceRange + BaseProfileData.MIN_CONFIDENCE;
+			profileData.confidence = 0.5 * BaseProfileData.CONFIDENCE_RANGE + BaseProfileData.MIN_CONFIDENCE;
 			return latestValue;
 		}
 
@@ -36,7 +34,10 @@ export default class NumberDataUpdateStrategy extends ProfileDataUpdateStrategy<
 
 		// gain at least a little confidence to avoid measuring data too fast again
 		// the closer our value difference to 0 is, the more confidence boost we get
-		profileData.confidence += Math.max(0.1 * confidenceRange, (1 - Math.abs(valueDifference)) * confidenceRange);
+		profileData.confidence += Math.max(
+			0.1 * BaseProfileData.CONFIDENCE_RANGE,
+			(1 - Math.abs(valueDifference)) * BaseProfileData.CONFIDENCE_RANGE
+		);
 		return newValue;
 	}
 	//endregion

@@ -11,6 +11,10 @@ export default class BaseProfileData {
 		return 1;
 	}
 
+	public static get CONFIDENCE_RANGE(): number {
+		return this.MAX_CONFIDENCE - this.MIN_CONFIDENCE;
+	}
+
 	public get isDefined(): boolean {
 		return this._isDefined;
 	}
@@ -24,7 +28,8 @@ export default class BaseProfileData {
 	}
 
 	public set confidence(confidence: number) {
-		this._confidence = Math.min(BaseProfileData.MAX_CONFIDENCE, Math.max(BaseProfileData.MIN_CONFIDENCE, Math.abs(confidence)));
+		this._confidence = Math.min(BaseProfileData.MAX_CONFIDENCE, Math.max(BaseProfileData.MIN_CONFIDENCE, confidence));
+	}
 
 	public get confidenceStrategy(): ProfileDataConfidenceStrategy {
 		return this._confidenceStrategy;
