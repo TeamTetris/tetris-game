@@ -21,7 +21,8 @@ export default class MainScene extends Phaser.Scene {
 
 	//region public methods
 	public preload(): void {
-		this.load.atlas("puzzleSpriteAtlas", "./assets/images/sprites.png", "./assets/images/sprites.json");
+		this.load.atlas("blockSpriteAtlas", "./assets/images/blockSprites.png", "./assets/images/blockSprites.json");
+		this.load.atlas("uiSpriteAtlas", "./assets/images/uiSprites.png", "./assets/images/uiSprites.json");
 	}
 
 	public create(): void {

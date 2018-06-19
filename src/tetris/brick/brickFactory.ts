@@ -92,7 +92,7 @@ export default class BrickFactory {
 
 	private _createSprite(blockAssetId: string): Phaser.GameObjects.Sprite {
 		// TODO: move the constant string somewhere else
-		return this._scene.add.sprite(0, 0, "puzzleSpriteAtlas", blockAssetId);
+		return this._scene.add.sprite(0, 0, "blockSpriteAtlas", blockAssetId);
 	}
 
 	private _newI(blockAssetId: string, position: Vector2, field: Field): Brick {
