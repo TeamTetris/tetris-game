@@ -16,15 +16,15 @@ export default class ProfileDataConfidenceStrategy {
 		this._decreasePerSecond = periodicDecrementValuePerSecond;
 	}
 
-	public static slow() {
+	public static slow(): ProfileDataConfidenceStrategy {
 		return ProfileDataConfidenceStrategy._slowDecrease;
 	}
 
-	public static default() {
+	public static default(): ProfileDataConfidenceStrategy {
 		return ProfileDataConfidenceStrategy._defaultDecrease;
 	}
 
-	public static fast() {
+	public static fast(): ProfileDataConfidenceStrategy {
 		return ProfileDataConfidenceStrategy._fastDecrease;
 	}
 	//endregion

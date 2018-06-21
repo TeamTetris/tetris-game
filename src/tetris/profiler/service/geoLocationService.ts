@@ -59,7 +59,7 @@ export default class GeoLocationService extends BaseService {
 		this._errorCallback(this.name, new Error(error.message));
 	}
 
-	private _serveResults(result: GeoLocation) {
+	private _serveResults(result: GeoLocation): void {
 		this._successCallback(this.name, new Measurement<GeoLocation>(result, this.name));
 		this._postRun();
 	}
