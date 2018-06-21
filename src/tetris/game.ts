@@ -5,6 +5,7 @@ import MainScene from "tetris/scene/mainScene";
 import MenuScene from "tetris/scene/menuScene";
 import BiasEngine from "tetris/biasEngine/biasEngine"
 import Profiler from "tetris/profiler/profiler";
+import config from "tetris/config";
 import "tetris/styles/scss/styles.scss"
 
 
@@ -28,11 +29,11 @@ export class Game extends Phaser.Game {
 	public start() {
 		super.start();
 		const menuScene = new MenuScene(this.changeScene);
-		const mainScene = new MainScene(this._biasEngine);
-		this.scene.add('MenuScene', menuScene, true);
-		this._activeScene = 'MenuScene';
-		this.scene.add('MainScene', mainScene, true);
-		this.changeScene('MenuScene');
+		const mainScene = new MainScene(this._biasEngine, this.changeScene);
+		this.scene.add(config.sceneKeys.mainScene, mainScene);
+		this.scene.add(config.sceneKeys.menuScene, menuScene, true);
+		this._activeScene = config.sceneKeys.menuScene;
+		
 	}
 	
 	public step(time: number, delta: number) {
@@ -43,8 +44,8 @@ export class Game extends Phaser.Game {
 	//endregion
 
 	//region constructor
-	public constructor(config: GameConfig) {
-		super(config);
+	public constructor(gameConfig: GameConfig) {
+		super(gameConfig);
 		this._profiler = new Profiler();
 		this._biasEngine = new BiasEngine(profiler);
 	}
@@ -57,15 +58,15 @@ export class Game extends Phaser.Game {
 	//endregion
 
 	//region private methods
-	private changeScene(key: string) {
-		this.scene.pause(this._activeScene);
-		this.scene.bringToTop(key);
-		this.scene.resume(key);
+	private changeScene(scene: string) {
+		this.scene.switch(this._activeScene, scene);
+		this.scene.swapPosition(this._activeScene, scene);
+		this._activeScene = scene;
 	}	
 	//endregion
 }
 
 // when the page is loaded, create our game instance
 window.onload = () => {
-  const game = new Game(config);
+  const game = new Game(gameConfig);
 };
