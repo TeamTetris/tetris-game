@@ -1,4 +1,6 @@
 import BaseProfileData from 'tetris/profiler/baseProfileData';
+import ProfileDataUpdateStrategy from "tetris/profiler/updateStrategy/profileDataUpdateStrategy";
+import ProfileDataConfidenceStrategy from "tetris/profiler/confidenceStrategy/profileDataConfidenceStrategy";
 
 export default class ProfileData<ValueType> extends BaseProfileData {
 
@@ -7,15 +9,26 @@ export default class ProfileData<ValueType> extends BaseProfileData {
 		return this._value;
 	}
 
-	public set value(value: ValueType) {
-		this._isDefined = true;
-		this._value = value;
-		this._confidence = BaseProfileData.MAX_CONFIDENCE;
-		this._addMeasurement(value);
+	public get updateStrategy(): ProfileDataUpdateStrategy<ValueType> {
+		return this._updateStrategy;
+	}
+
+	public set updateStrategy(strategy: ProfileDataUpdateStrategy<ValueType>) {
+		this._updateStrategy = strategy;
+	}
+
+	public get valueHistory(): Map<number, ValueType> {
+		return this._valueHistory;
 	}
 	//endregion
 
 	//region public methods
+	public updateValue(serviceName: string, value: ValueType): void {
+		this._dataSources.add(serviceName);
+		this._value = this._updateStrategy.accumulate(this, value);
+		this._isDefined = true;
+		this._addMeasurement(value);
+	}
 	//endregion
 
 	//region constructor
@@ -23,12 +36,14 @@ export default class ProfileData<ValueType> extends BaseProfileData {
 		super();
 
 		this._valueHistory = new Map<number, ValueType>();
+		this._updateStrategy = new ProfileDataUpdateStrategy<ValueType>();
 	}
 	//endregion
 
 	//region private members
 	private _value: ValueType;
-	private _valueHistory: Map<number, ValueType>;
+	private readonly _valueHistory: Map<number, ValueType>;
+	private _updateStrategy: ProfileDataUpdateStrategy<ValueType>;
 	//endregion
 
 	//region private methods
