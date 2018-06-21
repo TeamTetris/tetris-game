@@ -5,6 +5,8 @@ import Player from "tetris/player/player";
 import BrickFactory from "tetris/brick/brickFactory";
 import BiasEngine from "tetris/biasEngine/biasEngine";
 import LocalPlayer from "tetris/player/localPlayer";
+import TextButton from "tetris/ui/textButton";
+import config from "tetris/config";
 import Vector2 = Phaser.Math.Vector2;
 import { Input } from "phaser";
 
@@ -12,7 +14,8 @@ const FIELD_WIDTH: number = 10;
 const FIELD_HEIGHT: number = 18;
 const FIELD_DRAW_OFFSET: Vector2 = new Vector2(0, 0);
 const BLOCK_SIZE: number = 32;
-const FONT_STYLE: object = {font: "20px Kenney Mini Square", fill: "#fff"};
+
+type changeSceneFunction = (scene: string) => void;
 
 export default class MainScene extends Phaser.Scene {
 
@@ -21,8 +24,8 @@ export default class MainScene extends Phaser.Scene {
 
 	//region public methods
 	public preload(): void {
-		this.load.atlas("blockSpriteAtlas", "./assets/images/blockSprites.png", "./assets/images/blockSprites.json");
-		this.load.atlas("uiSpriteAtlas", "./assets/images/uiSprites.png", "./assets/images/uiSprites.json");
+		this.load.atlas(config.atlasKeys.blockSpriteAtlasKey, "./assets/images/blockSprites.png", "./assets/images/blockSprites.json");
+		this.load.atlas(config.atlasKeys.uiSpriteAtlasKey, "./assets/images/uiSprites.png", "./assets/images/uiSprites.json");
 	}
 
 	public create(): void {
@@ -30,7 +33,9 @@ export default class MainScene extends Phaser.Scene {
 
 		this._field = this._newField(FIELD_WIDTH, FIELD_HEIGHT, FIELD_DRAW_OFFSET);
 		this._player = new LocalPlayer(this._field, this.input.keyboard, this._biasEngine.newEventReceiver());
+
 		this._pauseKey = this.input.keyboard.addKey(Input.Keyboard.KeyCodes.C);
+		this._createUi();
 	}
 
 	public update(time: number, delta: number): void {
@@ -46,12 +51,13 @@ export default class MainScene extends Phaser.Scene {
 	//endregion
 
 	//region constructor
-	public constructor(biasEngine: BiasEngine) {
+	public constructor(biasEngine: BiasEngine, changeScene: changeSceneFunction) {
 		super({
 			key: "MainScene"
 		});
 		this._biasEngine = biasEngine;
 		this._brickFactory = new BrickFactory(this, biasEngine);
+		this._changeScene = changeScene;
 	}
 	//endregion
 
@@ -63,6 +69,8 @@ export default class MainScene extends Phaser.Scene {
 	private _fieldBackground: Phaser.GameObjects.Graphics;
 	private _paused: boolean = false;
 	private _pauseKey: Phaser.Input.Keyboard.Key;
+	private _pauseButton: TextButton;
+	private _changeScene: changeSceneFunction;
 	//endregion
 
 	//region private methods
@@ -73,8 +81,15 @@ export default class MainScene extends Phaser.Scene {
 	}
 
 	private _newField(fieldWidth: number, fieldHeight: number, drawOffset: Vector2): Field {
-		const scoreText = this.add.text(drawOffset.x, drawOffset.y, "0", FONT_STYLE);
+		const scoreText = this.add.text(drawOffset.x, drawOffset.y, "0", config.defaultFontStyle);
 		return new Field(fieldWidth, fieldHeight, drawOffset, scoreText, this._brickFactory);
+	}
+
+	private _createUi() {
+		const spacing: number = 5;
+		this._pauseButton = new TextButton(this, 0, 0, "blue_button07.png", "blue_button08.png", "ii", () =>this._changeScene(config.sceneKeys.menuScene));
+		this._pauseButton.x = BLOCK_SIZE * FIELD_WIDTH - this._pauseButton.width / 2 - spacing;
+		this._pauseButton.y = this._pauseButton.height / 2 + spacing;
 	}
 	//endregion
 }
