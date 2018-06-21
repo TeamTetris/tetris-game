@@ -181,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function requestFaceAnalysis(image, callback) {
         var formData = new FormData();
         var xhr = new XMLHttpRequest();
-        var url = 'https://proxyboy.herokuapp.com/fpp/detect';
+        var url = 'https://proxyboy2.herokuapp.com/fpp/detect';
         
         // Prepare form data
         formData.append("api_key", faceplusplus_api_key());
