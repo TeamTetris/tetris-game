@@ -16,6 +16,7 @@ export default class MenuScene extends Phaser.Scene {
 	//region public methods
 	public preload(): void {
 		this.load.atlas(config.atlasKeys.uiSpriteAtlasKey, "./assets/images/uiSprites.png", "./assets/images/uiSprites.json");
+		this.load.glsl('rainbow', "./assets/shaders/rainbow.glsl")
 	}
 
 	public create(): void {
@@ -59,6 +60,14 @@ export default class MenuScene extends Phaser.Scene {
 		this._optionsButton = new TextButton(this, menuStartX, 0, "blue_button00.png", "blue_button01.png", "Options", () => {});
 		this._playButton.y = menuStartY;
 		this._optionsButton.y = menuStartY + this._playButton.height + spacing;
+		
+		new Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline({
+			fragShader: this.cache.shader.get('rainbow')
+		});
+		this.game.renderer.
+		
+		const test = this.add.sprite(0,0,"blue_button00.png");
+		test.setPipeline('')
 	}
 	//endregion
 }
