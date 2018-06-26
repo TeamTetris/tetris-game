@@ -15,7 +15,7 @@ import NetworkingClient from "tetris/networking/networkingClient";
 const gameConfig: GameConfig = {
 	width: config.graphics.width,
 	height: config.graphics.height,
-	type: Phaser.AUTO,
+	type: Phaser.WEBGL,
 	parent: "game",
 	"render.antialias": false,
 };
