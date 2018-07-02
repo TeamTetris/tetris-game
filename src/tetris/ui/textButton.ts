@@ -60,6 +60,7 @@ export default class TextButton {
 	private _onClick: () => any;
 	private readonly _buttonSpriteUp: string;
 	private readonly _buttonSpriteDown: string;
+	private _buttonPressed: boolean = false;
 	//endregion
 
 	//region private methods
@@ -71,26 +72,41 @@ export default class TextButton {
 		this.text.y = y - this.text.height / 2 - 4;
 	}
 
-	private _registerButtonEvents() {
-		this.button.on('pointerdown', () => {
+	private _setVisualPressedState(pressed: boolean) {
+		if (pressed == this._buttonPressed) {
+			return;
+		}
+		this._buttonPressed = pressed;
+		if (pressed) {
 			this.button.setFrame(this._buttonSpriteDown);
 			this.button.y += 4;
 			this.text.y += 4;
-		});
-
-		this.button.on('pointerup', () => {
+		} else {
 			this.button.setFrame(this._buttonSpriteUp);
 			this.button.y -= 4;
 			this.text.y -= 4;
+		}
+	}
+
+	private _registerButtonEvents() {
+		this.button.on('pointerdown', () => {
+			this._setVisualPressedState(true);
+		});
+
+		this.button.on('pointerup', () => {
+			this._setVisualPressedState(false);			
 			this._onClick();
 		});
 
 		this.button.on('pointerover', () => {
-			this.button.tint = 0xd0d0d0;
+			this.button.tint = 0xe0e0e0;
 		});
 		
 		this.button.on('pointerout', () => {
 			this.button.tint = 0xffffff;
+			if (this._buttonPressed) {
+				this._setVisualPressedState(false);
+			}
 		});
 	}
 	//endregion
