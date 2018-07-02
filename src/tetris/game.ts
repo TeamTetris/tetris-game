@@ -28,12 +28,12 @@ export class Game extends Phaser.Game {
 	//region public methods
 	public start() {
 		super.start();
-		const menuScene = new MenuScene(this.changeScene);
-		const mainScene = new MainScene(this._biasEngine, this.changeScene);
+		const menuScene = new MenuScene(this.changeScene.bind(this));
+		const mainScene = new MainScene(this._biasEngine, this.changeScene.bind(this));
+
 		this.scene.add(config.sceneKeys.mainScene, mainScene);
 		this.scene.add(config.sceneKeys.menuScene, menuScene, true);
 		this._activeScene = config.sceneKeys.menuScene;
-		
 	}
 	
 	public step(time: number, delta: number) {
