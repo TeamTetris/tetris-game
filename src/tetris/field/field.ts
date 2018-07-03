@@ -18,6 +18,13 @@ export default class Field {
 			});
 			serializedBlocks.push(serializedBlockRow);
 		});
+		if (this.activeBrick) {
+			this.activeBrick.blocks.forEach(block => {
+				if (!this.isPositionOutOfBounds(block.currentPosition, true)) {
+					serializedBlocks[block.currentPosition.y][block.currentPosition.x] = { spriteFrameName: block.spriteFrameName };
+				}
+			})
+		}
 		return serializedBlocks;
 	}
 
