@@ -15,6 +15,10 @@ export default class Block {
 		return this._positions[this._currentPositionIndex];
 	}
 
+	public get spriteFrameName(): string {
+		return this._sprite.frame.name;
+	}
+
 	public get positions(): Vector2[] {
 		return this._positions;
 	}

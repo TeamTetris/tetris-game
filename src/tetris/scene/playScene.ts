@@ -10,6 +10,7 @@ import config from "tetris/config";
 import Vector2 = Phaser.Math.Vector2;
 import { Input } from "phaser";
 import NetworkingClient from "tetris/networking/networkingClient";
+import FieldState from "tetris/field/fieldState";
 
 const FIELD_WIDTH: number = 10;
 const FIELD_HEIGHT: number = 18;
@@ -48,6 +49,11 @@ export default class PlayScene extends Phaser.Scene {
 		}
 		this._field.update(time, delta);
 		this._player.update(time, delta);
+
+		if (this._field.fieldState == FieldState.Playing && this._field.blockStateChanged) {
+			this._field.blockStateChanged = false;
+			this._networkingClient.emit("fieldUpdate", { fieldState: this._field.serializedBlockState});
+		}
 	}
 	//endregion
 

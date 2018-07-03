@@ -9,6 +9,30 @@ import FieldState from 'tetris/field/fieldState';
 export default class Field {
 
 	//region public members
+	public get serializedBlockState(): Object {
+		const serializedBlocks = [];
+		this._blockRows.forEach(blockRow => {
+			const serializedBlockRow = [];
+			blockRow.forEach(block => {
+				serializedBlockRow.push(block ? { spriteFrameName: block.spriteFrameName } : null);
+			});
+			serializedBlocks.push(serializedBlockRow);
+		});
+		return serializedBlocks;
+	}
+
+	public get blockStateChanged(): boolean {
+		return this._blockStateChanged;
+	}
+	
+	public set blockStateChanged(changed: boolean) {
+		this._blockStateChanged = changed;
+	}
+
+	public get fieldState(): FieldState {
+		return this._fieldState;
+	}
+
 	public get activeBrick(): Brick {
 		return this._activeBrick;
 	}
@@ -38,12 +62,20 @@ export default class Field {
 
 		if (!this.activeBrick) {
 			this._generateNewBrick(time);
+			this._blockStateChanged = true;
 		} else {
 			if (this._nextActiveBrickDrop <= time) {
 				this._nextActiveBrickDrop = time + this._activeBrickDropInterval;
 				this.activeBrick.dropOne();
+				this._blockStateChanged = true;
 			}
+
 			this.activeBrick.update(time, delta);
+			
+			if (this.activeBrick.stateChanged) {
+				this.activeBrick.stateChanged = false;
+				this._blockStateChanged = true;				
+			}
 		}
 		if (this.activeBrick.isStuck()) {
 			this._addToField(this.activeBrick.blocks);
@@ -54,6 +86,7 @@ export default class Field {
 			if (deletedRows > 0) {
 				this._increaseScore(deletedRows);
 			}
+			this._blockStateChanged = true;
 		}
 
 		this.preDraw();
@@ -118,6 +151,7 @@ export default class Field {
 	// contains only stuck bricks
 	private readonly _bricks: Brick[];
 	private readonly _blockRows: Block[][];
+	private _blockStateChanged = false;
 	//endregion
 
 	//region private methods
@@ -177,7 +211,7 @@ export default class Field {
 			block.move(new Vector2(0, 1));
 			this._blockRows[rowIndex + 1][blockIndex] = block;
 			this._blockRows[rowIndex][blockIndex] = null;
-		})
+		});
 	}
 
 	private _increaseScore(deletedRows: number): void {
