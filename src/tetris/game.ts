@@ -12,12 +12,12 @@ import NetworkingClient from "tetris/networking/networkingClient";
 
 
 // main game configuration
-const config: GameConfig = {
-  width: 320,
-  height: 576,
-  type: Phaser.AUTO,
-  parent: "game",
-  "render.antialias": false,
+const gameConfig: GameConfig = {
+	width: config.graphics.width,
+	height: config.graphics.height,
+	type: Phaser.AUTO,
+	parent: "game",
+	"render.antialias": false,
 };
 
 

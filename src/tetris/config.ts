@@ -10,6 +10,15 @@ const config = {
     ui: {
         spacing: 20,
     },
+    field: {
+        width: 10,
+        height: 18,
+        blockSize: 32,
+    },
+    graphics: {
+        width: 800,
+        height: 720
+    },
     defaultFontStyle: {font: "20px Kenney Mini Square", fill: "#fff"},
 }
 

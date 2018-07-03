@@ -6,6 +6,7 @@ import Brick from "tetris/brick/brick";
 import BiasEngine from "tetris/biasEngine/biasEngine";
 import Field from "tetris/field/field";
 import BrickChances from "tetris/brick/brickChances";
+import config from "tetris/config";
 
 interface BrickCreationFunction {
 	(blockAssetId: string, position: Vector2, field: Field): Brick;
@@ -91,8 +92,7 @@ export default class BrickFactory {
 
 
 	private _createSprite(blockAssetId: string): Phaser.GameObjects.Sprite {
-		// TODO: move the constant string somewhere else
-		return this._scene.add.sprite(0, 0, "blockSpriteAtlas", blockAssetId);
+		return this._scene.add.sprite(0, 0, config.atlasKeys.blockSpriteAtlasKey, blockAssetId);
 	}
 
 	private _newI(blockAssetId: string, position: Vector2, field: Field): Brick {

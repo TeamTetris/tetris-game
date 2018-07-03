@@ -121,13 +121,11 @@ export default class Field {
 	public constructor(width: number,
 					   height: number,
 					   drawOffset: Vector2,
-					   scoreText: Phaser.GameObjects.Text,
 					   brickFactory: BrickFactory) {
 		this._width = width;
 		this._height = height;
 		this._drawOffset = drawOffset;
 		this._bricks = [];
-		this._scoreText = scoreText;
 		this._brickFactory = brickFactory;
 		this._blockRows = new Array(this._height);
 		this._setupField();
@@ -139,7 +137,6 @@ export default class Field {
 	private readonly _width: integer;
 	private readonly _height: integer;
 	private readonly _drawOffset: Vector2;
-	private readonly _scoreText: Phaser.GameObjects.Text;
 	private readonly _brickFactory: BrickFactory;
 
 	private _nextActiveBrickDrop: number;
@@ -216,7 +213,6 @@ export default class Field {
 
 	private _increaseScore(deletedRows: number): void {
 		this._score += deletedRows * 100;
-		this._scoreText.setText(this._score.toString());
 	}
 	//endregion
 }

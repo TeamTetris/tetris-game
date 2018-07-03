@@ -4,6 +4,7 @@
 import "phaser";
 import Vector2 = Phaser.Math.Vector2;
 import Brick from "tetris/brick/brick";
+import config from "tetris/config";
 
 export default class Block {
 	//region public members
@@ -23,8 +24,16 @@ export default class Block {
 		return this._positions;
 	}
 
+	public get sprite(): Phaser.GameObjects.Sprite {
+		return this._sprite;
+	}
+	//endregion
+
+	//region public methods
 	public destroy(): void {
-		this._brick.blocks.splice(this._brick.blocks.indexOf(this), 1);
+		if (this._brick) {
+			this._brick.blocks.splice(this._brick.blocks.indexOf(this), 1);
+		}
 		this._sprite.setVisible(false);
 		this._sprite.destroy();
 	}
@@ -37,18 +46,24 @@ export default class Block {
 		this._positions.forEach(p => p.add(movement));
 		return this.currentPosition;
 	}
-	//endregion
-
-	//region public methods
+	
 	public update(): void {
+		
 	}
 	
 	public preDraw(fieldDrawOffset: Vector2): void {
+		// only display blocks that are below the field ceiling
+		if (this.currentPosition.y < 0) {
+			this._sprite.setVisible(false);
+		} else {
+			this._sprite.setVisible(true);
+		}
+
 		// convert from blocks to pixels
-		let pixelPosition = this.currentPosition.clone().scale(this._sprite.frame.cutHeight);
+		let pixelPosition = this.currentPosition.clone().scale(config.field.blockSize);
 
 		// get center position
-		const blockCenter = new Vector2(this._sprite.frame.cutWidth, this._sprite.frame.cutHeight).scale(0.5);
+		const blockCenter = new Vector2(config.field.blockSize, config.field.blockSize).scale(0.5);
 		pixelPosition.add(blockCenter);
 
 		// move to field position
