@@ -51,6 +51,8 @@ export default class PlayScene extends Phaser.Scene {
 		this._localPlayerField.update(time, delta);
 		this._player.update(time, delta);
 
+		this._scoreText.setText(this._localPlayerField.score.toString());
+
 		if (this._localPlayerField.fieldState == FieldState.Playing && this._localPlayerField.blockStateChanged) {
 			this._localPlayerField.blockStateChanged = false;
 			this._networkingClient.emit("fieldUpdate", { fieldState: this._localPlayerField.serializedBlockState});
@@ -99,10 +101,9 @@ export default class PlayScene extends Phaser.Scene {
 	private _createUi() {
 		const spacing: number = 5;
 		this._pauseButton = new TextButton(this, 0, 0, "blue_button07.png", "blue_button08.png", "ii", () => this._changeScene(config.sceneKeys.menuScene));
-		this._pauseButton.x =  config.field.blockSize * config.field.width - this._pauseButton.width / 2 - spacing;
+		this._pauseButton.x =  config.graphics.width - this._pauseButton.width / 2 - spacing;
 		this._pauseButton.y = this._pauseButton.height / 2 + spacing;
-
-		this._scoreText = this.add.text(0, 0, "0", config.defaultFontStyle);
+		this._scoreText = this.add.text(PLAYER_FIELD_DRAW_OFFSET.x, PLAYER_FIELD_DRAW_OFFSET.y, "0", config.defaultLargeFontStyle);
 	}
 	//endregion
 }

@@ -59,6 +59,10 @@ export default class Field {
 	public get height(): number {
 		return this._height;
 	}
+
+	public get score(): number {
+		return this._score;
+	}
 	//endregion
 
 	//region public methods

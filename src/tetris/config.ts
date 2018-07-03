@@ -19,7 +19,8 @@ const config = {
         width: 800,
         height: 720
     },
-    defaultFontStyle: {font: "20px Kenney Mini Square", fill: "#fff"},
+    defaultSmallFontStyle: {font: "20px Kenney Mini Square", fill: "#fff"},
+    defaultLargeFontStyle: {font: "40px Kenney Mini Square", fill: "#fff"},
 }
 
 export default config;
