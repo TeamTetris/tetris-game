@@ -16,7 +16,7 @@ const config = {
         blockSize: 32,
     },
     graphics: {
-        width: 800,
+        width: 1200,
         height: 720
     },
     defaultSmallFontStyle: {font: "20px Kenney Mini Square", fill: "#fff"},

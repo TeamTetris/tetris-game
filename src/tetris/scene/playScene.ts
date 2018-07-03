@@ -28,7 +28,8 @@ export default class PlayScene extends Phaser.Scene {
 	}
 
 	public create(): void {
-		this._createFieldBackground();
+		this._createFieldBackground(PLAYER_FIELD_DRAW_OFFSET);
+		this._createFieldBackground(new Vector2(420, 80));
 
 		this._localPlayerField = this._newField(config.field.width, config.field.height, PLAYER_FIELD_DRAW_OFFSET);
 		this._remotePlayerField = new RemoteField(this, config.field.width, config.field.height, new Vector2(420, 80));
@@ -88,10 +89,10 @@ export default class PlayScene extends Phaser.Scene {
 	//endregion
 
 	//region private methods
-	private _createFieldBackground(): void {
+	private _createFieldBackground(offset: Vector2): void {
 		this._fieldBackground = this.add.graphics();
 		this._fieldBackground.fillStyle(0x002d4f);
-		this._fieldBackground.fillRect(PLAYER_FIELD_DRAW_OFFSET.x, PLAYER_FIELD_DRAW_OFFSET.y, config.field.blockSize * config.field.width, config.field.blockSize * config.field.height);
+		this._fieldBackground.fillRect(offset.x, offset.y, config.field.blockSize * config.field.width, config.field.blockSize * config.field.height);
 	}
 
 	private _newField(fieldWidth: number, fieldHeight: number, drawOffset: Vector2): Field {

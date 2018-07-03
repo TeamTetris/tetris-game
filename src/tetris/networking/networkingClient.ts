@@ -19,10 +19,7 @@ export default class NetworkingClient {
 
   //region constructor
   public constructor() {
-    console.log('starting socket');
     this._socket = socketIO('http://localhost:8081');
-    //this.receive("fieldUpdate", (args) => { console.log ("field update", args); })
-    //setInterval(() => this._socket.emit("fieldUpdate", { fieldId: id, fieldState: "" }), 5000);
   }
 	//endregion
 
