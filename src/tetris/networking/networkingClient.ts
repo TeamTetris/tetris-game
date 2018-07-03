@@ -15,11 +15,15 @@ export default class NetworkingClient {
   public receive(event: string, callback: Function) {
     this._socket.on(event, callback);
   }
+
+  public connect() {
+    this._socket.connect();
+  }
 	//endregion
 
   //region constructor
   public constructor() {
-    this._socket = socketIO('http://localhost:8081');
+    this._socket = socketIO('http://localhost:8081', { autoConnect: false });
   }
 	//endregion
 

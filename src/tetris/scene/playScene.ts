@@ -28,14 +28,27 @@ export default class PlayScene extends Phaser.Scene {
 	}
 
 	public create(): void {
-		this._createFieldBackground(PLAYER_FIELD_DRAW_OFFSET);
-		this._createFieldBackground(new Vector2(420, 80));
+		this._playerFieldBackground = this._createFieldBackground(PLAYER_FIELD_DRAW_OFFSET);
 
 		this._localPlayerField = this._newField(config.field.width, config.field.height, PLAYER_FIELD_DRAW_OFFSET);
-		this._remotePlayerField = new RemoteField(this, config.field.width, config.field.height, new Vector2(420, 80));
 		this._player = new LocalPlayer(this._localPlayerField, this.input.keyboard, this._biasEngine.newEventReceiver());
 		
-		this._networkingClient.receive("fieldUpdate", (args) => this._remotePlayerField.updateSprites(args.fieldState));
+		this._networkingClient.receive("playerLeft", (args) => {
+			this._removeRemoteField(args.id);
+		});
+		this._networkingClient.receive("playerJoined", (args) => {
+			this._addRemoteField(args.id);
+		});
+		this._networkingClient.receive("fieldUpdate", (args) => {
+			const field = this._remotePlayerFields.get(args.id);
+			if (!field) {
+				this._addRemoteField(args.id);
+			}
+			field.updateSprites(args.fieldState);
+		});
+		this._networkingClient.connect();
+
+		this._remotePlayerFields = new Map<string, RemoteField>();
 
 		this._createUi();
 		this._pauseKey = this.input.keyboard.addKey(Input.Keyboard.KeyCodes.C);
@@ -79,20 +92,33 @@ export default class PlayScene extends Phaser.Scene {
 	private readonly _brickFactory: BrickFactory;
 	private _player: Player;
 	private _localPlayerField: Field;
-	private _remotePlayerField: RemoteField;
-	private _fieldBackground: Phaser.GameObjects.Graphics;
 	private _paused: boolean = false;
 	private _pauseKey: Phaser.Input.Keyboard.Key;
+	private _remotePlayerFields: Map<string, RemoteField>;
+	private _remotePlayerFieldIndex = 0;
+	private _playerFieldBackground: Phaser.GameObjects.Graphics;
 	private _pauseButton: TextButton;
 	private _changeScene: changeSceneFunction;
 	private _networkingClient: NetworkingClient;
 	//endregion
 
 	//region private methods
-	private _createFieldBackground(offset: Vector2): void {
-		this._fieldBackground = this.add.graphics();
-		this._fieldBackground.fillStyle(0x002d4f);
-		this._fieldBackground.fillRect(offset.x, offset.y, config.field.blockSize * config.field.width, config.field.blockSize * config.field.height);
+	private _addRemoteField(index: string) {
+		const position = new Vector2(420 + (this._remotePlayerFieldIndex % 4) * 180, 80 + Math.floor(this._remotePlayerFieldIndex / 4) * 300);
+		this._remotePlayerFieldIndex++;
+		this._remotePlayerFields.set(index, new RemoteField(this, config.field.width, config.field.height, position, this._createFieldBackground(position, 0.5), 0.5));
+	}
+
+	private _removeRemoteField(index: string) {
+		this._remotePlayerFields.get(index).destroy();
+		this._remotePlayerFields.delete(index);
+	}
+
+	private _createFieldBackground(offset: Vector2, drawScale: number = 1): Phaser.GameObjects.Graphics {
+		const fieldBackground = this.add.graphics();
+		fieldBackground.fillStyle(0x002d4f);
+		fieldBackground.fillRect(offset.x, offset.y, config.field.blockSize * config.field.width * drawScale, config.field.blockSize * config.field.height * drawScale);
+		return fieldBackground;
 	}
 
 	private _newField(fieldWidth: number, fieldHeight: number, drawOffset: Vector2): Field {

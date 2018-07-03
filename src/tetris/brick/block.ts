@@ -48,10 +48,10 @@ export default class Block {
 	}
 	
 	public update(): void {
-		
+
 	}
 	
-	public preDraw(fieldDrawOffset: Vector2): void {
+	public preDraw(fieldDrawOffset: Vector2, drawScale: number = 1): void {
 		// only display blocks that are below the field ceiling
 		if (this.currentPosition.y < 0) {
 			this._sprite.setVisible(false);
@@ -59,11 +59,15 @@ export default class Block {
 			this._sprite.setVisible(true);
 		}
 
+		if (drawScale != 1) {
+			this.sprite.setScale(drawScale, drawScale);
+		}
+
 		// convert from blocks to pixels
-		let pixelPosition = this.currentPosition.clone().scale(config.field.blockSize);
+		let pixelPosition = this.currentPosition.clone().scale(config.field.blockSize * drawScale);
 
 		// get center position
-		const blockCenter = new Vector2(config.field.blockSize, config.field.blockSize).scale(0.5);
+		const blockCenter = new Vector2(config.field.blockSize, config.field.blockSize).scale(0.5 * drawScale);
 		pixelPosition.add(blockCenter);
 
 		// move to field position
