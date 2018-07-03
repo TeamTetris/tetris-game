@@ -65,7 +65,7 @@ export default class Brick {
 	}
 
 	public checkIfStuck(): boolean {
-		this._tryToMove(new Vector2(0, 0), true);
+		this._tryToMove(new Vector2(0, 1), true);
 		return this.isStuck();
 	}
 
