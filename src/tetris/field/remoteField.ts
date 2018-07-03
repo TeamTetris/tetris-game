@@ -57,8 +57,8 @@ export default class RemoteField {
 			for(let x = 0; x < this._width; x++) {
 				const sprite = this._scene.add.sprite(0, 0, config.atlasKeys.blockSpriteAtlasKey, "");
 				this._blockRows[y][x] = new Block(sprite, [ new Vector2(x, y) ], null);
-				this._blockRows[y][x].sprite.setVisible(false);
 				this._blockRows[y][x].preDraw(this._drawOffset);
+				this._blockRows[y][x].sprite.setVisible(false);
 			}
 		}
 	}
