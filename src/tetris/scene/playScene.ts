@@ -9,6 +9,7 @@ import TextButton from "tetris/ui/textButton";
 import config from "tetris/config";
 import Vector2 = Phaser.Math.Vector2;
 import { Input } from "phaser";
+import NetworkingClient from "tetris/networking/networkingClient";
 
 const FIELD_WIDTH: number = 10;
 const FIELD_HEIGHT: number = 18;
@@ -17,7 +18,7 @@ const BLOCK_SIZE: number = 32;
 
 type changeSceneFunction = (scene: string) => void;
 
-export default class MainScene extends Phaser.Scene {
+export default class PlayScene extends Phaser.Scene {
 
 	//region public members
 	//endregion
@@ -51,13 +52,14 @@ export default class MainScene extends Phaser.Scene {
 	//endregion
 
 	//region constructor
-	public constructor(biasEngine: BiasEngine, changeScene: changeSceneFunction) {
+	public constructor(biasEngine: BiasEngine, changeScene: changeSceneFunction, networkingClient: NetworkingClient) {
 		super({
-			key: "MainScene"
+			key: "PlayScene"
 		});
 		this._biasEngine = biasEngine;
 		this._brickFactory = new BrickFactory(this, biasEngine);
 		this._changeScene = changeScene;
+		this._networkingClient = networkingClient;
 	}
 	//endregion
 
@@ -71,6 +73,7 @@ export default class MainScene extends Phaser.Scene {
 	private _pauseKey: Phaser.Input.Keyboard.Key;
 	private _pauseButton: TextButton;
 	private _changeScene: changeSceneFunction;
+	private _networkingClient: NetworkingClient;
 	//endregion
 
 	//region private methods
@@ -87,7 +90,7 @@ export default class MainScene extends Phaser.Scene {
 
 	private _createUi() {
 		const spacing: number = 5;
-		this._pauseButton = new TextButton(this, 0, 0, "blue_button07.png", "blue_button08.png", "ii", () =>this._changeScene(config.sceneKeys.menuScene));
+		this._pauseButton = new TextButton(this, 0, 0, "blue_button07.png", "blue_button08.png", "ii", () => this._changeScene(config.sceneKeys.menuScene));
 		this._pauseButton.x = BLOCK_SIZE * FIELD_WIDTH - this._pauseButton.width / 2 - spacing;
 		this._pauseButton.y = this._pauseButton.height / 2 + spacing;
 	}

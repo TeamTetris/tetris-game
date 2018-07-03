@@ -1,12 +1,14 @@
 /// <reference path="../../definitions/phaser.d.ts"/>
 
 import "phaser";
-import MainScene from "tetris/scene/mainScene";
+import PlayScene from "tetris/scene/playScene";
 import MenuScene from "tetris/scene/menuScene";
 import BiasEngine from "tetris/biasEngine/biasEngine"
 import Profiler from "tetris/profiler/profiler";
 import config from "tetris/config";
-import "tetris/styles/scss/styles.scss"
+import "tetris/styles/scss/styles.scss";
+import NetworkingClient from "tetris/networking/networkingClient";
+
 
 
 // main game configuration
@@ -29,9 +31,9 @@ export class Game extends Phaser.Game {
 	public start() {
 		super.start();
 		const menuScene = new MenuScene(this.changeScene.bind(this));
-		const mainScene = new MainScene(this._biasEngine, this.changeScene.bind(this));
+		const playScene = new PlayScene(this._biasEngine, this.changeScene.bind(this));
 
-		this.scene.add(config.sceneKeys.mainScene, mainScene);
+		this.scene.add(config.sceneKeys.playScene, playScene);
 		this.scene.add(config.sceneKeys.menuScene, menuScene, true);
 		this._activeScene = config.sceneKeys.menuScene;
 	}
@@ -48,12 +50,14 @@ export class Game extends Phaser.Game {
 		super(gameConfig);
 		this._profiler = new Profiler();
 		this._biasEngine = new BiasEngine(profiler);
+		this._networkingClient = new NetworkingClient(); 
 	}
 	//endregion
 
 	//region private members
 	private readonly _biasEngine;
 	private readonly _profiler;
+	private readonly _networkingClient;
 	private _activeScene;
 	//endregion
 

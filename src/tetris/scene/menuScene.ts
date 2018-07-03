@@ -58,7 +58,7 @@ export default class MenuScene extends Phaser.Scene {
 		const menuStartX: number = BLOCK_SIZE * FIELD_WIDTH / 2;
 		const menuStartY: number = BLOCK_SIZE * FIELD_HEIGHT / 3;
 		const spacing: number = 20
-		this._playButton = new TextButton(this, menuStartX, 0, "blue_button00.png", "blue_button01.png", "Start Game", () => this._changeScene(config.sceneKeys.mainScene));
+		this._playButton = new TextButton(this, menuStartX, 0, "blue_button00.png", "blue_button01.png", "Start Game", () => this._changeScene(config.sceneKeys.playScene));
 		this._optionsButton = new TextButton(this, menuStartX, 0, "blue_button00.png", "blue_button01.png", "Options", () => {});
 		this._playButton.y = menuStartY;
 		this._optionsButton.y = menuStartY + this._playButton.height + spacing;

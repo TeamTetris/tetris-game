@@ -1,6 +1,6 @@
 const config = {
     sceneKeys: {
-        mainScene: 'MainScene',
+        playScene: 'PlayScene',
         menuScene: 'MenuScene',
     },
     atlasKeys: {
