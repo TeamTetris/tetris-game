@@ -25,7 +25,7 @@ export default class MenuScene extends Phaser.Scene {
 	}
 
 	public update(time: number, delta: number): void {
-		this._pipeline.setFloat1('uTime', time / 200);
+		this._pipeline.setFloat1('uTime', time / 800);
 	}
 	//endregion
 
@@ -50,7 +50,7 @@ export default class MenuScene extends Phaser.Scene {
 
 	//region private methods
 	private _createBackground(): void {
-		this._background = this.add.sprite(400, 600, config.atlasKeys.uiSpriteAtlasKey, 'blue_button00.png');
+		const backgroundGraphics = this.add.graphics();
 		this._pipeline = new Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline({
 			game: this._game,
 			renderer: this._game.renderer, 
@@ -60,8 +60,11 @@ export default class MenuScene extends Phaser.Scene {
 
 		this._pipeline.setFloat2('uResolution', config.graphics.width, config.graphics.height);
 
-		//this._background.fillStyle(0x00ffff);
-		//this._background.fillRect(0, 0, config.graphics.width, config.graphics.height);
+		backgroundGraphics.fillStyle(0xffffff);
+		backgroundGraphics.fillRect(0, 0, config.graphics.width, config.graphics.height);
+		backgroundGraphics.generateTexture('backgroundGraphics');
+		this._background = this.add.sprite(config.graphics.width / 2, config.graphics.height / 2, 'backgroundGraphics');
+
 		this._background.setPipeline('rainbow');
 	}
 
