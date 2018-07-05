@@ -2,13 +2,15 @@
 precision mediump float;
 #endif
 
-uniform float u_time;
-uniform vec2 u_mouse;
-uniform vec2 u_resolution;
+uniform sampler2D uMainSampler;
+uniform vec2 uResolution;
+uniform float uTime;
+
+varying vec2 outTexCoord;
 
 void main()
 {
-    vec2 uv = gl_FragCoord.xy / u_resolution.xy;
-    vec3 col = 0.5 + 0.5 * cos(u_time + uv.xyx + vec3(0, 2, 4));
-    gl_FragColor = vec4(col, 1.0);
+    vec2 uv = gl_FragCoord.xy / uResolution.xy;
+    vec3 col = 0.5 + 0.5 * cos(uTime + uv.xyx + vec3(0, 2, 4));
+    gl_FragColor = vec4(col, 1.0) * texture2D(uMainSampler, outTexCoord);
 }

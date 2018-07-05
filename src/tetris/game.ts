@@ -30,7 +30,7 @@ export class Game extends Phaser.Game {
 	//region public methods
 	public start() {
 		super.start();
-		const menuScene = new MenuScene(this.changeScene.bind(this));
+		const menuScene = new MenuScene(this, this.changeScene.bind(this));
 		const playScene = new PlayScene(this._biasEngine, this.changeScene.bind(this), this._networkingClient);
 
 		this.scene.add(config.sceneKeys.playScene, playScene);

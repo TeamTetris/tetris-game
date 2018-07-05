@@ -25,31 +25,44 @@ export default class MenuScene extends Phaser.Scene {
 	}
 
 	public update(time: number, delta: number): void {
-		
+		this._pipeline.setFloat1('uTime', time / 200);
 	}
 	//endregion
 
 	//region constructor
-	public constructor(changeScene: changeSceneFunction) {
+	public constructor(game: Phaser.Game, changeScene: changeSceneFunction) {
 		super({
 			key: "MenuScene"
 		});
+		this._game = game;
 		this._changeScene = changeScene;
 	}
 	//endregion
 
 	//region private members
-	private _background: Phaser.GameObjects.Graphics;
+	private _background: Phaser.GameObjects.Sprite;
 	private _playButton: TextButton;
 	private _optionsButton: TextButton;
 	private _changeScene: changeSceneFunction;
+	private _game: Phaser.Game;
+	private _pipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
 	//endregion
 
 	//region private methods
 	private _createBackground(): void {
-		this._background = this.add.graphics();
-		this._background.fillStyle(0x00ffff);
-		this._background.fillRect(0, 0, config.graphics.width, config.graphics.height);
+		this._background = this.add.sprite(400, 600, config.atlasKeys.uiSpriteAtlasKey, 'blue_button00.png');
+		this._pipeline = new Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline({
+			game: this._game,
+			renderer: this._game.renderer, 
+			fragShader: this.cache.shader.get('rainbow') 
+		});
+		(this._game.renderer as Phaser.Renderer.WebGL.WebGLRenderer).addPipeline('rainbow', this._pipeline);
+
+		this._pipeline.setFloat2('uResolution', config.graphics.width, config.graphics.height);
+
+		//this._background.fillStyle(0x00ffff);
+		//this._background.fillRect(0, 0, config.graphics.width, config.graphics.height);
+		this._background.setPipeline('rainbow');
 	}
 
 	private _createButtons(): void {
@@ -60,14 +73,6 @@ export default class MenuScene extends Phaser.Scene {
 		this._optionsButton = new TextButton(this, menuStartX, 0, "blue_button00.png", "blue_button01.png", "Options", () => {});
 		this._playButton.y = menuStartY;
 		this._optionsButton.y = menuStartY + this._playButton.height + spacing;
-		
-		new Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline({
-			fragShader: this.cache.shader.get('rainbow')
-		});
-		this.game.renderer.
-		
-		const test = this.add.sprite(0,0,"blue_button00.png");
-		test.setPipeline('')
 	}
 	//endregion
 }
