@@ -91,7 +91,7 @@ export default class Profiler {
 		});
 	}
 
-	private _requestWebcam() {
+	private _requestWebcam(): void {
 		CameraController.instance.startVideoStream();
 		Dialog.display('camera-modal', 'Take a photo')
 			.addAcceptButton('camera-modal-accept-button')

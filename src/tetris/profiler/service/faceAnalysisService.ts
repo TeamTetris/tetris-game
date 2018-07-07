@@ -59,7 +59,7 @@ export default class FaceAnalysisService extends BaseService {
 	//endregion
 
 	//region protected methods
-	protected _run(successCallback: (senderName: string, measurement: Measurement<Object>) => void) {
+	protected _run(successCallback: (senderName: string, measurement: Measurement<Object>) => void): void {
 		this._successCallback = successCallback;
 		if (CameraController.instance.permissionState !== HardwarePermission.granted) {
 			this._errorCallback(this.name, new Error('Can not access camera'));

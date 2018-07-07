@@ -27,7 +27,7 @@ export default class BrickBias {
 	//endregion
 
 	//region constructor
-	public static newFromTierList(field: Field, biasValue: number) {
+	public static newFromTierList(field: Field, biasValue: number): BrickBias {
 		const brickBias = BrickBias.newDefault(field);
 		brickBias.chances = BrickChances.newNoChances();
 		
