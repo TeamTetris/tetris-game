@@ -49,6 +49,7 @@ export default class GeoLocationService extends BaseService {
 		this._googleMapsAPI.reverseGeocode(reverseGeocodeParams, (error: Error, result: object) => {
 			if(!result) {
 				this._errorCallback(this.name, error);
+				this._postRun();
 				return;
 			}
 			this._receiveLocation(result);
@@ -57,6 +58,7 @@ export default class GeoLocationService extends BaseService {
 
 	private _handleCoordinatesError(error: PositionError): void {
 		this._errorCallback(this.name, new Error(error.message));
+		this._postRun();
 	}
 
 	private _serveResults(result: GeoLocation): void {
@@ -95,6 +97,7 @@ export default class GeoLocationService extends BaseService {
 			})
 			.catch((error) => {
 				this._errorCallback(this.name, error);
+				this._postRun();
 			});
 	}
 	//endregion
