@@ -6,6 +6,11 @@ import NumberDataUpdateStrategy from "tetris/profiler/updateStrategy/numberDataU
 const LOCATION_KEY = "location";
 const AGE_KEY = "age";
 const ETHNICITY_KEY = "ethnicity";
+const GENDER_KEY = "gender";
+const BEAUTY_KEY = "beauty";
+const SKIN_ACNE_KEY = "skin_acne";
+const SKIN_HEALTH_KEY = "skin_health";
+const GLASSES_KEY = "glasses";
 
 export default class Profile {
 
@@ -20,6 +25,26 @@ export default class Profile {
 	
 	public get ethnicity(): ProfileData<string> {
 		return this._getProperty(ETHNICITY_KEY) as ProfileData<string>;
+	}
+
+	public get gender(): ProfileData<string> {
+		return this._getProperty(GENDER_KEY) as ProfileData<string>;
+	}
+
+	public get beauty(): ProfileData<number> {
+		return this._getProperty(BEAUTY_KEY) as ProfileData<number>;
+	}
+
+	public get skinAcne(): ProfileData<number> {
+		return this._getProperty(SKIN_ACNE_KEY) as ProfileData<number>;
+	}
+
+	public get skinHealth(): ProfileData<number> {
+		return this._getProperty(SKIN_HEALTH_KEY) as ProfileData<number>;
+	}
+
+	public get glasses(): ProfileData<boolean> {
+		return this._getProperty(GLASSES_KEY) as ProfileData<boolean>;
 	}
 	//endregion
 
