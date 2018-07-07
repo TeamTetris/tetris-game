@@ -9,10 +9,6 @@
   <link rel="stylesheet" type="text/css" href="assets/css/camera.css"> 
   <link rel="stylesheet" type="text/css" href="assets/css/main.css">
   <link rel="stylesheet" type="text/css" href="assets/css/fontLoader.css">
-  <script src="assets/js/modal.js"></script>
-  <script src="assets/js/camera.js"></script>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <script src="build/bundle.js"></script>
 </head>
 
 <body>
@@ -22,23 +18,19 @@
       .
     </div>
   </div>
-  <button id="myBtn">Open Camera</button>
 
-  <div id="myModal" class="modal">
+  <div id="camera-modal" class="modal">
     <!-- Modal content -->
     <div class="modal-content">
       <div class="modal-header">
         <span class="close">&times;</span>
-        <h2>Take A Selfie</h2>
+        <h2 id="modal-title"></h2>
       </div>
       <div class="modal-body">
         <div class="camera-container">
-          <input id="camera-stream-wo-js" type="file" accept="image/*" capture="camera">
           <div id="camera-stream-with-js" class="app">
-            <a href="#" id="start-camera" class="visible">Touch here to start the app.</a>
             <video id="camera-stream"></video>
-            <img id="snap">
-            <p id="error-message"></p>
+            <img id="snap" src="" />
             <div class="controls">
               <a href="#" id="delete-photo" title="Delete Photo" class="disabled">
                 <i class="material-icons">delete</i>
@@ -46,14 +38,12 @@
               <a href="#" id="take-photo" title="Take Photo">
                 <i class="material-icons">camera_alt</i>
               </a>
-              <a href="#" id="download-photo" download="selfie.png" title="Save Photo" class="disabled">
-                <i class="material-icons">file_download</i>
-              </a>
             </div>
             <!-- Hidden canvas element. Used for taking snapshot of video. -->
-            <canvas id="hidden-canvas"></canvas>
+            <canvas id="hidden-camera-canvas"></canvas>
           </div>
         </div>
+          <button id="camera-modal-accept-button" class="dialog-accept-button">Accept</button>
       </div>
       <!--<div class="modal-footer">
         <h3>Modal Footer</h3>
@@ -62,5 +52,6 @@
   </div>
 
 </body>
-
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script src="build/bundle.js"></script>
 </html>
