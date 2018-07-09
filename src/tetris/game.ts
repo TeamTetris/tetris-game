@@ -8,7 +8,6 @@ import Profiler from "tetris/profiler/profiler";
 
 const profiler = new Profiler();
 const biasEngine = new BiasEngine(profiler);
-const mainScene = new MainScene(biasEngine);
 
 // main game configuration
 const config: GameConfig = {
@@ -16,7 +15,7 @@ const config: GameConfig = {
   height: 576,
   type: Phaser.AUTO,
   parent: "game",
-  scene: mainScene,
+  scene: new MainScene(biasEngine),
   "render.antialias": false,
 };
 
