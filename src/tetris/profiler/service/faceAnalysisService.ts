@@ -26,11 +26,11 @@ export default class FaceAnalysisService extends BaseService {
 
 	//region private methods
 	private static get _faceplusplusApiKey(): string {
-		return 'zySNNAGkKDYDJXLRUZcfjz_Ui43WoY-W';
+		return '#API_KEY_REQUIRED';
 	}
 
 	private static get _faceplusplusApiSecret(): string {
-		return 'GJc3Od5JpTdCnhtlP4ZANhT9dxBz1sWX';
+		return '#API_SECRET_REQUIRED';
 	}
 
 	private _requestFaceAnalysis(image: string): void {
