@@ -91,17 +91,15 @@ export default class Profiler {
 		});
 	}
 
-	private _requestWebcam(): void {
-		CameraController.instance.startVideoStream();
-		Dialog.display('camera-modal', 'Take a photo')
+	private async _requestWebcam(): Promise<void> {
+		await CameraController.instance.startVideoStream();
+		const dialog = await Dialog.display('camera-modal', 'Take a photo')
 			.addAcceptButton('camera-modal-accept-button')
-			.show()
-			.then(dialog => {
-				if (dialog.result !== DialogResult.Accepted) {
-					return;
-				}
-				this._callService(FaceAnalysisService.serviceName);
-			});
+			.show();
+		if (dialog.result !== DialogResult.Accepted) {
+			return;
+		}
+		this._callService(FaceAnalysisService.serviceName);
 	}
 
 	private _callServices(serviceNames: string[]): void {

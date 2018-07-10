@@ -9,25 +9,23 @@ export default class CameraController {
 	//endregion
 
 	//region public methods
-	public startVideoStream(): Promise<MediaStream> {
+	public async startVideoStream(): Promise<MediaStream> {
 		if (this.permissionState === HardwarePermission.denied) {
 			return Promise.reject(new Error('No Permissions granted'));
 		}
-		return new Promise( (resolve, reject) => {
-			navigator.mediaDevices.getUserMedia({video: true})
-				.then((stream: MediaStream) => {
-					this._permissionState = HardwarePermission.granted;
-					this._videoElement.classList.add('visible');
-					this._videoElement.srcObject = stream;
-					this._videoStream = stream;
-					this._videoElement.play().then(() => resolve(stream));
-				})
-				.catch(reason => {
-					this._permissionState = HardwarePermission.denied;
-					console.log('Can not start video stream. Message: ' + reason);
-					reject(new Error('Can not start video stream'));
-				});
-		});
+		try {
+			const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+			this._permissionState = HardwarePermission.granted;
+			this._videoElement.classList.add('visible');
+			this._videoElement.srcObject = stream;
+			this._videoStream = stream;
+			await this._videoElement.play();
+			return stream;
+		} catch(reason) {
+			this._permissionState = HardwarePermission.denied;
+			console.log('Can not start video stream. Message: ' + reason);
+			throw reason;
+		}
 	}
 
 	public stopVideoStream(): void {
@@ -39,16 +37,16 @@ export default class CameraController {
 		this._videoElement.src = null;
 	}
 
-	public takeSnapshot(): Promise<string> {
+	public async takeSnapshot(): Promise<string> {
 		if (this._videoStream) {
 			return Promise.resolve(this._takeSnapshot());
 		}
-		return new Promise((resolve, reject) => {
-			this.startVideoStream()
-				.then(() => resolve(this._takeSnapshot()))
-				.catch(error => reject(error));
-		});
-
+		try {
+			await this.startVideoStream();
+		} catch (error) {
+			throw error;
+		}
+		this._takeSnapshot();
 	}
 
 	//endregion
@@ -102,15 +100,14 @@ export default class CameraController {
 			.replace(/^data:image\/(png|jpg);base64,/, "");
 	}
 
-	private _takePhotoButtonClicked(event: Event): void {
+	private async _takePhotoButtonClicked(event: Event): Promise<void> {
 		event.preventDefault();
 
-		this.takeSnapshot().then(image => {
-			this._photoPreview.src = "data:image/png;base64, " + image;
-			this._photoPreview.classList.add('visible');
-			this._deletePhotoButton.classList.remove('disabled');
-			this._videoElement.pause();
-		});
+		const image = await this.takeSnapshot();
+		this._photoPreview.src = "data:image/png;base64, " + image;
+		this._photoPreview.classList.add('visible');
+		this._deletePhotoButton.classList.remove('disabled');
+		this._videoElement.pause();
 	}
 
 	private _deletePhotoButtonClicked(event: Event): void {
