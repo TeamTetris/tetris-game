@@ -53,7 +53,9 @@ export default class PlayScene extends Phaser.Scene {
 		this._localPlayerField.update(time, delta);
 		this._player.update(time, delta);
 
-		this._scoreText.setText(this._localPlayerField.score.toString());
+		this._updateScore(this._localPlayerField.score.toString());
+		
+		this._updateCountdown(Math.floor((30000 - (time % 30000)) / 1000 ), Math.floor(30000 / 1000) );
 
 		if (this._localPlayerField.fieldState == FieldState.Playing && this._localPlayerField.blockStateChanged) {
 			this._localPlayerField.blockStateChanged = false;
@@ -88,6 +90,7 @@ export default class PlayScene extends Phaser.Scene {
 	private _pauseButton: TextButton;
 	private _changeScene: changeSceneFunction;
 	private _networkingClient: NetworkingClient;
+	private _countdownGraphic: Phaser.GameObjects.Graphics;
 	//endregion
 
 	//region private methods
@@ -147,11 +150,44 @@ export default class PlayScene extends Phaser.Scene {
 		this._scoreText = this.add.text(0, 20, "0", config.defaultLargeFontStyle);
 		this._updateScore("0");
 
+		this._countdownGraphic = this.add.graphics();
+		this._updateCountdown(30, 30);
+	}
+
 	private _updateScore(score: string) {
 		this._scoreText.setText(score);
 		this._scoreText.x = (config.graphics.width - this._scoreText.width) / 2;
 	}
 
+	private _updateCountdown(time: number, totalTime: number) {
+		if (totalTime <= 0) {
+			throw new Error(`Can't update countdown with total time smaller or equal 0. totalTime: ${totalTime}`);
+		}
+		if (time < 0) {
+			throw new Error(`Can't update countdown with time smaller 0. time: ${time}`);
+		}
+
+		const x = config.graphics.width / 5 * 4;
+		const y = config.graphics.height / 3;
+		const radius = config.graphics.width / 15;
+		const startRad = Phaser.Math.DegToRad(270);
+		
+		// Format time into radius usable for Phaser
+		const countdownPercentage = time * 100 / totalTime;
+		const countdownDeg = countdownPercentage * 360 / 100;
+		const endRad = Phaser.Math.DegToRad(countdownDeg + 270 % 360);
+
+		// Redraw countdown circle
+		this._countdownGraphic.clear();
+		this._countdownGraphic.lineStyle(9, 0xffffff);
+		this._countdownGraphic.beginPath();
+		if (time === totalTime) {
+			this._countdownGraphic.arc(x, y, radius, startRad, Phaser.Math.DegToRad(269), false);
+			this._countdownGraphic.closePath();
+		} else {
+			this._countdownGraphic.arc(x, y, radius, startRad, endRad, false);
+		}
+		this._countdownGraphic.strokePath();
 	}
 	//endregion
 }
