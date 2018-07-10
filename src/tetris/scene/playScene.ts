@@ -91,6 +91,7 @@ export default class PlayScene extends Phaser.Scene {
 	private _changeScene: changeSceneFunction;
 	private _networkingClient: NetworkingClient;
 	private _countdownGraphic: Phaser.GameObjects.Graphics;
+	private _countdownText: Phaser.GameObjects.Text;
 	//endregion
 
 	//region private methods
@@ -151,6 +152,7 @@ export default class PlayScene extends Phaser.Scene {
 		this._updateScore("0");
 
 		this._countdownGraphic = this.add.graphics();
+		this._countdownText = this.add.text(0, 0, "0", config.defaultLargeFontStyle);
 		this._updateCountdown(30, 30);
 	}
 
@@ -188,6 +190,11 @@ export default class PlayScene extends Phaser.Scene {
 			this._countdownGraphic.arc(x, y, radius, startRad, endRad, false);
 		}
 		this._countdownGraphic.strokePath();
+
+		// Redraw countdown text
+		this._countdownText.setText(time.toString());
+		this._countdownText.x = x - this._countdownText.width / 2;
+		this._countdownText.y = y - this._countdownText.height / 1.5;
 	}
 	//endregion
 }
