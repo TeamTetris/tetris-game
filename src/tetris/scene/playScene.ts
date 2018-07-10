@@ -12,7 +12,9 @@ import NetworkingClient from "tetris/networking/networkingClient";
 import FieldState from "tetris/field/fieldState";
 import RemoteField from "tetris/field/remoteField";
 
-const PLAYER_FIELD_DRAW_OFFSET: Vector2 = new Vector2(50, 80);
+const PLAYER_FIELD_DRAW_OFFSET: Vector2 = new Vector2(
+	(config.graphics.width - config.field.width * config.field.blockSize) / 2, 
+	(config.graphics.height - config.field.height * config.field.blockSize) / 1.5);
 
 type changeSceneFunction = (scene: string) => void;
 
