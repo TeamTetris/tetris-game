@@ -201,6 +201,21 @@ export default class PlayScene extends Phaser.Scene {
 		];
 		this._addToplist(players);
 	}
+
+	private _addToplist(players: any[]) {
+		const widgetX = config.graphics.width / 5 * 4;
+		const widgetY = config.graphics.height / 2;
+		const dividerSpacing = 20;
+
+		
+		for (const [index, player] of players.entries()) {
+			
+			// Add text
+			const text = this.add.text(0, 0, player.name);
+			text.x = widgetX - text.width / 2;
+			text.y = widgetY + index * dividerSpacing + index * text.height;
+
+		}
 	}
 
 	private _updateScore(score: string) {
