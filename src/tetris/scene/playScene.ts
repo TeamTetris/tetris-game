@@ -223,7 +223,6 @@ export default class PlayScene extends Phaser.Scene {
 		for (const [index, player] of players.entries()) {
 			
 			// Add text
-			const text = this.add.text(0, 0, player.name);
 			const playerName = this.add.text(0, 0, player.name, config.defaultToplistFontStyle);
 			playerName.x = widgetX - playerName.width / 2;
 			playerName.y = widgetY + index * dividerSpacing + index * playerName.height;
@@ -238,13 +237,30 @@ export default class PlayScene extends Phaser.Scene {
 			score.x = widgetX + 125 - score.width / 2;
 			score.y = widgetY + index * dividerSpacing + index * score.height;
 
+			if (player.danger) {
+				playerName.setColor('#ff0000');
+				rank.setColor('#ff0000');
+				score.setColor('#ff0000');
+			} else if (player.rank === 1) {
+				playerName.setPipeline('rainbow-text');
+				rank.setPipeline('rainbow-text');
+				score.setPipeline('rainbow-text');
+			}
 
 			// Add divider
-			const dividerY = text.y + text.height + dividerSpacing / 2;
-			if (index + 1 < players.length) {
+			const dividerY = playerName.y - dividerSpacing / 2;
+			if (index > 0) {
 				const divider = this.add.graphics();
-				divider.lineStyle(2, 0xffffff, 0.4);
-				divider.lineBetween(widgetX - 100, dividerY, widgetX + 100, dividerY);
+				if (player.danger) {
+					divider.lineStyle(1, 0xff0000, 0.4);
+				} else {
+					divider.lineStyle(1, 0xffffff, 0.4);
+				}
+				divider.lineBetween(widgetX - 125, dividerY, widgetX + 125, dividerY);
+
+				if (index > 0 && player.rank - players[index - 1].rank > 1) {
+					divider.lineBetween(widgetX - 125, dividerY + 2, widgetX + 125, dividerY + 2);
+				}
 			}
 		}
 	}
@@ -263,7 +279,7 @@ export default class PlayScene extends Phaser.Scene {
 		}
 
 		const x = config.graphics.width / 5 * 4;
-		const y = config.graphics.height / 3;
+		const y = config.graphics.height / 30 * 8;
 		const radius = config.graphics.width / 15;
 		const startRad = Phaser.Math.DegToRad(270);
 		
