@@ -208,8 +208,9 @@ export default class PlayScene extends Phaser.Scene {
 
 	private _addToplist(players: any[]) {
 		const widgetX = config.graphics.width / 5 * 4;
-		const widgetY = config.graphics.height / 2;
-		const dividerSpacing = 20;
+		const widgetY = config.graphics.height / 20 * 9;
+		const dividerSpacing = 25;
+
 		this._pipeline = new Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline({
 			game: this._game,
 			renderer: this._game.renderer, 
@@ -223,8 +224,20 @@ export default class PlayScene extends Phaser.Scene {
 			
 			// Add text
 			const text = this.add.text(0, 0, player.name);
-			text.x = widgetX - text.width / 2;
-			text.y = widgetY + index * dividerSpacing + index * text.height;
+			const playerName = this.add.text(0, 0, player.name, config.defaultToplistFontStyle);
+			playerName.x = widgetX - playerName.width / 2;
+			playerName.y = widgetY + index * dividerSpacing + index * playerName.height;
+
+			// Add position
+			const rank = this.add.text(0, 0, player.rank, config.defaultToplistFontStyle);
+			rank.x = widgetX - 125 - rank.width / 2;
+			rank.y = widgetY + index * dividerSpacing + index * rank.height;
+
+			// Add score
+			const score = this.add.text(0, 0, player.score, config.defaultToplistFontStyle);
+			score.x = widgetX + 125 - score.width / 2;
+			score.y = widgetY + index * dividerSpacing + index * score.height;
+
 
 			// Add divider
 			const dividerY = text.y + text.height + dividerSpacing / 2;
