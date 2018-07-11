@@ -10,7 +10,6 @@ export default class RemoteField {
 
 	//region public methods
 	public updateSprites(serializedBlocks) {
-		console.log("RemoteField updating muh sprites", serializedBlocks);
 		for(let y = 0; y < this._height; y++) {
 			for(let x = 0; x < this._width; x++) {
 				if (serializedBlocks[y][x]) {

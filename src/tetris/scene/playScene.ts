@@ -34,17 +34,27 @@ export default class PlayScene extends Phaser.Scene {
 		this._player = new LocalPlayer(this._localPlayerField, this.input.keyboard, this._biasEngine.newEventReceiver());
 		
 		this._networkingClient.receive("playerLeft", (args) => {
+			console.log('playerLeft:', args.id)
 			this._removeRemoteField(args.id);
 		});
 		this._networkingClient.receive("playerJoined", (args) => {
+			console.log('playerJoined:', args.id)
 			this._addRemoteField(args.id);
 		});
 		this._networkingClient.receive("fieldUpdate", (args) => {
 			const field = this._remotePlayerFields.get(args.id);
 			if (!field) {
+				console.log("WARNING: Had to create player field; currentplayers MISSED?");
 				this._addRemoteField(args.id);
 			}
 			field.updateSprites(args.fieldState);
+		});
+		this._networkingClient.receive("currentPlayers", (args) => {
+			console.log("received currentPlayers");
+			args.players.forEach(player => {
+				this._addRemoteField(player);
+				this._remotePlayerFields.get(player).updateSprites(args.fields[player]);
+			});
 		});
 		this._networkingClient.connect();
 
