@@ -92,6 +92,7 @@ export default class PlayScene extends Phaser.Scene {
 	private _networkingClient: NetworkingClient;
 	private _countdownGraphic: Phaser.GameObjects.Graphics;
 	private _countdownText: Phaser.GameObjects.Text;
+	private _topListDivider: Phaser.GameObjects.Graphics;
 	//endregion
 
 	//region private methods
@@ -215,6 +216,13 @@ export default class PlayScene extends Phaser.Scene {
 			text.x = widgetX - text.width / 2;
 			text.y = widgetY + index * dividerSpacing + index * text.height;
 
+			// Add divider
+			const dividerY = text.y + text.height + dividerSpacing / 2;
+			if (index + 1 < players.length) {
+				const divider = this.add.graphics();
+				divider.lineStyle(2, 0xffffff, 0.4);
+				divider.lineBetween(widgetX - 100, dividerY, widgetX + 100, dividerY);
+			}
 		}
 	}
 
