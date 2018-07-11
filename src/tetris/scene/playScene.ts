@@ -154,6 +154,53 @@ export default class PlayScene extends Phaser.Scene {
 		this._countdownGraphic = this.add.graphics();
 		this._countdownText = this.add.text(0, 0, "0", config.defaultLargeFontStyle);
 		this._updateCountdown(30, 30);
+
+
+		const players = [
+			{
+				rank: 1,
+				name: 'KDA Player ;)',
+				score: 9001,
+				danger: false,
+			}, {
+				rank: 2,
+				name: 'Diamond Smurf 1337',
+				score: 8442,
+				danger: false,
+			}, {
+				rank: 3,
+				name: 'Rank 3 - Sad AF',
+				score: 8245,
+				danger: false,
+			}, {
+				rank: 23,
+				name: 'Some noob above you',
+				score: 4520,
+				danger: false,
+			}, {
+				rank: 24,
+				name: 'You',
+				score: 4473,
+				danger: false,
+			}, {
+				rank: 25,
+				name: 'Random player',
+				score: 4320,
+				danger: false,
+			}, {
+				rank: 36,
+				name: 'Bad Player',
+				score: 3520,
+				danger: true,
+			}, {
+				rank: 37,
+				name: 'AFK all day long',
+				score: 892,
+				danger: true,
+			}
+		];
+		this._addToplist(players);
+	}
 	}
 
 	private _updateScore(score: string) {
