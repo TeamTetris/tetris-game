@@ -20,6 +20,7 @@ const config = {
         height: 720
     },
     serverAddress: "https://tetrisboi.herokuapp.com",
+    defaultToplistFontStyle: {font: "16px Kenney Mini Square", fill: "#fff"},
     defaultSmallFontStyle: {font: "20px Kenney Mini Square", fill: "#fff"},
     defaultLargeFontStyle: {font: "40px Kenney Mini Square", fill: "#fff"},
 }
