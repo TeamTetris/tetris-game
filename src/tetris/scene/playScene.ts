@@ -61,11 +61,12 @@ export default class PlayScene extends Phaser.Scene {
 			this._localPlayerField.blockStateChanged = false;
 			this._networkingClient.emit("fieldUpdate", { fieldState: this._localPlayerField.serializedBlockState});
 		}
+		this._pipeline.setFloat1('uTime', time / 800);
 	}
 	//endregion
 
 	//region constructor
-	public constructor(biasEngine: BiasEngine, changeScene: changeSceneFunction, networkingClient: NetworkingClient) {
+	public constructor(game: Phaser.Game, biasEngine: BiasEngine, changeScene: changeSceneFunction, networkingClient: NetworkingClient) {
 		super({
 			key: "PlayScene"
 		});
@@ -73,6 +74,7 @@ export default class PlayScene extends Phaser.Scene {
 		this._brickFactory = new BrickFactory(this, biasEngine);
 		this._changeScene = changeScene;
 		this._networkingClient = networkingClient;
+		this._game = game;
 	}
 	//endregion
 
@@ -92,7 +94,8 @@ export default class PlayScene extends Phaser.Scene {
 	private _networkingClient: NetworkingClient;
 	private _countdownGraphic: Phaser.GameObjects.Graphics;
 	private _countdownText: Phaser.GameObjects.Text;
-	private _topListDivider: Phaser.GameObjects.Graphics;
+	private _game: Phaser.Game;
+	private _pipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
 	//endregion
 
 	//region private methods
@@ -207,6 +210,13 @@ export default class PlayScene extends Phaser.Scene {
 		const widgetX = config.graphics.width / 5 * 4;
 		const widgetY = config.graphics.height / 2;
 		const dividerSpacing = 20;
+		this._pipeline = new Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline({
+			game: this._game,
+			renderer: this._game.renderer, 
+			fragShader: this.cache.shader.get('rainbow') 
+		});
+		(this._game.renderer as Phaser.Renderer.WebGL.WebGLRenderer).addPipeline('rainbow-text', this._pipeline);
+		this._pipeline.setFloat2('uResolution', config.graphics.width, config.graphics.height);
 
 		
 		for (const [index, player] of players.entries()) {
