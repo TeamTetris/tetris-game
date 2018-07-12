@@ -29,6 +29,8 @@ export default class PlayScene extends Phaser.Scene {
 	}
 
 	public create(): void {
+		this._createUi();
+
 		this._playerFieldBackground = this._createFieldBackground(PLAYER_FIELD_DRAW_OFFSET);
 
 		this._localPlayerField = this._newField(config.field.width, config.field.height, PLAYER_FIELD_DRAW_OFFSET);
@@ -39,7 +41,6 @@ export default class PlayScene extends Phaser.Scene {
 
 		this._remotePlayerFields = new Map<string, RemoteField>();
 
-		this._createUi();
 		this._pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C);
 	}
 
@@ -139,7 +140,8 @@ export default class PlayScene extends Phaser.Scene {
 	private _createFieldBackground(offset: Vector2, drawScale: number = 1): Phaser.GameObjects.Graphics {
 		const fieldBackground = this.add.graphics();
 		fieldBackground.fillStyle(0x002d4f);
-		fieldBackground.fillRect(offset.x, offset.y, config.field.blockSize * config.field.width * drawScale, config.field.blockSize * config.field.height * drawScale);
+		fieldBackground.lineStyle(1, 0xD4D4D4, 1);
+		fieldBackground.strokeRect(offset.x, offset.y, config.field.blockSize * config.field.width * drawScale, config.field.blockSize * config.field.height * drawScale);
 		return fieldBackground;
 	}
 
@@ -148,6 +150,10 @@ export default class PlayScene extends Phaser.Scene {
 	}
 
 	private _createUi() {
+		const background = this.add.graphics();
+		background.fillStyle(0x1E1E1E);
+		background.fillRect(0, 0, config.graphics.width, config.graphics.height);
+
 		const spacing: number = 5;
 		this._pauseButton = new TextButton(this, 0, 0, "blue_button07.png", "blue_button08.png", "ii", () => this._changeScene(config.sceneKeys.menuScene));
 		this._pauseButton.x =  config.graphics.width - this._pauseButton.width / 2 - spacing;
