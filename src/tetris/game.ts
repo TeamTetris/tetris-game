@@ -1,23 +1,25 @@
 /// <reference path="../../definitions/phaser.d.ts"/>
 
 import "phaser";
-import MainScene from "tetris/scene/mainScene";
+import PlayScene from "tetris/scene/playScene";
+import MenuScene from "tetris/scene/menuScene";
 import BiasEngine from "tetris/biasEngine/biasEngine"
 import Profiler from "tetris/profiler/profiler";
-// import "tetris/styles/scss/styles.scss"
+import config from "tetris/config";
+import "tetris/styles/scss/styles.scss";
+import NetworkingClient from "tetris/networking/networkingClient";
 
-const profiler = new Profiler();
-const biasEngine = new BiasEngine(profiler);
+
 
 // main game configuration
-const config: GameConfig = {
-  width: 320,
-  height: 576,
-  type: Phaser.AUTO,
-  parent: "game",
-  scene: new MainScene(biasEngine),
-  "render.antialias": false,
+const gameConfig: GameConfig = {
+	width: config.graphics.width,
+	height: config.graphics.height,
+	type: Phaser.AUTO,
+	parent: "game",
+	"render.antialias": false,
 };
+
 
 // game class
 export class Game extends Phaser.Game {
@@ -26,6 +28,16 @@ export class Game extends Phaser.Game {
 	//endregion
 
 	//region public methods
+	public start() {
+		super.start();
+		const menuScene = new MenuScene(this.changeScene.bind(this));
+		const playScene = new PlayScene(this._biasEngine, this.changeScene.bind(this), this._networkingClient);
+
+		this.scene.add(config.sceneKeys.playScene, playScene);
+		this.scene.add(config.sceneKeys.menuScene, menuScene, true);
+		this._activeScene = config.sceneKeys.menuScene;
+	}
+	
 	public step(time: number, delta: number) {
 		super.step(time, delta);
 		this._profiler.update(time, delta);
@@ -34,24 +46,31 @@ export class Game extends Phaser.Game {
 	//endregion
 
 	//region constructor
-	public constructor(config: GameConfig) {
-		super(config);
-
-		this._biasEngine = biasEngine;
-		this._profiler = profiler;
+	public constructor(gameConfig: GameConfig) {
+		super(gameConfig);
+		this._profiler = new Profiler();
+		this._biasEngine = new BiasEngine(this._profiler);
+		this._networkingClient = new NetworkingClient(); 
 	}
 	//endregion
 
 	//region private members
 	private readonly _biasEngine;
 	private readonly _profiler;
+	private readonly _networkingClient;
+	private _activeScene;
 	//endregion
 
 	//region private methods
+	private changeScene(scene: string) {
+		this.scene.switch(this._activeScene, scene);
+		this.scene.swapPosition(this._activeScene, scene);
+		this._activeScene = scene;
+	}	
 	//endregion
 }
 
 // when the page is loaded, create our game instance
 window.onload = () => {
-  const game = new Game(config);
+  const game = new Game(gameConfig);
 };

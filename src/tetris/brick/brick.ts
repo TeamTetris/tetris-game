@@ -20,6 +20,14 @@ export default class Brick {
 	public get blocks(): Block[] {
 		return this._blocks;
 	}
+
+	public get stateChanged(): boolean {
+		return this._stateChanged;
+	}
+	
+	public set stateChanged(changed: boolean) {
+		this._stateChanged = changed;
+	}
 	//endregion
 
 	//region public methods
@@ -57,7 +65,7 @@ export default class Brick {
 	}
 
 	public checkIfStuck(): boolean {
-		this._tryToMove(new Vector2(0, 0), true);
+		this._tryToMove(new Vector2(0, 1), true);
 		return this.isStuck();
 	}
 
@@ -89,6 +97,7 @@ export default class Brick {
 	private _blocks: Block[];
 	private _field: Field;
 	private _stuck: boolean = false;
+	private _stateChanged: boolean = false;
 	//endregion
 
 	//region private methods
@@ -96,7 +105,8 @@ export default class Brick {
 		if (this._isMovePossible(move)) {
 			this._blocks.forEach(b => b.move(move));
 			this.position.add(move);
-			return true;		
+			this._stateChanged = true;
+			return true;
 		} else if (stuckIfFails) {
 			this._stuck = true;
 			return false;
@@ -117,14 +127,13 @@ export default class Brick {
 	private _tryToRotate(clockwise: boolean): void {
 		const rotatedBlocks = this._blocks.map(originalBlock => {
 			let rotatedBlock = originalBlock.clone();
-
 			rotatedBlock.rotate(clockwise);
-			
 			return rotatedBlock; 
 		});
 
 		if (this._isRotationPossible(rotatedBlocks)) {
 			this._blocks = rotatedBlocks;
+			this._stateChanged = true;
 		}
 	}
 
