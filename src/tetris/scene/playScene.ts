@@ -11,6 +11,7 @@ import Vector2 = Phaser.Math.Vector2;
 import NetworkingClient from "tetris/networking/networkingClient";
 import FieldState from "tetris/field/fieldState";
 import RemoteField from "tetris/field/remoteField";
+import CountdownWidget from "tetris/ui/countdownWidget";
 
 const PLAYER_FIELD_DRAW_OFFSET: Vector2 = new Vector2(
 	(config.graphics.width - config.field.width * config.field.blockSize) / 2, 
@@ -56,7 +57,7 @@ export default class PlayScene extends Phaser.Scene {
 
 		this._updateScore(this._localPlayerField.score.toString());
 		
-		this._updateCountdown(Math.floor((30000 - (time % 30000)) / 100 ) / 10, Math.floor(30000 / 100) / 10 );
+		this._countdownWidget.update(30 - (time / 1000 % 30), 30 );
 
 		if (this._localPlayerField.fieldState == FieldState.Playing && this._localPlayerField.blockStateChanged) {
 			this._localPlayerField.blockStateChanged = false;
@@ -93,8 +94,7 @@ export default class PlayScene extends Phaser.Scene {
 	private _pauseButton: TextButton;
 	private _changeScene: changeSceneFunction;
 	private _networkingClient: NetworkingClient;
-	private _countdownGraphic: Phaser.GameObjects.Graphics;
-	private _countdownText: Phaser.GameObjects.Text;
+	private _countdownWidget: CountdownWidget;
 	private _game: Phaser.Game;
 	private _pipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
 	//endregion
@@ -161,9 +161,9 @@ export default class PlayScene extends Phaser.Scene {
 		this._scoreText = this.add.text(0, (config.graphics.height - config.field.height * config.field.blockSize) / 4, "0", config.defaultLargeFontStyle);
 		this._updateScore("0");
 
-		this._countdownGraphic = this.add.graphics();
-		this._countdownText = this.add.text(0, 0, "0", config.defaultLargeFontStyle);
-		this._updateCountdown(30, 30);
+
+		this._countdownWidget = new CountdownWidget(this, config.graphics.width / 5 * 4, config.graphics.height / 30 * 8);
+		this._countdownWidget.update(30, 30);
 
 
 		const players = [
@@ -274,59 +274,6 @@ export default class PlayScene extends Phaser.Scene {
 	private _updateScore(score: string) {
 		this._scoreText.setText(score);
 		this._scoreText.x = (config.graphics.width - this._scoreText.width) / 2;
-	}
-
-	private _updateCountdown(time: number, totalTime: number) {
-		if (totalTime <= 0) {
-			throw new Error(`Can't update countdown with total time smaller or equal 0. totalTime: ${totalTime}`);
-		}
-		if (time < 0) {
-			throw new Error(`Can't update countdown with time smaller 0. time: ${time}`);
-		}
-
-		const x = config.graphics.width / 5 * 4;
-		const y = config.graphics.height / 30 * 8;
-		const radius = config.graphics.width / 15;
-		const startRad = Phaser.Math.DegToRad(270);
-		
-		// Format time into radius usable for Phaser
-		const countdownPercentage = time * 100 / totalTime;
-		const countdownDeg = countdownPercentage * 360 / 100;
-		const endRad = Phaser.Math.DegToRad(countdownDeg + 270 % 360);
-
-		// Redraw countdown circle
-		this._countdownGraphic.clear();
-		if (countdownPercentage < 75) {
-			this._countdownGraphic.lineStyle(9, 0xFFFF00);
-			this._countdownText.setColor('#FFFF00');
-		} else {
-			this._countdownGraphic.lineStyle(9, 0xffffff);
-			this._countdownText.setColor('#ffffff');
-		}
-		if (countdownPercentage < 50) {
-			this._countdownGraphic.lineStyle(9, 0xFFA500);
-			this._countdownText.setColor('#FFA500');
-		} 
-		if (countdownPercentage < 25) {
-			this._countdownGraphic.lineStyle(9, 0xff0000);
-			this._countdownText.setColor('#ff0000');
-			this._countdownText.setText(time.toFixed(1).toString());
-		} else {
-			this._countdownText.setText(time.toFixed(0).toString());
-		}
-		this._countdownGraphic.beginPath();
-		if (time === totalTime) {
-			this._countdownGraphic.arc(x, y, radius, startRad, Phaser.Math.DegToRad(269), false);
-			this._countdownGraphic.closePath();
-		} else {
-			this._countdownGraphic.arc(x, y, radius, startRad, endRad, false);
-		}
-		this._countdownGraphic.strokePath();
-
-		// Redraw countdown text
-		
-		this._countdownText.x = x - this._countdownText.width / 2;
-		this._countdownText.y = y - this._countdownText.height / 1.5;
 	}
 	//endregion
 }
