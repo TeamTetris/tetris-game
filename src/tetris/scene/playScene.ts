@@ -8,7 +8,6 @@ import LocalPlayer from "tetris/player/localPlayer";
 import TextButton from "tetris/ui/textButton";
 import config from "tetris/config";
 import Vector2 = Phaser.Math.Vector2;
-import { Input } from "phaser";
 import NetworkingClient from "tetris/networking/networkingClient";
 import FieldState from "tetris/field/fieldState";
 import RemoteField from "tetris/field/remoteField";
@@ -33,39 +32,17 @@ export default class PlayScene extends Phaser.Scene {
 		this._localPlayerField = this._newField(config.field.width, config.field.height, PLAYER_FIELD_DRAW_OFFSET);
 		this._player = new LocalPlayer(this._localPlayerField, this.input.keyboard, this._biasEngine.newEventReceiver());
 		
-		this._networkingClient.receive("playerLeft", (args) => {
-			console.log('playerLeft:', args.id)
-			this._removeRemoteField(args.id);
-		});
-		this._networkingClient.receive("playerJoined", (args) => {
-			console.log('playerJoined:', args.id)
-			this._addRemoteField(args.id);
-		});
-		this._networkingClient.receive("fieldUpdate", (args) => {
-			const field = this._remotePlayerFields.get(args.id);
-			if (!field) {
-				console.log("WARNING: Had to create player field; currentplayers MISSED?");
-				this._addRemoteField(args.id);
-			}
-			field.updateSprites(args.fieldState);
-		});
-		this._networkingClient.receive("currentPlayers", (args) => {
-			console.log("received currentPlayers");
-			args.players.forEach(player => {
-				this._addRemoteField(player);
-				this._remotePlayerFields.get(player).updateSprites(args.fields[player]);
-			});
-		});
+		this._setupNetworkingClient();
 		this._networkingClient.connect();
 
 		this._remotePlayerFields = new Map<string, RemoteField>();
 
 		this._createUi();
-		this._pauseKey = this.input.keyboard.addKey(Input.Keyboard.KeyCodes.C);
+		this._pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C);
 	}
 
 	public update(time: number, delta: number): void {
-		if (Input.Keyboard.JustDown(this._pauseKey)) {
+		if (Phaser.Input.Keyboard.JustDown(this._pauseKey)) {
 			this._paused = !this._paused;
 		}
 		if (this._paused) {
@@ -112,6 +89,32 @@ export default class PlayScene extends Phaser.Scene {
 	//endregion
 
 	//region private methods
+	private _setupNetworkingClient() {
+		this._networkingClient.receive("playerLeft", (args) => {
+			console.log('playerLeft:', args.id)
+			this._removeRemoteField(args.id);
+		});
+		this._networkingClient.receive("playerJoined", (args) => {
+			console.log('playerJoined:', args.id)
+			this._addRemoteField(args.id);
+		});
+		this._networkingClient.receive("fieldUpdate", (args) => {
+			const field = this._remotePlayerFields.get(args.id);
+			if (!field) {
+				console.warn("WARNING: Had to create player field; currentplayers MISSED?");
+				this._addRemoteField(args.id);
+			}
+			field.updateSprites(args.fieldState);
+		});
+		this._networkingClient.receive("currentPlayers", (args) => {
+			console.log("Received currentPlayers");
+			args.players.forEach(player => {
+				this._addRemoteField(player);
+				this._remotePlayerFields.get(player).updateSprites(args.fields[player]);
+			});
+		});
+	}
+
 	private _addRemoteField(index: string) {
 		const position = new Vector2(420 + (this._remotePlayerFieldIndex % 4) * 180, 80 + Math.floor(this._remotePlayerFieldIndex / 4) * 300);
 		this._remotePlayerFieldIndex++;

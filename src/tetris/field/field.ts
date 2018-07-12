@@ -11,19 +11,19 @@ export default class Field {
 	//region public members
 	public get serializedBlockState(): Object {
 		const serializedBlocks = [];
-		this._blockRows.forEach(blockRow => {
+		for (const blockRow of this._blockRows)  {
 			const serializedBlockRow = [];
-			blockRow.forEach(block => {
+			for (const block of blockRow) {
 				serializedBlockRow.push(block ? { spriteFrameName: block.spriteFrameName } : null);
-			});
+			}
 			serializedBlocks.push(serializedBlockRow);
-		});
+		}
 		if (this.activeBrick) {
-			this.activeBrick.blocks.forEach(block => {
+			for (const block of this.activeBrick.blocks) {
 				if (!this.isPositionOutOfBounds(block.currentPosition, true)) {
 					serializedBlocks[block.currentPosition.y][block.currentPosition.x] = { spriteFrameName: block.spriteFrameName };
 				}
-			})
+			}
 		}
 		return serializedBlocks;
 	}

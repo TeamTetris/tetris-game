@@ -10,8 +10,8 @@ export default class RemoteField {
 
 	//region public methods
 	public updateSprites(serializedBlocks) {
-		for(let y = 0; y < this._height; y++) {
-			for(let x = 0; x < this._width; x++) {
+		for (let y = 0; y < this._height; y++) {
+			for (let x = 0; x < this._width; x++) {
 				if (serializedBlocks[y][x]) {
 					this._blockRows[y][x].sprite.setVisible(true);
 					this._blockRows[y][x].sprite.setFrame(serializedBlocks[y][x].spriteFrameName);
@@ -25,11 +25,11 @@ export default class RemoteField {
 	public destroy() {
 		this._background.destroy();
 		this._background = null;
-		this._blockRows.forEach(blockRow => {
-			blockRow.forEach(block => {
+		for (const blockRow of this._blockRows) {
+			for (const block of blockRow) {
 				block.destroy();
-			})
-		});
+			}
+		}
 		this._blockRows = [];
 	}
 	//endregion
@@ -64,13 +64,10 @@ export default class RemoteField {
 
 	//region private methods
 	private _setupField() {
-		this._blockRows = new Array(this._height);
-		const iterator = this._blockRows.keys();
-		for (let key of iterator) {
-			this._blockRows[key] = new Array(this._width).fill(null);
-		}
-		for(let y = 0; y < this._height; y++) {
-			for(let x = 0; x < this._width; x++) {
+		this._blockRows = [];
+		for (let y = 0; y < this._height; y++) {
+			this._blockRows.push(new Array(this._width).fill(null));
+			for (let x = 0; x < this._width; x++) {
 				const sprite = this._scene.add.sprite(0, 0, config.atlasKeys.blockSpriteAtlasKey, "");
 				this._blockRows[y][x] = new Block(sprite, [ new Vector2(x, y) ], null);
 				this._blockRows[y][x].preDraw(this._drawOffset, this._drawScale);
