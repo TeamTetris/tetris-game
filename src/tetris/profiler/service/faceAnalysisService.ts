@@ -25,21 +25,11 @@ export default class FaceAnalysisService extends BaseService {
 	//endregion
 
 	//region private methods
-	private static get _faceplusplusApiKey(): string {
-		return '#API_KEY_REQUIRED';
-	}
-
-	private static get _faceplusplusApiSecret(): string {
-		return '#API_SECRET_REQUIRED';
-	}
-
 	private async _requestFaceAnalysis(image: string): Promise<void> {
 		const formData = new FormData();
 		const url = 'https://proxyboy2.herokuapp.com/fpp/detect';
 
 		// Prepare form data
-		formData.append("api_key", FaceAnalysisService._faceplusplusApiKey);
-		formData.append("api_secret", FaceAnalysisService._faceplusplusApiSecret);
 		formData.append("return_attributes", 'eyestatus,gender,age,ethnicity,eyestatus,beauty,skinstatus');
 		formData.append("image_base64", image);
 
