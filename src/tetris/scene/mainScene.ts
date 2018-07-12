@@ -6,6 +6,7 @@ import BrickFactory from "tetris/brick/brickFactory";
 import BiasEngine from "tetris/biasEngine/biasEngine";
 import LocalPlayer from "tetris/player/localPlayer";
 import Vector2 = Phaser.Math.Vector2;
+import { Input } from "phaser";
 
 const FIELD_WIDTH: number = 10;
 const FIELD_HEIGHT: number = 18;
@@ -28,9 +29,16 @@ export default class MainScene extends Phaser.Scene {
 
 		this._field = this._newField(FIELD_WIDTH, FIELD_HEIGHT, FIELD_DRAW_OFFSET);
 		this._player = new LocalPlayer(this._field, this.input.keyboard, this._biasEngine.newEventReceiver());
+		this._pauseKey = this.input.keyboard.addKey(Input.Keyboard.KeyCodes.C);
 	}
 
 	public update(time: number, delta: number): void {
+		if (Input.Keyboard.JustDown(this._pauseKey)) {
+			this._paused = !this._paused;
+		}
+		if (this._paused) {
+			return;
+		}
 		this._field.update(time, delta);
 		this._player.update(time, delta);
 	}
@@ -52,6 +60,8 @@ export default class MainScene extends Phaser.Scene {
 	private _player: Player;
 	private _field: Field;
 	private _fieldBackground: Phaser.GameObjects.Graphics;
+	private _paused: boolean = false;
+	private _pauseKey: Phaser.Input.Keyboard.Key;
 	//endregion
 
 	//region private methods

@@ -4,10 +4,10 @@ import "phaser";
 import MainScene from "tetris/scene/mainScene";
 import BiasEngine from "tetris/biasEngine/biasEngine"
 import Profiler from "tetris/profiler/profiler";
-import "./styles/scss/styles.scss"
+// import "tetris/styles/scss/styles.scss"
 
-const biasEngine = new BiasEngine();
-const mainScene = new MainScene(biasEngine);
+const profiler = new Profiler();
+const biasEngine = new BiasEngine(profiler);
 
 // main game configuration
 const config: GameConfig = {
@@ -15,7 +15,7 @@ const config: GameConfig = {
   height: 576,
   type: Phaser.AUTO,
   parent: "game",
-  scene: mainScene,
+  scene: new MainScene(biasEngine),
   "render.antialias": false,
 };
 
@@ -29,6 +29,7 @@ export class Game extends Phaser.Game {
 	public step(time: number, delta: number) {
 		super.step(time, delta);
 		this._profiler.update(time, delta);
+		this._biasEngine.update(time, delta);
 	}
 	//endregion
 
@@ -36,8 +37,8 @@ export class Game extends Phaser.Game {
 	public constructor(config: GameConfig) {
 		super(config);
 
-		this._biasEngine = new BiasEngine();
-		this._profiler = new Profiler();
+		this._biasEngine = biasEngine;
+		this._profiler = profiler;
 	}
 	//endregion
 

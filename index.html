@@ -1,20 +1,57 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="author" content="Christian Friedow, Johannes Schneider, Maximilian Söchting, Julian Weise">
-        <title>TETRIS</title>
-        <!-- <link rel="stylesheet" type="text/css" href="styles/css/styles.css"> -->
-        <link rel="stylesheet" type="text/css" href="assets/css/main.css">
-        <link rel="stylesheet" type="text/css" href="assets/css/fontLoader.css">
-        <script src="build/bundle.js"></script>
-    </head>
-    <body>
-        <div class="container">
-            <div id="game"></div>
-            <div id="font-hack">
-                .
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="author" content="Christian Friedow, Johannes Schneider, Maximilian Söchting, Julian Weise">
+  <title>TETRIS</title>
+  <link rel="stylesheet" type="text/css" href="assets/css/modal.css"> 
+  <link rel="stylesheet" type="text/css" href="assets/css/camera.css"> 
+  <link rel="stylesheet" type="text/css" href="assets/css/main.css">
+  <link rel="stylesheet" type="text/css" href="assets/css/fontLoader.css">
+</head>
+
+<body>
+  <div class="container">
+    <div id="game"></div>
+    <div id="font-hack">
+      .
+    </div>
+  </div>
+
+  <div id="camera-modal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="close">&times;</span>
+        <h2 id="modal-title"></h2>
+      </div>
+      <div class="modal-body">
+        <div class="camera-container">
+          <div id="camera-stream-with-js" class="app">
+            <video id="camera-stream"></video>
+            <img id="snap" src="" />
+            <div class="controls">
+              <a href="#" id="delete-photo" title="Delete Photo" class="disabled">
+                <i class="material-icons">delete</i>
+              </a>
+              <a href="#" id="take-photo" title="Take Photo">
+                <i class="material-icons">camera_alt</i>
+              </a>
             </div>
+            <!-- Hidden canvas element. Used for taking snapshot of video. -->
+            <canvas id="hidden-camera-canvas"></canvas>
+          </div>
         </div>
-    </body>
+          <button id="camera-modal-accept-button" class="dialog-accept-button">Accept</button>
+      </div>
+      <!--<div class="modal-footer">
+        <h3>Modal Footer</h3>
+      </div>-->
+    </div>
+  </div>
+
+</body>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script src="build/bundle.js"></script>
 </html>

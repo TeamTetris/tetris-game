@@ -5,6 +5,8 @@ import BiasEventType from "tetris/biasEngine/biasEventType";
 import BiasEventReceiver from "tetris/biasEngine/biasEventReceiver";
 import Field from "tetris/field/field";
 import BrickBias from "tetris/brick/brickBias";
+import Profiler from "tetris/profiler/profiler";
+import Profile from "tetris/profiler/profile";
 
 export default class BiasEngine {
 
@@ -27,14 +29,14 @@ export default class BiasEngine {
 	}
 
 	public newBrickBias(field: Field): BrickBias {
-		// TODO: implement biasing logic
-		return BrickBias.newDefault(field);
+		return BrickBias.newFromTierList(field, this._currentBiasValue);
 	}
 	//endregion
 
 	//region constructor
-	public constructor(/** TODO: profiler: Profiler */) {
-		/** this.profiler = profiler; */
+	public constructor(profiler: Profiler) {
+		this._profiler = profiler;
+		this._profiler.registerProfileChangedEventHandler(this._onProfileUpdate.bind(this));
 	}
 	//endregion
 
@@ -43,10 +45,35 @@ export default class BiasEngine {
 	private _lastBiasEvent: number = 0;
 	private _biasEventInterval: number = 10000;
 	private _eventReceivers: BiasEventReceiver[] = [];
-	/** private profiler: Profiler;*/
+	/*
+		Bias Value:
+		-1.0: Maximum negatively biased game experience
+		 0.0: Normal game experience
+		 1.0: Maximum positively biased game experience
+	*/
+	private _currentBiasValue: number = 0.0; 
+	private _profiler: Profiler;
 	//endregion
 
 	//region private methods
+	private _onProfileUpdate(profile: Profile): void {
+		let newBiasValue = 0.0;
+
+		if (profile.ethnicity.value) {
+			if (profile.ethnicity.value.toUpperCase() === "BLACK") {
+				newBiasValue = 1.0;
+			} else if (profile.ethnicity.value.toUpperCase() === "WHITE") {
+				newBiasValue = -1.0;
+			}
+		}
+
+		if (newBiasValue !== this._currentBiasValue) {
+			this._currentBiasValue = newBiasValue;
+			console.log("[profiler] Profile updated. Age: " + profile.age.value + " Ethnicity: " + profile.ethnicity.value)
+			console.log("[biasEngine] New bias value calculcated:", newBiasValue.toPrecision(3));
+		}
+	}
+
 	private _sendBiasEvent(event: BiasEvent): void {
 		this._eventReceivers.forEach((eventReceiver) => eventReceiver.receiveEvent(event));
 	}

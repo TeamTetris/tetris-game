@@ -20,18 +20,41 @@ export default class BrickBias {
 	public set position(position: Vector2) {
 		this._position = position;
 	}
+
 	//endregion
 
 	//region public methods
 	//endregion
 
 	//region constructor
+	public static newFromTierList(field: Field, biasValue: number): BrickBias {
+		const brickBias = BrickBias.newDefault(field);
+		brickBias.chances = BrickChances.newNoChances();
+		
+		const distanceBetween = (a, b) => Math.pow(Math.abs(a - b), 2);
+		
+		brickBias.chances.setChanceI(distanceBetween(biasValue, -1.0));
+		brickBias.chances.setChanceO(distanceBetween(biasValue, -1.0));
+		brickBias.chances.setChanceL(distanceBetween(biasValue, -0.5));
+		brickBias.chances.setChanceJ(distanceBetween(biasValue, -0.5));
+		brickBias.chances.setChanceT(distanceBetween(biasValue, 0.5));
+		brickBias.chances.setChanceS(distanceBetween(biasValue, 1.0));
+		brickBias.chances.setChanceZ(distanceBetween(biasValue, 1.0));
+
+		return brickBias;
+	}
+	
 	public static newDefault(field: Field): BrickBias {
 		const bias = new BrickBias();
 		bias.chances = BrickChances.newEqualChances();
 		bias.position = new Vector2(field.width / 2 - 1, -2);
 
 		return bias;
+	}
+
+	private constructor() {
+		this._chances = BrickChances.newEqualChances();
+		this._position = new Vector2(0, 0);
 	}
 	//endregion
 
