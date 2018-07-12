@@ -9,6 +9,27 @@ const config = {
     },
     ui: {
         spacing: 20,
+        colors: {
+            white: {
+                hex: 0xFFFFFF,
+                string: '#FFFFFF',
+            },
+            yellow: {
+                hex: 0xFFFF00,
+                string: '#FFFF00',
+            },
+            orange: {
+                hex: 0xFFA500,
+                string: '#FFA500',
+            },
+            red: {
+                hex: 0xFF0000,
+                string: '#FF0000',
+            },
+        },
+        countdown: {
+            lineWidth: 9,
+        },
     },
     field: {
         width: 10,
