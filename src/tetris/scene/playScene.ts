@@ -56,7 +56,7 @@ export default class PlayScene extends Phaser.Scene {
 
 		this._updateScore(this._localPlayerField.score.toString());
 		
-		this._updateCountdown(Math.floor((30000 - (time % 30000)) / 1000 ), Math.floor(30000 / 1000) );
+		this._updateCountdown(Math.floor((30000 - (time % 30000)) / 100 ) / 10, Math.floor(30000 / 100) / 10 );
 
 		if (this._localPlayerField.fieldState == FieldState.Playing && this._localPlayerField.blockStateChanged) {
 			this._localPlayerField.blockStateChanged = false;
@@ -158,7 +158,7 @@ export default class PlayScene extends Phaser.Scene {
 		this._pauseButton = new TextButton(this, 0, 0, "blue_button07.png", "blue_button08.png", "ii", () => this._changeScene(config.sceneKeys.menuScene));
 		this._pauseButton.x =  config.graphics.width - this._pauseButton.width / 2 - spacing;
 		this._pauseButton.y = this._pauseButton.height / 2 + spacing;
-		this._scoreText = this.add.text(0, 20, "0", config.defaultLargeFontStyle);
+		this._scoreText = this.add.text(0, (config.graphics.height - config.field.height * config.field.blockSize) / 4, "0", config.defaultLargeFontStyle);
 		this._updateScore("0");
 
 		this._countdownGraphic = this.add.graphics();
@@ -260,7 +260,7 @@ export default class PlayScene extends Phaser.Scene {
 				if (player.danger) {
 					divider.lineStyle(1, 0xff0000, 0.4);
 				} else {
-					divider.lineStyle(1, 0xffffff, 0.4);
+					divider.lineStyle(1, 0xD4D4D4, 1);
 				}
 				divider.lineBetween(widgetX - 125, dividerY, widgetX + 125, dividerY);
 
@@ -296,7 +296,24 @@ export default class PlayScene extends Phaser.Scene {
 
 		// Redraw countdown circle
 		this._countdownGraphic.clear();
-		this._countdownGraphic.lineStyle(9, 0xffffff);
+		if (countdownPercentage < 75) {
+			this._countdownGraphic.lineStyle(9, 0xFFFF00);
+			this._countdownText.setColor('#FFFF00');
+		} else {
+			this._countdownGraphic.lineStyle(9, 0xffffff);
+			this._countdownText.setColor('#ffffff');
+		}
+		if (countdownPercentage < 50) {
+			this._countdownGraphic.lineStyle(9, 0xFFA500);
+			this._countdownText.setColor('#FFA500');
+		} 
+		if (countdownPercentage < 25) {
+			this._countdownGraphic.lineStyle(9, 0xff0000);
+			this._countdownText.setColor('#ff0000');
+			this._countdownText.setText(time.toFixed(1).toString());
+		} else {
+			this._countdownText.setText(time.toFixed(0).toString());
+		}
 		this._countdownGraphic.beginPath();
 		if (time === totalTime) {
 			this._countdownGraphic.arc(x, y, radius, startRad, Phaser.Math.DegToRad(269), false);
@@ -307,7 +324,7 @@ export default class PlayScene extends Phaser.Scene {
 		this._countdownGraphic.strokePath();
 
 		// Redraw countdown text
-		this._countdownText.setText(time.toString());
+		
 		this._countdownText.x = x - this._countdownText.width / 2;
 		this._countdownText.y = y - this._countdownText.height / 1.5;
 	}
