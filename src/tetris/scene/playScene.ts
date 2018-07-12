@@ -244,9 +244,9 @@ export default class PlayScene extends Phaser.Scene {
 			score.y = widgetY + index * dividerSpacing + index * score.height;
 
 			if (player.danger) {
-				playerName.setColor('#ff0000');
-				rank.setColor('#ff0000');
-				score.setColor('#ff0000');
+				playerName.setColor('#D91B27');
+				rank.setColor('#D91B27');
+				score.setColor('#D91B27');
 			} else if (player.rank === 1) {
 				playerName.setPipeline('rainbow-text');
 				rank.setPipeline('rainbow-text');
