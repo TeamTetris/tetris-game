@@ -16,8 +16,8 @@ const config = {
         blockSize: 32,
     },
     graphics: {
-        width: 1200,
-        height: 720
+        width: window.innerWidth,
+        height: window.innerHeight
     },
     serverAddress: "https://tetrisboi.herokuapp.com",
     defaultToplistFontStyle: {font: "16px Kenney Mini Square", fill: "#fff"},
