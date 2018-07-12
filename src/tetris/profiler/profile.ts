@@ -66,6 +66,11 @@ export default class Profile {
 		this._newProfileData<GeoLocation>(LOCATION_KEY);
 		this._newProfileData<number>(AGE_KEY).updateStrategy = new NumberDataUpdateStrategy();
 		this._newProfileData<string>(ETHNICITY_KEY);
+		this._newProfileData<string>(GENDER_KEY);
+		this._newProfileData<number>(BEAUTY_KEY).updateStrategy = new NumberDataUpdateStrategy();
+		this._newProfileData<number>(SKIN_ACNE_KEY).updateStrategy = new NumberDataUpdateStrategy();
+		this._newProfileData<number>(SKIN_HEALTH_KEY).updateStrategy = new NumberDataUpdateStrategy();
+		this._newProfileData<boolean>(GLASSES_KEY);
 	}
 	//endregion
 

@@ -64,8 +64,5 @@ export default class BrickBias {
 	//endregion
 
 	//region private methods
-	private static _distanceBetween(a: number, b: number): number {
-		return Math.abs(b - a);
-	}
 	//endregion
 }
