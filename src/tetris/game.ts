@@ -49,7 +49,7 @@ export class Game extends Phaser.Game {
 	public constructor(gameConfig: GameConfig) {
 		super(gameConfig);
 		this._profiler = new Profiler();
-		this._biasEngine = new BiasEngine(profiler);
+		this._biasEngine = new BiasEngine(this._profiler);
 		this._networkingClient = new NetworkingClient(); 
 	}
 	//endregion

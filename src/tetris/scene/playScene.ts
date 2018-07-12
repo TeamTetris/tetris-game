@@ -71,7 +71,6 @@ export default class PlayScene extends Phaser.Scene {
 		if (this._paused) {
 			return;
 		}
-		this._field.update(time, delta);
 		this._localPlayerField.update(time, delta);
 		this._player.update(time, delta);
 
