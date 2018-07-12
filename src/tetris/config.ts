@@ -19,6 +19,7 @@ const config = {
         width: 1200,
         height: 720
     },
+    serverAddress: "http://chatty-octopus-52.localtunnel.me",
     defaultSmallFontStyle: {font: "20px Kenney Mini Square", fill: "#fff"},
     defaultLargeFontStyle: {font: "40px Kenney Mini Square", fill: "#fff"},
 }

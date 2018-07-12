@@ -2,6 +2,7 @@
 /// <reference path="../../../definitions/phaser.d.ts"/>
 
 import * as socketIO from 'socket.io-client';
+import config from 'tetris/config';
 
 export default class NetworkingClient {
 	//region public members
@@ -23,7 +24,7 @@ export default class NetworkingClient {
 
   //region constructor
   public constructor() {
-    this._socket = socketIO('http://localhost:8081', { autoConnect: false });
+    this._socket = socketIO(config.serverAddress, { autoConnect: false });
   }
 	//endregion
 
