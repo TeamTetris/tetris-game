@@ -63,7 +63,7 @@ export default class PlayScene extends Phaser.Scene {
 			this._localPlayerField.blockStateChanged = false;
 			this._networkingClient.emit("fieldUpdate", { fieldState: this._localPlayerField.serializedBlockState});
 		}
-		this._pipeline.setFloat1('uTime', time / 800);
+		this._updateShaders(time);
 	}
 	//endregion
 
@@ -150,6 +150,8 @@ export default class PlayScene extends Phaser.Scene {
 	}
 
 	private _createUi() {
+		this._initializeShaders();
+
 		const background = this.add.graphics();
 		background.fillStyle(0x1E1E1E);
 		background.fillRect(0, 0, config.graphics.width, config.graphics.height);
@@ -211,12 +213,13 @@ export default class PlayScene extends Phaser.Scene {
 		];
 		this._addToplist(players);
 	}
-
+		
 	private _addToplist(players: any[]) {
 		const widgetX = config.graphics.width / 5 * 4;
 		const widgetY = config.graphics.height / 20 * 9;
 		const dividerSpacing = 25;
 
+	private _initializeShaders() {
 		this._pipeline = new Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline({
 			game: this._game,
 			renderer: this._game.renderer, 
@@ -261,7 +264,7 @@ export default class PlayScene extends Phaser.Scene {
 					divider.lineStyle(1, 0xff0000, 0.4);
 				} else {
 					divider.lineStyle(1, 0xD4D4D4, 1);
-				}
+	}
 				divider.lineBetween(widgetX - 125, dividerY, widgetX + 125, dividerY);
 
 				if (index > 0 && player.rank - players[index - 1].rank > 1) {
@@ -269,6 +272,8 @@ export default class PlayScene extends Phaser.Scene {
 				}
 			}
 		}
+	private _updateShaders(time: number) {
+		this._pipeline.setFloat1('uTime', time / 800);
 	}
 
 	private _updateScore(score: string) {
