@@ -12,6 +12,7 @@ import NetworkingClient from "tetris/networking/networkingClient";
 import FieldState from "tetris/field/fieldState";
 import RemoteField from "tetris/field/remoteField";
 import CountdownWidget from "tetris/ui/countdownWidget";
+import ScoreboardWidget from "tetris/ui/scoreboardWidget";
 
 const PLAYER_FIELD_DRAW_OFFSET: Vector2 = new Vector2(
 	(config.graphics.width - config.field.width * config.field.blockSize) / 2, 
@@ -95,6 +96,7 @@ export default class PlayScene extends Phaser.Scene {
 	private _changeScene: changeSceneFunction;
 	private _networkingClient: NetworkingClient;
 	private _countdownWidget: CountdownWidget;
+	private _scoreboardWidget: ScoreboardWidget;
 	private _game: Phaser.Game;
 	private _pipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
 	//endregion
@@ -170,54 +172,59 @@ export default class PlayScene extends Phaser.Scene {
 
 		const players = [
 			{
-				rank: 1,
+				rank: '1',
 				name: 'KDA Player ;)',
-				score: 9001,
+				score: '9001',
 				danger: false,
+				ownScore: false,
 			}, {
-				rank: 2,
+				rank: '2',
 				name: 'Diamond Smurf 1337',
-				score: 8442,
+				score: '8442',
 				danger: false,
+				ownScore: false,
 			}, {
-				rank: 3,
+				rank: '3',
 				name: 'Rank 3 - Sad AF',
-				score: 8245,
+				score: '8245',
 				danger: false,
+				ownScore: false,
 			}, {
-				rank: 23,
+				rank: '23',
 				name: 'Some noob above you',
-				score: 4520,
+				score: '4520',
 				danger: false,
+				ownScore: false,
 			}, {
-				rank: 24,
+				rank: '24',
 				name: 'You',
-				score: 4473,
+				score: '4473',
 				danger: false,
+				ownScore: true,
 			}, {
-				rank: 25,
+				rank: '25',
 				name: 'Random player',
-				score: 4320,
+				score: '4320',
 				danger: false,
+				ownScore: false,
 			}, {
-				rank: 36,
+				rank: '36',
 				name: 'Bad Player',
-				score: 3520,
+				score: '3520',
 				danger: true,
+				ownScore: false,
 			}, {
-				rank: 37,
+				rank: '37',
 				name: 'AFK all day long',
-				score: 892,
+				score: '892',
 				danger: true,
+				ownScore: false,
 			}
 		];
-		this._addToplist(players);
-	}
 		
-	private _addToplist(players: any[]) {
-		const widgetX = config.graphics.width / 5 * 4;
-		const widgetY = config.graphics.height / 20 * 9;
-		const dividerSpacing = 25;
+		this._scoreboardWidget = new ScoreboardWidget(this, config.graphics.width / 5 * 4, config.graphics.height / 20 * 9);
+		this._scoreboardWidget.update(players);
+	}
 
 	private _initializeShaders() {
 		this._pipeline = new Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline({
@@ -227,51 +234,8 @@ export default class PlayScene extends Phaser.Scene {
 		});
 		(this._game.renderer as Phaser.Renderer.WebGL.WebGLRenderer).addPipeline('rainbow-text', this._pipeline);
 		this._pipeline.setFloat2('uResolution', config.graphics.width, config.graphics.height);
-
-		
-		for (const [index, player] of players.entries()) {
-			
-			// Add text
-			const playerName = this.add.text(0, 0, player.name, config.defaultToplistFontStyle);
-			playerName.x = widgetX - playerName.width / 2;
-			playerName.y = widgetY + index * dividerSpacing + index * playerName.height;
-
-			// Add position
-			const rank = this.add.text(0, 0, player.rank, config.defaultToplistFontStyle);
-			rank.x = widgetX - 125 - rank.width / 2;
-			rank.y = widgetY + index * dividerSpacing + index * rank.height;
-
-			// Add score
-			const score = this.add.text(0, 0, player.score, config.defaultToplistFontStyle);
-			score.x = widgetX + 125 - score.width / 2;
-			score.y = widgetY + index * dividerSpacing + index * score.height;
-
-			if (player.danger) {
-				playerName.setColor('#D91B27');
-				rank.setColor('#D91B27');
-				score.setColor('#D91B27');
-			} else if (player.rank === 1) {
-				playerName.setPipeline('rainbow-text');
-				rank.setPipeline('rainbow-text');
-				score.setPipeline('rainbow-text');
-			}
-
-			// Add divider
-			const dividerY = playerName.y - dividerSpacing / 2;
-			if (index > 0) {
-				const divider = this.add.graphics();
-				if (player.danger) {
-					divider.lineStyle(1, 0xff0000, 0.4);
-				} else {
-					divider.lineStyle(1, 0xD4D4D4, 1);
 	}
-				divider.lineBetween(widgetX - 125, dividerY, widgetX + 125, dividerY);
 
-				if (index > 0 && player.rank - players[index - 1].rank > 1) {
-					divider.lineBetween(widgetX - 125, dividerY + 2, widgetX + 125, dividerY + 2);
-				}
-			}
-		}
 	private _updateShaders(time: number) {
 		this._pipeline.setFloat1('uTime', time / 800);
 	}
