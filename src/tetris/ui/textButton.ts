@@ -43,7 +43,7 @@ export default class TextButton {
 		if (fontStyle) {
 			this.text = scene.add.text(0, 0, text, fontStyle);
 		} else {
-			this.text = scene.add.text(0, 0, text, config.defaultSmallFontStyle);
+			this.text = scene.add.text(0, 0, text, config.ui.fonts.small.font);
 		}
 		this._buttonSpriteDown = buttonSpriteDown;
 		this._buttonSpriteUp = buttonSpriteUp;

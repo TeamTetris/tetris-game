@@ -158,7 +158,7 @@ export default class PlayScene extends Phaser.Scene {
 		this._pauseButton = new TextButton(this, 0, 0, "blue_button07.png", "blue_button08.png", "ii", () => this._changeScene(config.sceneKeys.menuScene));
 		this._pauseButton.x =  config.graphics.width - this._pauseButton.width / 2 - spacing;
 		this._pauseButton.y = this._pauseButton.height / 2 + spacing;
-		this._scoreText = this.add.text(0, (config.graphics.height - config.field.height * config.field.blockSize) / 4, "0", config.defaultLargeFontStyle);
+		this._scoreText = this.add.text(0, (config.graphics.height - config.field.height * config.field.blockSize) / 4, "0", config.ui.fonts.large.font);
 		this._updateScore("0");
 
 

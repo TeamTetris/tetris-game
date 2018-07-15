@@ -54,7 +54,7 @@ export default class CountdownWidget {
 	//region constructor
 	public constructor(scene: Phaser.Scene, x: number, y: number) {
 		this.circle = scene.add.graphics();
-		this.text = scene.add.text(0, 0, "0", config.defaultLargeFontStyle);
+		this.text = scene.add.text(0, 0, "0", config.ui.fonts.large.font);
 		this.x = x;
 		this.y = y;
 		this.update(30, 30);

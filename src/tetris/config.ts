@@ -30,6 +30,20 @@ const config = {
         countdown: {
             lineWidth: 9,
         },
+        fonts: {
+            scoreboard: {
+                size: 18,
+                font: {font: "16px Kenney Mini Square", fill: "#fff"},
+            },
+            small: {
+                size: 22,
+                font: {font: "20px Kenney Mini Square", fill: "#fff"},
+            },
+            large: {
+                size: 42,
+                font: {font: "40px Kenney Mini Square", fill: "#fff"},
+            },
+        },
     },
     field: {
         width: 10,
@@ -41,9 +55,6 @@ const config = {
         height: window.innerHeight
     },
     serverAddress: "https://tetrisboi.herokuapp.com",
-    defaultToplistFontStyle: {font: "16px Kenney Mini Square", fill: "#fff"},
-    defaultSmallFontStyle: {font: "20px Kenney Mini Square", fill: "#fff"},
-    defaultLargeFontStyle: {font: "40px Kenney Mini Square", fill: "#fff"},
 }
 
 export default config;
