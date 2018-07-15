@@ -13,10 +13,63 @@ import FieldState from "tetris/field/fieldState";
 import RemoteField from "tetris/field/remoteField";
 import CountdownWidget from "tetris/ui/countdownWidget";
 import ScoreboardWidget from "tetris/ui/scoreboardWidget";
+import ScoreWidget from "tetris/ui/scoreWidget";
 
 const PLAYER_FIELD_DRAW_OFFSET: Vector2 = new Vector2(
 	(config.graphics.width - config.field.width * config.field.blockSize) / 2, 
 	(config.graphics.height - config.field.height * config.field.blockSize) / 1.5);
+
+const players = [
+	{
+		rank: '1',
+		name: 'KDA Player ;)',
+		score: '9001',
+		danger: false,
+		ownScore: false,
+	}, {
+		rank: '2',
+		name: 'Diamond Smurf 1337',
+		score: '8442',
+		danger: false,
+		ownScore: false,
+	}, {
+		rank: '3',
+		name: 'Rank 3 - Sad AF',
+		score: '8245',
+		danger: false,
+		ownScore: false,
+	}, {
+		rank: '23',
+		name: 'Some noob above you',
+		score: '4520',
+		danger: false,
+		ownScore: false,
+	}, {
+		rank: '24',
+		name: 'You',
+		score: '4473',
+		danger: false,
+		ownScore: true,
+	}, {
+		rank: '25',
+		name: 'Random player',
+		score: '4320',
+		danger: false,
+		ownScore: false,
+	}, {
+		rank: '36',
+		name: 'Bad Player',
+		score: '3520',
+		danger: true,
+		ownScore: false,
+	}, {
+		rank: '37',
+		name: 'AFK all day long',
+		score: '892',
+		danger: true,
+		ownScore: false,
+	}
+];
 
 type changeSceneFunction = (scene: string) => void;
 
@@ -56,8 +109,9 @@ export default class PlayScene extends Phaser.Scene {
 		this._localPlayerField.update(time, delta);
 		this._player.update(time, delta);
 
-		this._updateScore(this._localPlayerField.score.toString());
-		
+		// Update UI widgets
+		this._scoreWidget.update(this._localPlayerField.score.toString());
+		this._scoreboardWidget.update(players);
 		this._countdownWidget.update(30 - (time / 1000 % 30), 30 );
 
 		if (this._localPlayerField.fieldState == FieldState.Playing && this._localPlayerField.blockStateChanged) {
@@ -82,7 +136,6 @@ export default class PlayScene extends Phaser.Scene {
 	//endregion
 
 	//region private members
-	private _scoreText: Phaser.GameObjects.Text;
 	private readonly _biasEngine: BiasEngine;
 	private readonly _brickFactory: BrickFactory;
 	private _player: Player;
@@ -95,6 +148,7 @@ export default class PlayScene extends Phaser.Scene {
 	private _pauseButton: TextButton;
 	private _changeScene: changeSceneFunction;
 	private _networkingClient: NetworkingClient;
+	private _scoreWidget: ScoreWidget;
 	private _countdownWidget: CountdownWidget;
 	private _scoreboardWidget: ScoreboardWidget;
 	private _game: Phaser.Game;
@@ -162,68 +216,11 @@ export default class PlayScene extends Phaser.Scene {
 		this._pauseButton = new TextButton(this, 0, 0, "blue_button07.png", "blue_button08.png", "ii", () => this._changeScene(config.sceneKeys.menuScene));
 		this._pauseButton.x =  config.graphics.width - this._pauseButton.width / 2 - spacing;
 		this._pauseButton.y = this._pauseButton.height / 2 + spacing;
-		this._scoreText = this.add.text(0, (config.graphics.height - config.field.height * config.field.blockSize) / 4, "0", config.ui.fonts.large.font);
-		this._updateScore("0");
 
-
+		// create UI widgets
+		this._scoreWidget = new ScoreWidget(this, config.graphics.width / 2, (config.graphics.height - config.field.height * config.field.blockSize) / 4);
 		this._countdownWidget = new CountdownWidget(this, config.graphics.width / 5 * 4, config.graphics.height / 30 * 8);
-		this._countdownWidget.update(30, 30);
-
-
-		const players = [
-			{
-				rank: '1',
-				name: 'KDA Player ;)',
-				score: '9001',
-				danger: false,
-				ownScore: false,
-			}, {
-				rank: '2',
-				name: 'Diamond Smurf 1337',
-				score: '8442',
-				danger: false,
-				ownScore: false,
-			}, {
-				rank: '3',
-				name: 'Rank 3 - Sad AF',
-				score: '8245',
-				danger: false,
-				ownScore: false,
-			}, {
-				rank: '23',
-				name: 'Some noob above you',
-				score: '4520',
-				danger: false,
-				ownScore: false,
-			}, {
-				rank: '24',
-				name: 'You',
-				score: '4473',
-				danger: false,
-				ownScore: true,
-			}, {
-				rank: '25',
-				name: 'Random player',
-				score: '4320',
-				danger: false,
-				ownScore: false,
-			}, {
-				rank: '36',
-				name: 'Bad Player',
-				score: '3520',
-				danger: true,
-				ownScore: false,
-			}, {
-				rank: '37',
-				name: 'AFK all day long',
-				score: '892',
-				danger: true,
-				ownScore: false,
-			}
-		];
-		
 		this._scoreboardWidget = new ScoreboardWidget(this, config.graphics.width / 5 * 4, config.graphics.height / 20 * 9);
-		this._scoreboardWidget.update(players);
 	}
 
 	private _initializeShaders() {
@@ -238,11 +235,6 @@ export default class PlayScene extends Phaser.Scene {
 
 	private _updateShaders(time: number) {
 		this._pipeline.setFloat1('uTime', time / 800);
-	}
-
-	private _updateScore(score: string) {
-		this._scoreText.setText(score);
-		this._scoreText.x = (config.graphics.width - this._scoreText.width) / 2;
 	}
 	//endregion
 }
