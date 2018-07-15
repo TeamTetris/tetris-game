@@ -111,7 +111,6 @@ export default class PlayScene extends Phaser.Scene {
 
 		// Update UI widgets
 		this._scoreWidget.update(this._localPlayerField.score.toString());
-		this._scoreboardWidget.update(players);
 		this._countdownWidget.update(30 - (time / 1000 % 30), 30 );
 
 		if (this._localPlayerField.fieldState == FieldState.Playing && this._localPlayerField.blockStateChanged) {
@@ -221,6 +220,7 @@ export default class PlayScene extends Phaser.Scene {
 		this._scoreWidget = new ScoreWidget(this, config.graphics.width / 2, (config.graphics.height - config.field.height * config.field.blockSize) / 4);
 		this._countdownWidget = new CountdownWidget(this, config.graphics.width / 5 * 4, config.graphics.height / 30 * 8);
 		this._scoreboardWidget = new ScoreboardWidget(this, config.graphics.width / 5 * 4, config.graphics.height / 20 * 9);
+		this._scoreboardWidget.update(players);
 	}
 
 	private _initializeShaders() {
