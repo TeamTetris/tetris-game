@@ -111,10 +111,7 @@ export default class PlayScene extends Phaser.Scene {
 		this._scoreWidget.update(this._localPlayerField.score.toString());
 		this._countdownWidget.update(30 - (time / 1000 % 30), 30 );
 
-		if (this._localPlayerField.fieldState == FieldState.Playing && this._localPlayerField.blockStateChanged) {
-			this._localPlayerField.blockStateChanged = false;
-			this._game.networkingClient.emit("fieldUpdate", { fieldState: this._localPlayerField.serializedBlockState});
-		}
+		this._pushMultiplayerUpdate();
 		this._updateShaders(time);
 	}
 
@@ -235,6 +232,18 @@ export default class PlayScene extends Phaser.Scene {
 
 	private _updateShaders(time: number): void {
 		this._pipeline.setFloat1('uTime', time / 800);
+	}
+
+	private _pushMultiplayerUpdate() {
+		if (this._localPlayerField.fieldState == FieldState.Playing && this._localPlayerField.blockStateChanged) {
+			this._localPlayerField.blockStateChanged = false;
+			const matchUpdate = {
+				matchId: this._matchId,
+				points: this._localPlayerField.score,
+				field: this._localPlayerField.serializedBlockState,
+			}
+			this._game.networkingClient.emit("matchUpdate", matchUpdate);
+		}
 	}
 
 	private _startMatch(): void {
