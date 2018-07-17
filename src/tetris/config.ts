@@ -55,6 +55,6 @@ const config = {
         height: window.innerHeight
     },
     serverAddress: "https://tetrisboi.herokuapp.com",
-}
+};
 
 export default config;
