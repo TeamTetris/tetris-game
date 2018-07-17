@@ -3,6 +3,24 @@
 import TextButton from "tetris/ui/textButton";
 import config from "tetris/config";
 import Game from "tetris/game";
+import PlayScene from "tetris/scene/playScene";
+
+export interface MatchmakingInfo {
+	playersInQueue: number;
+}
+
+export interface SerializedMatch {
+	id: number;
+	players: Object[];
+	startTime: Date;
+	joinUntil: Date;
+	nextElimination: Date; 
+}
+
+export interface JoinResult {
+	success: boolean;
+	message:string;
+}
 
 export default class MenuScene extends Phaser.Scene {
 
@@ -18,6 +36,7 @@ export default class MenuScene extends Phaser.Scene {
 	public create(): void {
 		this._createBackground();
 		this._createButtons();
+		this._registerNetworkEvents();
 	}
 
 	public update(time: number, delta: number): void {
@@ -66,10 +85,42 @@ export default class MenuScene extends Phaser.Scene {
 		const menuStartX: number = config.graphics.width / 2;
 		const menuStartY: number = config.graphics.height / 3;
 		const spacing: number = 20;
-		this._playButton = new TextButton(this, menuStartX, 0, "blue_button00.png", "blue_button01.png", "Start Game", () => this._game.changeScene(config.sceneKeys.playScene));
-		this._optionsButton = new TextButton(this, menuStartX, 0, "blue_button00.png", "blue_button01.png", "Options", () => {});
+		this._playButton = new TextButton(this, menuStartX, 0, "blue_button00.png", "blue_button01.png", "Join Matchmaking", this._joinMatchmaking.bind(this));
+		this._optionsButton = new TextButton(this, menuStartX, 0, "blue_button00.png", "blue_button01.png", "Leave Matchmaking", this._leaveMatchmaking.bind(this));
 		this._playButton.y = menuStartY;
 		this._optionsButton.y = menuStartY + this._playButton.height + spacing;
 	}
-	//endregion
+
+	private _joinMatchmaking(): void {
+		this._game.networkingClient.emit("joinMatchmaking", {});
+	}
+
+	private _leaveMatchmaking(): void {
+		this._game.networkingClient.emit("leaveMatchmaking", {});
+	}
+
+	private _registerNetworkEvents(): void {
+		this._game.networkingClient.receive("matchmakingUpdate", this._updateMatchmakingInfo.bind(this));
+		this._game.networkingClient.receive("matchReady", this._joinMatch.bind(this));
+	}
+
+	private _updateMatchmakingInfo(matchmakingUpdate: MatchmakingInfo) {
+		// TODO: Update Matchmaking Widget
+		console.log("matchmakingUpdate: " + JSON.stringify(matchmakingUpdate));
+	}
+
+	private _joinMatch(match: SerializedMatch): void {
+		this._game.networkingClient.emit("joinMatch", {matchId: match.id}, (result: JoinResult) => {
+			if (result.success) {
+				this._game.changeScene(config.sceneKeys.playScene);
+				(this.scene.get(config.sceneKeys.playScene) as PlayScene).joinMatch(match.id);
+			} else {
+				// TODO: Display Matchmaking Error
+				console.error(`Could not join match ${match.id}. ${result.message}`);
+			}
+		});
+		
+	}
+
+ 	//endregion
 }

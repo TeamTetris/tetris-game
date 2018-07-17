@@ -88,8 +88,7 @@ export default class PlayScene extends Phaser.Scene {
 		this._localPlayerField = this._newField(config.field.width, config.field.height, PLAYER_FIELD_DRAW_OFFSET);
 		this._player = new LocalPlayer(this._localPlayerField, this.input.keyboard, this._game.biasEngine.newEventReceiver());
 		
-		this._setupNetworkingClient();
-		this._game.networkingClient.connect();
+		this._registerNetworkEvents();
 
 		this._remotePlayerFields = new Map<string, RemoteField>();
 
@@ -117,6 +116,10 @@ export default class PlayScene extends Phaser.Scene {
 			this._game.networkingClient.emit("fieldUpdate", { fieldState: this._localPlayerField.serializedBlockState});
 		}
 		this._updateShaders(time);
+	}
+
+	public joinMatch(id: number) {
+		this._matchId = id;
 	}
 	//endregion
 
@@ -146,10 +149,11 @@ export default class PlayScene extends Phaser.Scene {
 	private _scoreboardWidget: ScoreboardWidget;
 	private readonly _game: Game;
 	private _pipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
+	private _matchId: number;
 	//endregion
 
 	//region private methods
-	private _setupNetworkingClient(): void {
+	private _registerNetworkEvents(): void {
 		this._game.networkingClient.receive("playerLeft", (args) => {
 			this._removeRemoteField(args.id);
 		});

@@ -9,8 +9,8 @@ export default class NetworkingClient {
 	//endregion
 
   //region public methods
-  public emit(event: string, args) {
-    this._socket.emit(event, args);
+  public emit(event: string, args: any, acknowledgement: Function = null) {
+    this._socket.emit(event, args, acknowledgement);
   }
 
   public receive(event: string, callback: Function) {
