@@ -10,19 +10,19 @@ export default class ScoreWidget {
 	//endregion
 
 	//region public methods
-	get height() {
+	get height(): number {
 		return this.score.height;
 	}
 
-	get width() {
+	get width(): number {
 		return this.score.width;
 	}
 
-	get x() {
+	get x(): number {
 		return this.score.x;
 	}
 
-	get y() {
+	get y(): number {
 		return this.score.y;
 	}
 
@@ -36,7 +36,7 @@ export default class ScoreWidget {
 		this._adjustTextY();
 	}
 
-	public update(score: string) {
+	public update(score: string): void {
         this.score.setText(score);
         this._adjustTextX();
 	}
@@ -56,11 +56,11 @@ export default class ScoreWidget {
 	//endregion
 
     //region private methods
-    private _adjustTextX() {
+    private _adjustTextX(): void {
         this.score.x = this._x - this.score.width / 2;
     }
 
-    private _adjustTextY() {
+    private _adjustTextY(): void {
         this.score.y = this._y - this.score.height / 2;
     }
 	//endregion

@@ -10,19 +10,19 @@ export default class CountdownWidget {
 	//endregion
 
 	//region public methods
-	get height() {
+	get height(): number {
 		return this._radius * 2;
 	}
 
-	get width() {
+	get width(): number {
 		return this._radius * 2;
 	}
 
-	get x() {
+	get x(): number {
 		return this.circle.x;
 	}
 
-	get y() {
+	get y(): number {
 		return this.circle.y;
 	}
 
@@ -36,7 +36,7 @@ export default class CountdownWidget {
 		this._adjustTextPosition();
 	}
 
-	public update(time: number, totalTime: number) {
+	public update(time: number, totalTime: number): void {
 		if (totalTime <= 0) {
 			throw new Error(`Can't update countdown with total time smaller or equal 0. totalTime: ${totalTime}`);
 		}
@@ -66,7 +66,7 @@ export default class CountdownWidget {
 	//endregion
 
 	//region private methods
-	private _updateCircle(percentage: number) {
+	private _updateCircle(percentage: number): void {
 		const startRad = Phaser.Math.DegToRad(270);
 		const endRad = CountdownWidget._phaserRadius(percentage);
 		
@@ -83,7 +83,7 @@ export default class CountdownWidget {
 		this.circle.strokePath();
 	}
 
-	private _updateText(percentage: number, time: number) {
+	private _updateText(percentage: number, time: number): void {
 		if (percentage < 25) {
 			this.text.setText(time.toFixed(3).toString());
 		} else {
@@ -92,7 +92,7 @@ export default class CountdownWidget {
 		this._adjustTextPosition();
 	}
 
-	private _setColors(percentage: number) {
+	private _setColors(percentage: number): void {
 		if (percentage < 25) {
 			this.circle.lineStyle(config.ui.countdown.lineWidth, config.ui.colors.red.hex);
 			this.text.setColor(config.ui.colors.red.string);
@@ -108,12 +108,12 @@ export default class CountdownWidget {
 		}
 	}
 	
-	private _adjustTextPosition() {
+	private _adjustTextPosition(): void {
 		this.text.x = this.x - this.text.width / 2;
 		this.text.y = this.y - this.text.height / 1.5;
 	}
 
-	private static _phaserRadius(percentage: number) {
+	private static _phaserRadius(percentage: number): number {
 		const deg = percentage * 360 / 100;
 		return Phaser.Math.DegToRad(deg + 270 % 360);
 	}

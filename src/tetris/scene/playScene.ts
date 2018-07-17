@@ -155,13 +155,13 @@ export default class PlayScene extends Phaser.Scene {
 	//endregion
 
 	//region private methods
-	private _setupNetworkingClient() {
+	private _setupNetworkingClient(): void {
 		this._networkingClient.receive("playerLeft", (args) => {
-			console.log('playerLeft:', args.id)
+			console.log('playerLeft:', args.id);
 			this._removeRemoteField(args.id);
 		});
 		this._networkingClient.receive("playerJoined", (args) => {
-			console.log('playerJoined:', args.id)
+			console.log('playerJoined:', args.id);
 			this._addRemoteField(args.id);
 		});
 		this._networkingClient.receive("fieldUpdate", (args) => {
@@ -181,13 +181,13 @@ export default class PlayScene extends Phaser.Scene {
 		});
 	}
 
-	private _addRemoteField(index: string) {
+	private _addRemoteField(index: string): void {
 		const position = new Vector2(420 + (this._remotePlayerFieldIndex % 4) * 180, 80 + Math.floor(this._remotePlayerFieldIndex / 4) * 300);
 		this._remotePlayerFieldIndex++;
 		this._remotePlayerFields.set(index, new RemoteField(this, config.field.width, config.field.height, position, this._createFieldBackground(position, 0.5), 0.5));
 	}
 
-	private _removeRemoteField(index: string) {
+	private _removeRemoteField(index: string): void {
 		this._remotePlayerFields.get(index).destroy();
 		this._remotePlayerFields.delete(index);
 	}
@@ -204,7 +204,7 @@ export default class PlayScene extends Phaser.Scene {
 		return new Field(fieldWidth, fieldHeight, drawOffset, this._brickFactory);
 	}
 
-	private _createUi() {
+	private _createUi(): void {
 		this._initializeShaders();
 
 		const background = this.add.graphics();
@@ -223,7 +223,7 @@ export default class PlayScene extends Phaser.Scene {
 		this._scoreboardWidget.update(players);
 	}
 
-	private _initializeShaders() {
+	private _initializeShaders(): void {
 		this._pipeline = new Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline({
 			game: this._game,
 			renderer: this._game.renderer, 
@@ -233,7 +233,7 @@ export default class PlayScene extends Phaser.Scene {
 		this._pipeline.setFloat2('uResolution', config.graphics.width, config.graphics.height);
 	}
 
-	private _updateShaders(time: number) {
+	private _updateShaders(time: number): void {
 		this._pipeline.setFloat1('uTime', time / 800);
 	}
 	//endregion
