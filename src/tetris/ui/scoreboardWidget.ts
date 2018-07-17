@@ -8,12 +8,12 @@ export interface PlayerScore {
     score: string;
     danger: boolean;
     ownScore: boolean;
-};
+}
 
 export interface Font {
     size: number,
     font: {},
-};
+}
 
 export default class ScoreboardWidget {
 
@@ -73,7 +73,7 @@ export default class ScoreboardWidget {
         this._y = y;
 	}
 
-	public update(playerScores: PlayerScore[]) {
+	public update(playerScores: PlayerScore[]): void {
 		this._clearScoreboard();
 
 		for (const [index, player] of playerScores.entries()) {
@@ -83,7 +83,7 @@ export default class ScoreboardWidget {
 			if (index > 0) {
                 const currentPlayerRank = parseInt(player.rank, 10);
                 const previousPlayerRank = parseInt(playerScores[index - 1].rank, 10);
-                const doubleLine = currentPlayerRank - previousPlayerRank > 1 ? true : false;
+                const doubleLine = currentPlayerRank - previousPlayerRank > 1;
                 const lineColor = player.danger ? config.ui.colors.red.hex : config.ui.colors.white.hex;
                 this._createDivider(index, lineColor, doubleLine);
             }
@@ -101,14 +101,14 @@ export default class ScoreboardWidget {
 	//endregion
 
 	//region private members
-    private _scene: Phaser.Scene
+    private _scene: Phaser.Scene;
     private _x: number = 0;
     private _y: number = 0;
     private _font: Font;
 	//endregion
 
     //region private methods
-    private _clearScoreboard() {
+    private _clearScoreboard(): void {
         for (let index = 0; index < this.ranks.length; index++) {
             this.ranks[index].destroy();
             this.names[index].destroy();
@@ -119,7 +119,7 @@ export default class ScoreboardWidget {
         this.scores.splice(0, this.scores.length - 1);
     }
 
-    private _createPlayerText(index: number, player: PlayerScore) {
+    private _createPlayerText(index: number, player: PlayerScore): void {
         // Add rank text
         const rank = this._scene.add.text(0, 0, player.rank, this._font.font);
         rank.x = this.x - 125 - rank.width / 2;
@@ -151,7 +151,7 @@ export default class ScoreboardWidget {
         }
     }
 
-    private _createDivider(index: number, color: number, double: boolean = false) {
+    private _createDivider(index: number, color: number, double: boolean = false): void {
         // Create graphic
         const divider = this._scene.add.graphics();
         const dividerY = this.y + index * (config.ui.spacing + this._font.size) - config.ui.spacing / 2;
