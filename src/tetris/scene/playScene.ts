@@ -85,8 +85,6 @@ export default class PlayScene extends Phaser.Scene {
 		this._createUi();
 		this._startMatch();
 
-		this._playerFieldBackground = this._createFieldBackground(PLAYER_FIELD_DRAW_OFFSET);
-
 		this._localPlayerField = this._newField(config.field.width, config.field.height, PLAYER_FIELD_DRAW_OFFSET);
 		this._player = new LocalPlayer(this._localPlayerField, this.input.keyboard, this._game.biasEngine.newEventReceiver());
 		
@@ -96,6 +94,8 @@ export default class PlayScene extends Phaser.Scene {
 		this._remotePlayerFields = new Map<string, RemoteField>();
 
 		this._pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C);
+
+
 	}
 
 	public update(time: number, delta: number): void {
@@ -173,12 +173,16 @@ export default class PlayScene extends Phaser.Scene {
 	}
 
 	private _addRemoteField(index: string): void {
-		const position = new Vector2(420 + (this._remotePlayerFieldIndex % 4) * 180, 80 + Math.floor(this._remotePlayerFieldIndex / 4) * 300);
+		const drawScale = 0.7;
+		const position = new Vector2(
+			config.graphics.width / 20 + (config.field.width * config.field.blockSize * drawScale + config.ui.spacing) * this._remotePlayerFieldIndex , 
+			config.graphics.height / 4);
 		this._remotePlayerFieldIndex++;
-		this._remotePlayerFields.set(index, new RemoteField(this, config.field.width, config.field.height, position, this._createFieldBackground(position, 0.5), 0.5));
+		this._remotePlayerFields.set(index, new RemoteField(this, config.field.width, config.field.height, position, this._createFieldBackground(position, drawScale), drawScale));
 	}
 
 	private _removeRemoteField(index: string): void {
+		this._remotePlayerFieldIndex--;
 		this._remotePlayerFields.get(index).destroy();
 		this._remotePlayerFields.delete(index);
 	}
@@ -192,6 +196,7 @@ export default class PlayScene extends Phaser.Scene {
 	}
 
 	private _newField(fieldWidth: number, fieldHeight: number, drawOffset: Vector2): Field {
+		this._createFieldBackground(drawOffset);
 		return new Field(fieldWidth, fieldHeight, drawOffset, this._brickFactory);
 	}
 
