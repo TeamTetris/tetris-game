@@ -13,7 +13,7 @@ import CountdownWidget from "tetris/ui/countdownWidget";
 import ScoreboardWidget from "tetris/ui/scoreboardWidget";
 import ScoreWidget from "tetris/ui/scoreWidget";
 import Game from "tetris/game";
-import Match from "tetris/match/match";
+import Match from "tetris/interfaces/Match";
 
 const PLAYER_FIELD_DRAW_OFFSET: Vector2 = new Vector2(
 	(config.graphics.width - config.field.width * config.field.blockSize) / 2, 

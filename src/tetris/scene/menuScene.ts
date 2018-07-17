@@ -4,23 +4,9 @@ import TextButton from "tetris/ui/textButton";
 import config from "tetris/config";
 import Game from "tetris/game";
 import PlayScene from "tetris/scene/playScene";
-
-export interface MatchmakingInfo {
-	playersInQueue: number;
-}
-
-export interface SerializedMatch {
-	id: number;
-	players: Object[];
-	startTime: Date;
-	joinUntil: Date;
-	nextElimination: Date; 
-}
-
-export interface JoinResult {
-	success: boolean;
-	message:string;
-}
+import MatchmakingInfo from "tetris/interfaces/MatchmakingInfo";
+import Match from "tetris/interfaces/Match";
+import JoinResult from "tetris/interfaces/JoinResult";
 
 export default class MenuScene extends Phaser.Scene {
 
@@ -109,7 +95,7 @@ export default class MenuScene extends Phaser.Scene {
 		console.log("matchmakingUpdate: " + JSON.stringify(matchmakingUpdate));
 	}
 
-	private _joinMatch(match: SerializedMatch): void {
+	private _joinMatch(match: Match): void {
 		this._game.networkingClient.emit("joinMatch", {matchId: match.id}, (result: JoinResult) => {
 			if (result.success) {
 				this._game.changeScene(config.sceneKeys.playScene);
