@@ -72,7 +72,7 @@ export default class Profiler {
 				this._handleNewFace(faceAnalysisService, measurement)
 		);
 		geoLocationService.run(this._consumeService.bind(this));
-		this._requestWebcam();
+		this._requestPicture();
 	}
 	//endregion
 
@@ -91,7 +91,7 @@ export default class Profiler {
 		});
 	}
 
-	private async _requestWebcam(): Promise<void> {
+	private async _requestPicture(): Promise<void> {
 		await CameraController.instance.startVideoStream();
 		const dialog = await Dialog.display('camera-modal', 'Take a photo')
 			.addAcceptButton('camera-modal-accept-button')
