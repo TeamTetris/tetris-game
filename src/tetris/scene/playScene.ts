@@ -3,17 +3,16 @@
 import Field from "tetris/field/field";
 import Player from "tetris/player/player";
 import BrickFactory from "tetris/brick/brickFactory";
-import BiasEngine from "tetris/biasEngine/biasEngine";
 import LocalPlayer from "tetris/player/localPlayer";
 import TextButton from "tetris/ui/textButton";
 import config from "tetris/config";
 import Vector2 = Phaser.Math.Vector2;
-import NetworkingClient from "tetris/networking/networkingClient";
 import FieldState from "tetris/field/fieldState";
 import RemoteField from "tetris/field/remoteField";
 import CountdownWidget from "tetris/ui/countdownWidget";
 import ScoreboardWidget from "tetris/ui/scoreboardWidget";
 import ScoreWidget from "tetris/ui/scoreWidget";
+import Game from "tetris/game";
 
 const PLAYER_FIELD_DRAW_OFFSET: Vector2 = new Vector2(
 	(config.graphics.width - config.field.width * config.field.blockSize) / 2, 
@@ -71,8 +70,6 @@ const players = [
 	}
 ];
 
-type changeSceneFunction = (scene: string) => void;
-
 export default class PlayScene extends Phaser.Scene {
 
 	//region public members
@@ -89,10 +86,10 @@ export default class PlayScene extends Phaser.Scene {
 		this._playerFieldBackground = this._createFieldBackground(PLAYER_FIELD_DRAW_OFFSET);
 
 		this._localPlayerField = this._newField(config.field.width, config.field.height, PLAYER_FIELD_DRAW_OFFSET);
-		this._player = new LocalPlayer(this._localPlayerField, this.input.keyboard, this._biasEngine.newEventReceiver());
+		this._player = new LocalPlayer(this._localPlayerField, this.input.keyboard, this._game.biasEngine.newEventReceiver());
 		
 		this._setupNetworkingClient();
-		this._networkingClient.connect();
+		this._game.networkingClient.connect();
 
 		this._remotePlayerFields = new Map<string, RemoteField>();
 
@@ -115,27 +112,23 @@ export default class PlayScene extends Phaser.Scene {
 
 		if (this._localPlayerField.fieldState == FieldState.Playing && this._localPlayerField.blockStateChanged) {
 			this._localPlayerField.blockStateChanged = false;
-			this._networkingClient.emit("fieldUpdate", { fieldState: this._localPlayerField.serializedBlockState});
+			this._game.networkingClient.emit("fieldUpdate", { fieldState: this._localPlayerField.serializedBlockState});
 		}
 		this._updateShaders(time);
 	}
 	//endregion
 
 	//region constructor
-	public constructor(game: Phaser.Game, biasEngine: BiasEngine, changeScene: changeSceneFunction, networkingClient: NetworkingClient) {
+	public constructor(game: Game) {
 		super({
 			key: "PlayScene"
 		});
-		this._biasEngine = biasEngine;
-		this._brickFactory = new BrickFactory(this, biasEngine);
-		this._changeScene = changeScene;
-		this._networkingClient = networkingClient;
 		this._game = game;
+		this._brickFactory = new BrickFactory(this, this._game.biasEngine);
 	}
 	//endregion
 
 	//region private members
-	private readonly _biasEngine: BiasEngine;
 	private readonly _brickFactory: BrickFactory;
 	private _player: Player;
 	private _localPlayerField: Field;
@@ -145,26 +138,24 @@ export default class PlayScene extends Phaser.Scene {
 	private _remotePlayerFieldIndex = 0;
 	private _playerFieldBackground: Phaser.GameObjects.Graphics;
 	private _pauseButton: TextButton;
-	private _changeScene: changeSceneFunction;
-	private _networkingClient: NetworkingClient;
 	private _scoreWidget: ScoreWidget;
 	private _countdownWidget: CountdownWidget;
 	private _scoreboardWidget: ScoreboardWidget;
-	private _game: Phaser.Game;
+	private readonly _game: Game;
 	private _pipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
 	//endregion
 
 	//region private methods
 	private _setupNetworkingClient(): void {
-		this._networkingClient.receive("playerLeft", (args) => {
+		this._game.networkingClient.receive("playerLeft", (args) => {
 			console.log('playerLeft:', args.id);
 			this._removeRemoteField(args.id);
 		});
-		this._networkingClient.receive("playerJoined", (args) => {
+		this._game.networkingClient.receive("playerJoined", (args) => {
 			console.log('playerJoined:', args.id);
 			this._addRemoteField(args.id);
 		});
-		this._networkingClient.receive("fieldUpdate", (args) => {
+		this._game.networkingClient.receive("fieldUpdate", (args) => {
 			const field = this._remotePlayerFields.get(args.id);
 			if (!field) {
 				console.warn("WARNING: Had to create player field; currentplayers MISSED?");
@@ -172,7 +163,7 @@ export default class PlayScene extends Phaser.Scene {
 			}
 			field.updateSprites(args.fieldState);
 		});
-		this._networkingClient.receive("currentPlayers", (args) => {
+		this._game.networkingClient.receive("currentPlayers", (args) => {
 			console.log("Received currentPlayers");
 			args.players.forEach(player => {
 				this._addRemoteField(player);
@@ -212,7 +203,7 @@ export default class PlayScene extends Phaser.Scene {
 		background.fillRect(0, 0, config.graphics.width, config.graphics.height);
 
 		const spacing: number = 5;
-		this._pauseButton = new TextButton(this, 0, 0, "blue_button07.png", "blue_button08.png", "ii", () => this._changeScene(config.sceneKeys.menuScene));
+		this._pauseButton = new TextButton(this, 0, 0, "blue_button07.png", "blue_button08.png", "ii", () => this._game.changeScene(config.sceneKeys.menuScene));
 		this._pauseButton.x =  config.graphics.width - this._pauseButton.width / 2 - spacing;
 		this._pauseButton.y = this._pauseButton.height / 2 + spacing;
 

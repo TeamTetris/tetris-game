@@ -22,16 +22,27 @@ const gameConfig: GameConfig = {
 
 
 // game class
-export class Game extends Phaser.Game {
+export default class Game extends Phaser.Game {
 
 	//region public members
+	public get networkingClient(): NetworkingClient {
+		return this._networkingClient;
+	}
+
+	public get biasEngine(): BiasEngine {
+		return this._biasEngine;
+	}
+
+	public get profiler(): Profiler {
+		return this._profiler;
+	}
 	//endregion
 
 	//region public methods
 	public start() {
 		super.start();
-		const menuScene = new MenuScene(this, this.changeScene.bind(this));
-		const playScene = new PlayScene(this, this._biasEngine, this.changeScene.bind(this), this._networkingClient);
+		const menuScene = new MenuScene(this);
+		const playScene = new PlayScene(this);
 
 		this.scene.add(config.sceneKeys.playScene, playScene);
 		this.scene.add(config.sceneKeys.menuScene, menuScene, true);
@@ -42,6 +53,12 @@ export class Game extends Phaser.Game {
 		super.step(time, delta);
 		this._profiler.update(time, delta);
 		this._biasEngine.update(time, delta);
+	}
+
+	public changeScene(scene: string) {
+		this.scene.switch(this._activeScene, scene);
+		this.scene.swapPosition(this._activeScene, scene);
+		this._activeScene = scene;
 	}
 	//endregion
 
@@ -62,11 +79,6 @@ export class Game extends Phaser.Game {
 	//endregion
 
 	//region private methods
-	private changeScene(scene: string) {
-		this.scene.switch(this._activeScene, scene);
-		this.scene.swapPosition(this._activeScene, scene);
-		this._activeScene = scene;
-	}	
 	//endregion
 }
 

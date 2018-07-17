@@ -1,12 +1,8 @@
 /// <reference path="../../../definitions/phaser.d.ts"/>
 
 import TextButton from "tetris/ui/textButton";
-import Vector2 = Phaser.Math.Vector2;
 import config from "tetris/config";
-
-const FIELD_DRAW_OFFSET: Vector2 = new Vector2(0, 0);
-
-type changeSceneFunction = (scene: string) => void;
+import Game from "tetris/game";
 
 export default class MenuScene extends Phaser.Scene {
 
@@ -30,12 +26,11 @@ export default class MenuScene extends Phaser.Scene {
 	//endregion
 
 	//region constructor
-	public constructor(game: Phaser.Game, changeScene: changeSceneFunction) {
+	public constructor(game: Game) {
 		super({
 			key: "MenuScene"
 		});
 		this._game = game;
-		this._changeScene = changeScene;
 	}
 	//endregion
 
@@ -43,8 +38,7 @@ export default class MenuScene extends Phaser.Scene {
 	private _background: Phaser.GameObjects.Sprite;
 	private _playButton: TextButton;
 	private _optionsButton: TextButton;
-	private _changeScene: changeSceneFunction;
-	private _game: Phaser.Game;
+	private readonly _game: Game;
 	private _pipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
 	//endregion
 
@@ -71,8 +65,8 @@ export default class MenuScene extends Phaser.Scene {
 	private _createButtons(): void {
 		const menuStartX: number = config.graphics.width / 2;
 		const menuStartY: number = config.graphics.height / 3;
-		const spacing: number = 20
-		this._playButton = new TextButton(this, menuStartX, 0, "blue_button00.png", "blue_button01.png", "Start Game", () => this._changeScene(config.sceneKeys.playScene));
+		const spacing: number = 20;
+		this._playButton = new TextButton(this, menuStartX, 0, "blue_button00.png", "blue_button01.png", "Start Game", () => this._game.changeScene(config.sceneKeys.playScene));
 		this._optionsButton = new TextButton(this, menuStartX, 0, "blue_button00.png", "blue_button01.png", "Options", () => {});
 		this._playButton.y = menuStartY;
 		this._optionsButton.y = menuStartY + this._playButton.height + spacing;
