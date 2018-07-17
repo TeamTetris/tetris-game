@@ -28,15 +28,15 @@ export default class Dialog {
 		});
 	}
 
-	public addAcceptButton(buttonId: string): Dialog {
-		document.getElementById(buttonId).addEventListener('click', () => {
+	public addAcceptElement(element: HTMLElement): Dialog {
+		element.addEventListener("click", () => {
 			this.result = DialogResult.Accepted;
 		});
 		return this;
 	}
 
-	public addRejectButton(buttonId: string): Dialog {
-		document.getElementById(buttonId).addEventListener('click', () => {
+	public addRejectElement(element: HTMLElement): Dialog {
+		element.addEventListener("click", () => {
 			this.result = DialogResult.Rejected;
 		});
 		return this;
@@ -44,11 +44,20 @@ export default class Dialog {
 	//endregion
 
 	//region constructor
-	public static display(modalId: string, title: string, closeOnSideClick: boolean = true): Dialog {
+	public static display(modalId: string, title: string, closeOnSideClick: boolean = true): Promise<Dialog> {
 		try {
 			const dialog = new Dialog(modalId, closeOnSideClick);
 			dialog.title = title;
-			return dialog;
+
+			for (const acceptElement: HTMLElement of dialog._htmlElement.getElementsByClassName("dialog-accept-element")) {
+				dialog.addAcceptElement(acceptElement);
+			}
+
+			for (const rejectElement: HTMLElement of dialog._htmlElement.getElementsByClassName("dialog-reject-element")) {
+				dialog.addRejectElement(rejectElement);
+			}
+
+			return dialog.show();
 		} catch {
 			console.warn("Can not display modal " + modalId);
 		}
