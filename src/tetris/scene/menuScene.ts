@@ -16,6 +16,7 @@ export default class MenuScene extends Phaser.Scene {
 	//region public methods
 	public preload(): void {
 		this.load.atlas(config.atlasKeys.uiSpriteAtlasKey, "./assets/images/uiSprites.png", "./assets/images/uiSprites.json");
+		this.load.glsl('rainbow', "./assets/shaders/rainbow.glsl")
 	}
 
 	public create(): void {
@@ -24,31 +25,47 @@ export default class MenuScene extends Phaser.Scene {
 	}
 
 	public update(time: number, delta: number): void {
-		
+		this._pipeline.setFloat1('uTime', time / 800);
 	}
 	//endregion
 
 	//region constructor
-	public constructor(changeScene: changeSceneFunction) {
+	public constructor(game: Phaser.Game, changeScene: changeSceneFunction) {
 		super({
 			key: "MenuScene"
 		});
+		this._game = game;
 		this._changeScene = changeScene;
 	}
 	//endregion
 
 	//region private members
-	private _background: Phaser.GameObjects.Graphics;
+	private _background: Phaser.GameObjects.Sprite;
 	private _playButton: TextButton;
 	private _optionsButton: TextButton;
 	private _changeScene: changeSceneFunction;
+	private _game: Phaser.Game;
+	private _pipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
 	//endregion
 
 	//region private methods
 	private _createBackground(): void {
-		this._background = this.add.graphics();
-		this._background.fillStyle(0x00ffff);
-		this._background.fillRect(0, 0, config.graphics.width, config.graphics.height);
+		const backgroundGraphics = this.add.graphics();
+		this._pipeline = new Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline({
+			game: this._game,
+			renderer: this._game.renderer, 
+			fragShader: this.cache.shader.get('rainbow') 
+		});
+		(this._game.renderer as Phaser.Renderer.WebGL.WebGLRenderer).addPipeline('rainbow', this._pipeline);
+
+		this._pipeline.setFloat2('uResolution', config.graphics.width, config.graphics.height);
+
+		backgroundGraphics.fillStyle(0xffffff);
+		backgroundGraphics.fillRect(0, 0, config.graphics.width, config.graphics.height);
+		backgroundGraphics.generateTexture('backgroundGraphics');
+		this._background = this.add.sprite(config.graphics.width / 2, config.graphics.height / 2, 'backgroundGraphics');
+
+		this._background.setPipeline('rainbow');
 	}
 
 	private _createButtons(): void {

@@ -1,6 +1,7 @@
 /// <reference path="../../../definitions/phaser.d.ts"/>
 
 import config from "tetris/config";
+import { Font } from "tetris/ui/scoreboardWidget";
 
 export default class TextButton {
 
@@ -10,49 +11,44 @@ export default class TextButton {
 	//endregion
 
 	//region public methods
-	get height() {
+	get height(): number {
 		return this.button.height;
 	}
 
-	get width() {
+	get width(): number {
 		return this.button.width;
 	}
 
-	get x() {
+	get x(): number {
 		return this.button.x;
 	}
 
-	get y() {
+	get y(): number {
 		return this.button.y;
 	}
 
 	set x(x: number) {
 		this.button.x = x;
-		this._setTextX(x);
+		this._adjustTextX();
 	}
 
 	set y(y: number) {
 		this.button.y = y;
-		this._setTextY(y);
+		this._adjustTextY();
 	}
 	//endregion
 
 	//region constructor
-	public constructor(scene: Phaser.Scene, x: number, y: number, buttonSpriteUp: string, buttonSpriteDown: string, text: string, onClick: () => any, fontStyle?: object) {
-		this.button = scene.add.sprite(x, y, config.atlasKeys.uiSpriteAtlasKey, buttonSpriteUp);
-		if (fontStyle) {
-			this.text = scene.add.text(0, 0, text, fontStyle);
-		} else {
-			this.text = scene.add.text(0, 0, text, config.defaultSmallFontStyle);
-		}
+	public constructor(scene: Phaser.Scene, x: number, y: number, buttonSpriteUp: string, buttonSpriteDown: string, text: string, onClick: () => any, font: Font = config.ui.fonts.small) {
+		this.button = scene.add.sprite(0, 0, config.atlasKeys.uiSpriteAtlasKey, buttonSpriteUp);
+		this.text = scene.add.text(0, 0, text, font.font);
 		this._buttonSpriteDown = buttonSpriteDown;
 		this._buttonSpriteUp = buttonSpriteUp;
 		this._onClick = onClick;
 		this.button.setInteractive();
 		this._registerButtonEvents();
-		
-		this._setTextX(x);
-		this._setTextY(y);
+		this.x = x;
+		this.y = y;
 	}
 	//endregion
 
@@ -64,15 +60,7 @@ export default class TextButton {
 	//endregion
 
 	//region private methods
-	private _setTextX(x: number) {
-		this.text.x = x - this.text.width / 2;
-	}
-
-	private _setTextY(y: number) {
-		this.text.y = y - this.text.height / 2 - 4;
-	}
-
-	private _setVisualPressedState(pressed: boolean) {
+	private _setVisualPressedState(pressed: boolean): void {
 		if (pressed == this._buttonPressed) {
 			return;
 		}
@@ -88,7 +76,7 @@ export default class TextButton {
 		}
 	}
 
-	private _registerButtonEvents() {
+	private _registerButtonEvents(): void {
 		this.button.on('pointerdown', () => {
 			this._setVisualPressedState(true);
 		});
@@ -109,5 +97,13 @@ export default class TextButton {
 			}
 		});
 	}
+
+	private _adjustTextX(): void {
+        this.text.x = this.x - this.text.width / 2;
+    }
+
+    private _adjustTextY(): void {
+        this.text.y = this.y - this.text.height / 2 - 4;
+    }
 	//endregion
 }
