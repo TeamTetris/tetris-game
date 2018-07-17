@@ -162,7 +162,7 @@ export default class PlayScene extends Phaser.Scene {
 	private _updateMatch(match: Match) {
 		this._match = match;
 		for (const [index, player] of match.players.slice(0, 2).entries()) {
-			// TODO: Update scoreboard
+			this._scoreboardWidget.update(match.players);
 			this._remotePlayerFields[index].updateSprites(player.field);
 			// TODO: Update remote player names, scores and ranks
 		}
@@ -209,7 +209,6 @@ export default class PlayScene extends Phaser.Scene {
 		this._scoreWidget = new ScoreWidget(this, config.graphics.width / 2, (config.graphics.height - config.field.height * config.field.blockSize) / 4);
 		this._countdownWidget = new CountdownWidget(this, config.graphics.width / 5 * 4, config.graphics.height / 30 * 8);
 		this._scoreboardWidget = new ScoreboardWidget(this, config.graphics.width / 5 * 4, config.graphics.height / 20 * 9);
-		this._scoreboardWidget.update(players);
 	}
 
 	private _initializeShaders(): void {

@@ -1,14 +1,7 @@
 /// <reference path="../../../definitions/phaser.d.ts"/>
 
 import config from "tetris/config";
-
-export interface PlayerScore {
-    rank: string;
-    name: string;
-    score: string;
-    danger: boolean;
-    ownScore: boolean;
-}
+import MatchPlayer from "tetris/interfaces/MatchPlayer";
 
 export interface Font {
     size: number,
@@ -73,7 +66,7 @@ export default class ScoreboardWidget {
         this._y = y;
 	}
 
-	public update(playerScores: PlayerScore[]): void {
+	public update(playerScores: MatchPlayer[]): void {
 		this._clearScoreboard();
 
 		for (const [index, player] of playerScores.entries()) {
@@ -119,7 +112,7 @@ export default class ScoreboardWidget {
         this.scores.splice(0, this.scores.length - 1);
     }
 
-    private _createPlayerText(index: number, player: PlayerScore): void {
+    private _createPlayerText(index: number, player: MatchPlayer): void {
         // Add rank text
         const rank = this._scene.add.text(0, 0, player.rank, this._font.font);
         rank.x = this.x - 125 - rank.width / 2;
@@ -144,7 +137,8 @@ export default class ScoreboardWidget {
             rank.setPipeline('rainbow-text');
             name.setPipeline('rainbow-text');
             score.setPipeline('rainbow-text');
-        } else if (player.ownScore === true) {
+            // TODO: Compare username
+        }else if (player.name === "You") {
             rank.setColor(config.ui.colors.yellow.string);
             name.setColor(config.ui.colors.yellow.string);
             score.setColor(config.ui.colors.yellow.string);
