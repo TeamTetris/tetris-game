@@ -88,13 +88,10 @@ export default class PlayScene extends Phaser.Scene {
 		this._localPlayerField = this._newField(config.field.width, config.field.height, PLAYER_FIELD_DRAW_OFFSET);
 		this._player = new LocalPlayer(this._localPlayerField, this.input.keyboard, this._game.biasEngine.newEventReceiver());
 		
+		this._addRemoteFields();
 		this._registerNetworkEvents();
 
-		this._remotePlayerFields = new Map<string, RemoteField>();
-
 		this._pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C);
-
-
 	}
 
 	public update(time: number, delta: number): void {
@@ -109,7 +106,7 @@ export default class PlayScene extends Phaser.Scene {
 
 		// Update UI widgets
 		this._scoreWidget.update(this._localPlayerField.score.toString());
-		this._countdownWidget.update(30 - (time / 1000 % 30), 30 );
+		this._countdownWidget.update(new Date().valueOf() - this._match.nextElimination.valueOf() / 1000, this._match.roundStartTime.valueOf() - this._match.nextElimination.valueOf() / 1000);
 
 		this._pushMultiplayerUpdate();
 		this._updateShaders(time);
@@ -127,6 +124,14 @@ export default class PlayScene extends Phaser.Scene {
 		});
 		this._game = game;
 		this._brickFactory = new BrickFactory(this, this._game.biasEngine);
+		this._match = {
+			id: 0,
+			players: [],
+			startTime: new Date(),
+			joinUntil: new Date(),
+			roundStartTime: new Date(),
+			nextElimination: new Date(),
+		}
 	}
 	//endregion
 
@@ -137,8 +142,7 @@ export default class PlayScene extends Phaser.Scene {
 	private _paused: boolean = false;
 	private _match: Match;
 	private _pauseKey: Phaser.Input.Keyboard.Key;
-	private _remotePlayerFields: Map<string, RemoteField>;
-	private _remotePlayerFieldIndex = 0;
+	private _remotePlayerFields: RemoteField[];
 	private _playerFieldBackground: Phaser.GameObjects.Graphics;
 	private _pauseButton: TextButton;
 	private _scoreWidget: ScoreWidget;
@@ -147,45 +151,33 @@ export default class PlayScene extends Phaser.Scene {
 	private readonly _game: Game;
 	private _pipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
 	private _matchId: number;
+	private _match: Match;
 	//endregion
 
 	//region private methods
 	private _registerNetworkEvents(): void {
-		this._game.networkingClient.receive("playerLeft", (args) => {
-			this._removeRemoteField(args.id);
-		});
-		this._game.networkingClient.receive("playerJoined", (args) => {
-			this._addRemoteField(args.id);
-		});
-		this._game.networkingClient.receive("fieldUpdate", (args) => {
-			const field = this._remotePlayerFields.get(args.id);
-			if (!field) {
-				console.warn("WARNING: Had to create player field; currentplayers MISSED?");
-				this._addRemoteField(args.id);
-			}
-			field.updateSprites(args.fieldState);
-		});
-		this._game.networkingClient.receive("currentPlayers", (args) => {
-			args.players.forEach(player => {
-				this._addRemoteField(player);
-				this._remotePlayerFields.get(player).updateSprites(args.fields[player]);
-			});
-		});
+		this._game.networkingClient.receive("matchUpdate", this._updateMatch.bind(this));
 	}
 
-	private _addRemoteField(index: string): void {
+	private _updateMatch(match: Match) {
+		this._match = match;
+		for (const [index, player] of match.players.slice(0, 2).entries()) {
+			// TODO: Update scoreboard
+			this._remotePlayerFields[index].updateSprites(player.field);
+			// TODO: Update remote player names, scores and ranks
+		}
+	}
+
+	private _addRemoteFields(): void {
+		this._remotePlayerFields = [];
 		const drawScale = 0.7;
-		const position = new Vector2(
-			config.graphics.width / 20 + (config.field.width * config.field.blockSize * drawScale + config.ui.spacing) * this._remotePlayerFieldIndex , 
-			config.graphics.height / 4);
-		this._remotePlayerFieldIndex++;
-		this._remotePlayerFields.set(index, new RemoteField(this, config.field.width, config.field.height, position, this._createFieldBackground(position, drawScale), drawScale));
-	}
-
-	private _removeRemoteField(index: string): void {
-		this._remotePlayerFieldIndex--;
-		this._remotePlayerFields.get(index).destroy();
-		this._remotePlayerFields.delete(index);
+		for (let index = 0; index < 2; index++) {
+			const position = new Vector2(
+				config.graphics.width / 20 + (config.field.width * config.field.blockSize * drawScale + config.ui.spacing) * index , 
+				config.graphics.height / 4);
+			const remoteField = new RemoteField(this, config.field.width, config.field.height, position, this._createFieldBackground(position, drawScale), drawScale);
+			this._remotePlayerFields.push(remoteField);	
+		}
 	}
 
 	private _createFieldBackground(offset: Vector2, drawScale: number = 1): Phaser.GameObjects.Graphics {
