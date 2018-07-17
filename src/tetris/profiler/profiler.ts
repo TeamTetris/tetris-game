@@ -137,7 +137,7 @@ export default class Profiler {
 		this._profile.age.updateValue(sender.name, measurement.value["age"].value);
 		this._profile.skinAcne.updateValue(sender.name, measurement.value['skinstatus']['acne']);
 		this._profile.skinHealth.updateValue(sender.name, measurement.value['skinstatus']['health']);
-		this._profile.glasses.updateValue(sender.name, measurement.value['glasses'].value == 'None');
+		this._profile.glasses.updateValue(sender.name, measurement.value['glass'].value == 'None');
 	}
 
 	// ERROR callbacks
