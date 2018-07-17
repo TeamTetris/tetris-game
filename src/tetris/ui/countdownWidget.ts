@@ -28,12 +28,12 @@ export default class CountdownWidget {
 
 	set x(x: number) {
 		this.circle.x = x;
-		this._adjustTextPosition();
+		this._adjustTextX();
 	}
 
 	set y(y: number) {
 		this.circle.y = y;
-		this._adjustTextPosition();
+		this._adjustTextY();
 	}
 
 	public update(time: number, totalTime: number): void {
@@ -89,7 +89,7 @@ export default class CountdownWidget {
 		} else {
 			this.text.setText(time.toFixed(0).toString());
 		}
-		this._adjustTextPosition();
+		this._adjustTextX();
 	}
 
 	private _setColors(percentage: number): void {
@@ -107,11 +107,14 @@ export default class CountdownWidget {
 			this.text.setColor(config.ui.colors.white.string);
 		}
 	}
-	
-	private _adjustTextPosition(): void {
-		this.text.x = this.x - this.text.width / 2;
-		this.text.y = this.y - this.text.height / 1.5;
-	}
+
+	private _adjustTextX(): void {
+        this.text.x = this.x - this.text.width / 2;
+    }
+
+    private _adjustTextY(): void {
+        this.text.y = this.y - this.text.height / 1.5;
+    }
 
 	private static _phaserRadius(percentage: number): number {
 		const deg = percentage * 360 / 100;
