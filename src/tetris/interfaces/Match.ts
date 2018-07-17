@@ -4,6 +4,7 @@ export default interface Match {
 	id: number;
 	players: MatchPlayer[];
 	startTime: Date;
-	joinUntil: Date;
+    joinUntil: Date;
+    roundStartTime: Date;
 	nextElimination: Date;
 }
