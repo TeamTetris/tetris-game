@@ -1,7 +1,7 @@
 /// <reference path="../../../definitions/phaser.d.ts"/>
 
 import config from "tetris/config";
-import MatchPlayer from "tetris/interfaces/MatchPlayer";
+import MatchPlayer, { ScoreboardStatus } from "tetris/interfaces/MatchPlayer";
 
 export interface Font {
     size: number,
@@ -77,7 +77,7 @@ export default class ScoreboardWidget {
                 const currentPlayerRank = parseInt(player.rank, 10);
                 const previousPlayerRank = parseInt(playerScores[index - 1].rank, 10);
                 const doubleLine = currentPlayerRank - previousPlayerRank > 1;
-                const lineColor = player.danger ? config.ui.colors.red.hex : config.ui.colors.white.hex;
+                const lineColor = player.scoreboardStatus === ScoreboardStatus.Endangered ? config.ui.colors.red.hex : config.ui.colors.white.hex;
                 this._createDivider(index, lineColor, doubleLine);
             }
 		}
@@ -129,11 +129,11 @@ export default class ScoreboardWidget {
         score.y = this.y + index * (config.ui.spacing + this._font.size);
 
         // Set text color
-        if (player.danger) {
+        if (player.scoreboardStatus === ScoreboardStatus.Endangered) {
             rank.setColor(config.ui.colors.red.string);
             name.setColor(config.ui.colors.red.string);
             score.setColor(config.ui.colors.red.string);
-        } else if (player.rank === '1') {
+        } else if (player.scoreboardStatus === ScoreboardStatus.Spotlighted) {
             rank.setPipeline('rainbow-text');
             name.setPipeline('rainbow-text');
             score.setPipeline('rainbow-text');

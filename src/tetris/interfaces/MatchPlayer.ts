@@ -1,16 +1,16 @@
-enum ConnectionStatus {
+export enum ConnectionStatus {
 	Connecting,
 	Connected,
 	Disconnected
 }
 
-enum ScoreboardStatus {
+export enum ScoreboardStatus {
 	Regular,
 	Endangered,
 	Spotlighted
 }
 
-enum PlayStatus {
+export enum PlayStatus {
 	Playing,
 	Finished
 }
@@ -19,7 +19,6 @@ export default interface MatchPlayer {
 	rank: string;
     name: string;
     score: string;
-    danger: boolean;
 	connectionStatus: ConnectionStatus;
 	scoreboardStatus: ScoreboardStatus;
 	playStatus: PlayStatus;
