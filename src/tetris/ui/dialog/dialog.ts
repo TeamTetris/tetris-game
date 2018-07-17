@@ -49,12 +49,12 @@ export default class Dialog {
 			const dialog = new Dialog(modalId, closeOnSideClick);
 			dialog.title = title;
 
-			for (const acceptElement: HTMLElement of dialog._htmlElement.getElementsByClassName("dialog-accept-element")) {
-				dialog.addAcceptElement(acceptElement);
+			for (const acceptElement of dialog._htmlElement.getElementsByClassName("dialog-accept-element")) {
+				dialog.addAcceptElement(acceptElement as HTMLElement);
 			}
 
-			for (const rejectElement: HTMLElement of dialog._htmlElement.getElementsByClassName("dialog-reject-element")) {
-				dialog.addRejectElement(rejectElement);
+			for (const rejectElement of dialog._htmlElement.getElementsByClassName("dialog-reject-element")) {
+				dialog.addRejectElement(rejectElement as HTMLElement);
 			}
 
 			return dialog.show();
