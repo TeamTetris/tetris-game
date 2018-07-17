@@ -106,7 +106,7 @@ export default class PlayScene extends Phaser.Scene {
 
 		// Update UI widgets
 		this._scoreWidget.update(this._localPlayerField.score.toString());
-		this._countdownWidget.update(new Date().valueOf() - this._match.nextElimination.valueOf() / 1000, this._match.roundStartTime.valueOf() - this._match.nextElimination.valueOf() / 1000);
+		this._countdownWidget.update(new Date().valueOf() - this._match.nextElimination.valueOf() / 1000, this._match.startTime.valueOf() - this._match.nextElimination.valueOf() / 1000);
 
 		this._pushMultiplayerUpdate();
 		this._updateShaders(time);
@@ -129,7 +129,6 @@ export default class PlayScene extends Phaser.Scene {
 			players: [],
 			startTime: new Date(),
 			joinUntil: new Date(),
-			roundStartTime: new Date(),
 			nextElimination: new Date(),
 		}
 	}

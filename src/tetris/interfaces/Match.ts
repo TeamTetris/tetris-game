@@ -5,6 +5,5 @@ export default interface Match {
 	players: MatchPlayer[];
 	startTime: Date;
     joinUntil: Date;
-    roundStartTime: Date;
 	nextElimination: Date;
 }
