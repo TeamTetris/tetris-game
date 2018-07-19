@@ -95,9 +95,11 @@ export default class CameraController {
 			this._videoElement.videoHeight
 		);
 
-		return this._canvas
+		const base64Image = this._canvas
 			.toDataURL('image/png')
 			.replace(/^data:image\/(png|jpg);base64,/, "");
+		console.log('Snapshot taken: ' + base64Image.substr(base64Image.length - 20));
+		return base64Image;
 	}
 
 	private async _takePhotoButtonClicked(event: Event): Promise<void> {
