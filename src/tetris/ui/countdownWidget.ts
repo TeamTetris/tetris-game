@@ -85,7 +85,7 @@ export default class CountdownWidget {
 
 	private _updateText(percentage: number, time: number): void {
 		if (percentage < 25) {
-			this.text.setText(time.toFixed(3).toString());
+			this.text.setText(time.toFixed(1).toString());
 		} else {
 			this.text.setText(time.toFixed(0).toString());
 		}

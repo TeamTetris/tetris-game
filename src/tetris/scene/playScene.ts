@@ -106,14 +106,14 @@ export default class PlayScene extends Phaser.Scene {
 
 		// Update UI widgets
 		this._scoreWidget.update(this._localPlayerField.score.toString());
-		this._countdownWidget.update(new Date().valueOf() - this._match.nextElimination.valueOf() / 1000, this._match.startTime.valueOf() - this._match.nextElimination.valueOf() / 1000);
+		this._countdownWidget.update(Math.max(0, (new Date(this._match.nextElimination).valueOf() - new Date().valueOf()) / 1000), 60);
 
 		this._pushMultiplayerUpdate();
 		this._updateShaders(time);
 	}
 
-	public joinMatch(id: number) {
-		this._matchId = id;
+	public joinMatch(match: Match) {
+		this._match = match;
 	}
 	//endregion
 
@@ -124,13 +124,6 @@ export default class PlayScene extends Phaser.Scene {
 		});
 		this._game = game;
 		this._brickFactory = new BrickFactory(this, this._game.biasEngine);
-		this._match = {
-			id: 0,
-			players: [],
-			startTime: new Date(),
-			joinUntil: new Date(),
-			nextElimination: new Date(),
-		}
 	}
 	//endregion
 
@@ -148,8 +141,7 @@ export default class PlayScene extends Phaser.Scene {
 	private _countdownWidget: CountdownWidget;
 	private _scoreboardWidget: ScoreboardWidget;
 	private readonly _game: Game;
-	private _pipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
-	private _matchId: number;
+	private _rainbowPipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
 	private _match: Match;
 	//endregion
 
@@ -160,9 +152,11 @@ export default class PlayScene extends Phaser.Scene {
 
 	private _updateMatch(match: Match) {
 		this._match = match;
-		for (const [index, player] of match.players.slice(0, 2).entries()) {
+		for (const [index, player] of match.players.entries()) {
 			this._scoreboardWidget.update(match.players);
-			this._remotePlayerFields[index].updateSprites(player.field);
+			if (index < 3) {
+				this._remotePlayerFields[index].updateSprites(player.field);
+			}
 			// TODO: Update remote player names, scores and ranks
 		}
 	}
@@ -211,24 +205,24 @@ export default class PlayScene extends Phaser.Scene {
 	}
 
 	private _initializeShaders(): void {
-		this._pipeline = new Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline({
+		this._rainbowPipeline = new Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline({
 			game: this._game,
 			renderer: this._game.renderer, 
 			fragShader: this.cache.shader.get('rainbow') 
 		});
-		(this._game.renderer as Phaser.Renderer.WebGL.WebGLRenderer).addPipeline('rainbow-text', this._pipeline);
-		this._pipeline.setFloat2('uResolution', config.graphics.width, config.graphics.height);
+		(this._game.renderer as Phaser.Renderer.WebGL.WebGLRenderer).addPipeline('rainbow-text', this._rainbowPipeline);
+		this._rainbowPipeline.setFloat2('uResolution', config.graphics.width, config.graphics.height);
 	}
 
 	private _updateShaders(time: number): void {
-		this._pipeline.setFloat1('uTime', time / 800);
+		this._rainbowPipeline.setFloat1('uTime', time / 800);
 	}
 
 	private _pushMultiplayerUpdate() {
 		if (this._localPlayerField.fieldState == FieldState.Playing && this._localPlayerField.blockStateChanged) {
 			this._localPlayerField.blockStateChanged = false;
 			const matchUpdate = {
-				matchId: this._matchId,
+				matchId: this._match.id,
 				points: this._localPlayerField.score,
 				field: this._localPlayerField.serializedBlockState,
 			}

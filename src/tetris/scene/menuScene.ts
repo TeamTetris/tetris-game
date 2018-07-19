@@ -96,16 +96,16 @@ export default class MenuScene extends Phaser.Scene {
 	}
 
 	private _joinMatch(match: Match): void {
-		this._game.networkingClient.emit("joinMatch", {matchId: match.id}, (result: JoinResult) => {
+		this._game.networkingClient.emit("joinMatch", { matchId: match.id }, (result: JoinResult) => {
+			console.log('joinresult: ', JSON.stringify(result));
 			if (result.success) {
 				this._game.changeScene(config.sceneKeys.playScene);
-				(this.scene.get(config.sceneKeys.playScene) as PlayScene).joinMatch(match.id);
+				(this.scene.get(config.sceneKeys.playScene) as PlayScene).joinMatch(result.match);
 			} else {
 				// TODO: Display Matchmaking Error
 				console.error(`Could not join match ${match.id}. ${result.message}`);
 			}
 		});
-		
 	}
 
  	//endregion
