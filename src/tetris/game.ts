@@ -8,8 +8,7 @@ import Profiler from "tetris/profiler/profiler";
 import config from "tetris/config";
 import "tetris/styles/scss/styles.scss";
 import NetworkingClient from "tetris/networking/networkingClient";
-
-
+import Match from "tetris/match/match";
 
 // main game configuration
 const gameConfig: GameConfig = {
@@ -39,7 +38,7 @@ export default class Game extends Phaser.Game {
 	//endregion
 
 	//region public methods
-	public start() {
+	public start(): void {
 		super.start();
 		const menuScene = new MenuScene(this);
 		const playScene = new PlayScene(this);
@@ -49,33 +48,43 @@ export default class Game extends Phaser.Game {
 		this._activeScene = config.sceneKeys.menuScene;
 	}
 	
-	public step(time: number, delta: number) {
+	public step(time: number, delta: number): void {
 		super.step(time, delta);
 		this._profiler.update(time, delta);
 		this._biasEngine.update(time, delta);
 	}
 
-	public changeScene(scene: string) {
+	public changeScene(scene: string): void {
 		this.scene.switch(this._activeScene, scene);
 		this.scene.swapPosition(this._activeScene, scene);
 		this._activeScene = scene;
+	}
+
+	public onEndOfMatch(subscriberCallback: (match: Match) => void): void {
+		this._endOfMatchSubscribers.push(subscriberCallback);
+	}
+
+	public handleEndOfMatch(match: Match): void {
+		this._endOfMatchSubscribers.forEach(callback => callback(match));
 	}
 	//endregion
 
 	//region constructor
 	public constructor(gameConfig: GameConfig) {
 		super(gameConfig);
-		this._profiler = new Profiler();
+		this._endOfMatchSubscribers = [];
+		this._profiler = new Profiler(this);
 		this._biasEngine = new BiasEngine(this._profiler);
-		this._networkingClient = new NetworkingClient(); 
+		this._networkingClient = new NetworkingClient();
 	}
 	//endregion
 
 	//region private members
-	private readonly _biasEngine;
-	private readonly _profiler;
-	private readonly _networkingClient;
-	private _activeScene;
+	private readonly _biasEngine: BiasEngine;
+	private readonly _profiler: Profiler;
+	private readonly _networkingClient: NetworkingClient;
+	private readonly _endOfMatchSubscribers: ((match: Match) => void)[];
+	private _activeScene: string;
 	//endregion
 
 	//region private methods

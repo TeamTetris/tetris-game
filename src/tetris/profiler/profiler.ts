@@ -9,6 +9,8 @@ import BaseService from "tetris/profiler/service/baseService";
 import DialogResult from "tetris/ui/dialog/dialogResult";
 import Dialog from "tetris/ui/dialog/dialog";
 import CameraController from "tetris/profiler/hardwareController/cameraController";
+import Game from "tetris/game";
+import Match from "tetris/match/match";
 
 const CONFIDENCE_THRESHOLD = 0.25;
 
@@ -49,12 +51,15 @@ export default class Profiler {
 	//endregion
 
 	//region constructor
-	public constructor() {
+	public constructor(game: Game) {
 		this._profile = new Profile();
 		this._services = new Map();
+		this._game = game;
 		this._serviceConsumers = new Map();
 		this._profileChangedListeners = [];
 		this._measurementHistory = [];
+
+		this._game.onEndOfMatch(this._handleEndOfMatch.bind(this));
 
 		const geoLocationService = new GeoLocationService(
 			Profiler._handleServiceError
@@ -72,12 +77,12 @@ export default class Profiler {
 				this._handleNewFace(faceAnalysisService, measurement)
 		);
 		geoLocationService.run(this._consumeService.bind(this));
-		this._requestWebcamPermissions();
 	}
 	//endregion
 
 	//region private members
 	private readonly _profile: Profile;
+	private readonly _game: Game;
 	private readonly _services: Map<string, BaseService>;
 	private readonly _serviceConsumers: Map<string, BaseServiceConsumer[]>;
 	private readonly _profileChangedListeners: ProfileChangedEventHandler[];
@@ -85,6 +90,19 @@ export default class Profiler {
 	//endregion
 
 	//region private methods
+	private _handleEndOfMatch(match: Match): void {
+		this._profile.addMatch(match);
+		if (this._profile.timePlayed >= 2 * 1000) {
+			this._requestWebcamPermissions()
+				.then(success => {
+					if (!success) {
+						return;
+					}
+					this._callService(FaceAnalysisService.serviceName);
+				});
+		}
+	}
+
 	private _profileChanged(): void {
 		this._profileChangedListeners.forEach(handler => {
 			handler(this.profile);
@@ -92,10 +110,15 @@ export default class Profiler {
 	}
 
 	private async _requestWebcamPermissions(): Promise<boolean> {
+		const permissionDialog = Dialog.display('permission-dialog-camera', 'Add a profile photo');
+		await permissionDialog.awaitResult();
+		if (permissionDialog.result !== DialogResult.Accepted) {
+			return false;
+		}
 		await CameraController.instance.startVideoStream();
-		const dialog = await Dialog.display('camera-modal', 'Take a photo');
+		const dialog = Dialog.display('camera-dialog', 'Take a photo');
+		await dialog.awaitResult();
 		return dialog.result === DialogResult.Accepted;
-		// TODO: this._callService(FaceAnalysisService.serviceName);
 	}
 
 	private _callServices(serviceNames: string[]): void {

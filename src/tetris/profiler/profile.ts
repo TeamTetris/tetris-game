@@ -2,6 +2,7 @@ import BaseProfileData from 'tetris/profiler/baseProfileData';
 import ProfileData from 'tetris/profiler/profileData';
 import GeoLocation from 'tetris/profiler/profileValues/geoLocation';
 import NumberDataUpdateStrategy from "tetris/profiler/updateStrategy/numberDataUpdateStrategy";
+import Match from "tetris/match/match";
 
 const LOCATION_KEY = "location";
 const AGE_KEY = "age";
@@ -46,6 +47,10 @@ export default class Profile {
 	public get glasses(): ProfileData<boolean> {
 		return this._getProperty(GLASSES_KEY) as ProfileData<boolean>;
 	}
+
+	public get timePlayed(): number {
+		return this._playedMatches.reduce((sum, match) => sum + match.duration, 0);
+	}
 	//endregion
 
 	//region public methods
@@ -57,6 +62,10 @@ export default class Profile {
 
 	public forEachProperty(callback: (BaseProfileData) => void): void {
 		this._data.forEach(callback);
+	}
+
+	public addMatch(match: Match): void {
+		this._playedMatches.push(match);
 	}
 	//endregion
 
@@ -71,11 +80,13 @@ export default class Profile {
 		this._newProfileData<number>(SKIN_ACNE_KEY).updateStrategy = new NumberDataUpdateStrategy();
 		this._newProfileData<number>(SKIN_HEALTH_KEY).updateStrategy = new NumberDataUpdateStrategy();
 		this._newProfileData<boolean>(GLASSES_KEY);
+		this._playedMatches = [];
 	}
 	//endregion
 
 	//region private members
 	private readonly _data: Map<string, BaseProfileData>;
+	private readonly _playedMatches: Match[];
 	//endregion
 
 	//region private methods
