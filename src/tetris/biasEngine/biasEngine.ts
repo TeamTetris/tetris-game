@@ -67,11 +67,9 @@ export default class BiasEngine {
 			}
 		}
 
-		if (newBiasValue !== this._currentBiasValue) {
-			this._currentBiasValue = newBiasValue;
-			console.log("[profiler] Profile updated. Age: " + profile.age + " Ethnicity: " + profile.ethnicity);
-			console.log("[biasEngine] New bias value calculcated:", newBiasValue.toPrecision(3));
-		}
+		this._currentBiasValue = newBiasValue;
+		console.log("[profiler] Profile updated. Age: " + profile.age + " Ethnicity: " + profile.ethnicity);
+		console.log("[biasEngine] New bias value calculcated:", newBiasValue.toPrecision(3));
 	}
 
 	private _sendBiasEvent(event: BiasEvent): void {
