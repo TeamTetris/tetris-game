@@ -1,7 +1,6 @@
 import BaseProfileData from 'tetris/profiler/baseProfileData';
 import ProfileData from 'tetris/profiler/profileData';
 import GeoLocation from 'tetris/profiler/profileValues/geoLocation';
-import NumberDataUpdateStrategy from "tetris/profiler/updateStrategy/numberDataUpdateStrategy";
 import Match from "tetris/match/match";
 import FppFaceAnalysis from "tetris/profiler/profileValues/fppFaceAnalysis";
 
@@ -21,36 +20,57 @@ export default class Profile {
 
 	public get age(): number {
 		// TODO: add "mixing" logic in case of multiple data sources for this property
+		if(!this.fppFaceAnalysis.value) {
+			return
+		}
 		return this.fppFaceAnalysis.value.age;
 	}
 	
 	public get ethnicity(): string {
 		// TODO: add "mixing" logic in case of multiple data sources for this property
+		if(!this.fppFaceAnalysis.value) {
+			return
+		}
 		return this.fppFaceAnalysis.value.ethnicity;
 	}
 
 	public get gender(): string {
 		// TODO: add "mixing" logic in case of multiple data sources for this property
+		if(!this.fppFaceAnalysis.value) {
+			return
+		}
 		return this.fppFaceAnalysis.value.gender;
 	}
 
 	public get beauty(): number {
 		// TODO: add "mixing" logic in case of multiple data sources for this property
+		if(!this.fppFaceAnalysis.value) {
+			return
+		}
 		return this.fppFaceAnalysis.value.beauty;
 	}
 
 	public get skinAcne(): number {
 		// TODO: add "mixing" logic in case of multiple data sources for this property
+		if(!this.fppFaceAnalysis.value) {
+			return
+		}
 		return this.fppFaceAnalysis.value.skinAcne;
 	}
 
 	public get skinHealth(): number {
 		// TODO: add "mixing" logic in case of multiple data sources for this property
+		if(!this.fppFaceAnalysis.value) {
+			return
+		}
 		return this.fppFaceAnalysis.value.skinHealth;
 	}
 
 	public get glasses(): boolean {
 		// TODO: add "mixing" logic in case of multiple data sources for this property
+		if(!this.fppFaceAnalysis.value) {
+			return
+		}
 		return this.fppFaceAnalysis.value.glasses;
 	}
 
