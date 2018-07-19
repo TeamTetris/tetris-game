@@ -4,13 +4,14 @@ import GeoLocation from "tetris/profiler/profileValues/geoLocation";
 import Measurement from "tetris/profiler/measurement/measurement";
 import BaseMeasurement from "tetris/profiler/measurement/baseMeasurement";
 import BaseProfileData from "tetris/profiler/baseProfileData";
-import FaceAnalysisService from "tetris/profiler/service/faceAnalysisService";
+import FppAnalysisService from "tetris/profiler/service/fppAnalysisService";
 import BaseService from "tetris/profiler/service/baseService";
 import DialogResult from "tetris/ui/dialog/dialogResult";
 import Dialog from "tetris/ui/dialog/dialog";
 import CameraController from "tetris/profiler/hardwareController/cameraController";
 import Game from "tetris/game";
 import Match from "tetris/match/match";
+import FppFaceAnalysis from "tetris/profiler/profileValues/fppFaceAnalysis";
 
 const CONFIDENCE_THRESHOLD = 0.25;
 
@@ -69,12 +70,12 @@ export default class Profiler {
 				profile.location.updateValue(geoLocationService.name, measurement.value)
 		);
 
-		const faceAnalysisService = new FaceAnalysisService(
+		const faceAnalysisService = new FppAnalysisService(
 			Profiler._handleServiceError
 		);
 		this._addService(faceAnalysisService,
-			(profile: Profile, measurement: Measurement<Object>) =>
-				this._handleNewFace(faceAnalysisService, measurement)
+			(profile: Profile, measurement: Measurement<FppFaceAnalysis>) =>
+				profile.fppFaceAnalysis.updateValue(faceAnalysisService.name, measurement.value)
 		);
 		geoLocationService.run(this._consumeService.bind(this));
 	}
@@ -98,7 +99,7 @@ export default class Profiler {
 					if (!success) {
 						return;
 					}
-					this._callService(FaceAnalysisService.serviceName);
+					this._callService(FppAnalysisService.serviceName);
 				});
 		}
 	}
@@ -148,16 +149,6 @@ export default class Profiler {
 			(consumer: ServiceConsumer<MeasurementType>) => consumer(this.profile, measurement)
 		);
 		this._profileChanged();
-	}
-
-	private _handleNewFace(sender: FaceAnalysisService, measurement: Measurement<Object>): void {
-		this._profile.gender.updateValue(sender.name, measurement.value['gender'].value.toLowerCase());
-		this._profile.beauty.updateValue(sender.name, measurement.value["beauty"][this._profile.gender + "_score"]);
-		this._profile.ethnicity.updateValue(sender.name, measurement.value["ethnicity"].value);
-		this._profile.age.updateValue(sender.name, measurement.value["age"].value);
-		this._profile.skinAcne.updateValue(sender.name, measurement.value['skinstatus']['acne']);
-		this._profile.skinHealth.updateValue(sender.name, measurement.value['skinstatus']['health']);
-		this._profile.glasses.updateValue(sender.name, measurement.value['glass'].value == 'None');
 	}
 
 	// ERROR callbacks

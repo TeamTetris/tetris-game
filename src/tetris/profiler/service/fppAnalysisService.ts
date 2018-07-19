@@ -2,12 +2,13 @@ import BaseService from "tetris/profiler/service/baseService";
 import Measurement from "tetris/profiler/measurement/measurement";
 import CameraController from "tetris/profiler/hardwareController/cameraController";
 import HardwarePermission from "tetris/profiler/hardwareController/hardwarePermission";
+import FppFaceAnalysis from "tetris/profiler/profileValues/fppFaceAnalysis";
 
 
-export default class FaceAnalysisService extends BaseService {
+export default class FppAnalysisService extends BaseService {
 	//region public members
 	public static get serviceName(): string {
-		return 'FaceAnalysisService';
+		return 'FppAnalysisService';
 	}
 	//endregion
 
@@ -16,12 +17,12 @@ export default class FaceAnalysisService extends BaseService {
 
 	//region constructor
 	public constructor(errorCallback: (senderName: string, error: Error) => void) {
-		super(FaceAnalysisService.serviceName, errorCallback);
+		super(FppAnalysisService.serviceName, errorCallback);
 	}
 	//endregion
 
 	//region private members
-	private _successCallback: (senderName: string, measurement: Measurement<Object>) => void;
+	private _successCallback: (senderName: string, measurement: Measurement<FppFaceAnalysis>) => void;
 	//endregion
 
 	//region private methods
@@ -38,9 +39,17 @@ export default class FaceAnalysisService extends BaseService {
 			'body': formData,
 		});
 		const jsonResponse = await response.json();
+		const faceAnalysis: FppFaceAnalysis = FppFaceAnalysis.newFromResponse(jsonResponse);
+
+		if (!faceAnalysis) {
+			this._postRun();
+			this._errorCallback(this.name, new Error("Cannot read FacePlusPlus response!"));
+			return;
+		}
+
 		this._successCallback(
 			this.name,
-			new Measurement<Object>(jsonResponse['faces'][0]['attributes'], this.name)
+			new Measurement<FppFaceAnalysis>(faceAnalysis, this.name)
 		);
 		this._postRun();
 	}
