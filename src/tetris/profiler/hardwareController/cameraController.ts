@@ -33,12 +33,12 @@ export default class CameraController {
 			return;
 		}
 		this._videoElement.pause();
-		this._videoStream.stop();
+		this._videoStream.getTracks()[0].stop();
 		this._videoElement.src = null;
 	}
 
 	public async takeSnapshot(): Promise<string> {
-		if (this._videoStream) {
+		if (this._videoStream && this._videoStream.active) {
 			return Promise.resolve(this._takeSnapshot());
 		}
 		try {
