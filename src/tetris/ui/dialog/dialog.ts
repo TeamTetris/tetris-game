@@ -1,6 +1,6 @@
 import DialogResult from "tetris/ui/dialog/dialogResult";
 
-const DIALOG_TITLE_WRAPPER_ID = "modal-title";
+const DIALOG_TITLE_WRAPPER_CLASS = "dialog-title";
 
 export default class Dialog {
 
@@ -21,8 +21,12 @@ export default class Dialog {
 	//endregion
 
 	//region public methods
-	public show(): Promise<Dialog> {
+	public show(): Dialog {
 		this._htmlElement.classList.add('visible');
+		return this;
+	}
+
+	public awaitResult(): Promise<Dialog> {
 		return new Promise<Dialog>((resolve) => {
 			this._successCallback = resolve.bind(this, this);
 		});
@@ -44,9 +48,9 @@ export default class Dialog {
 	//endregion
 
 	//region constructor
-	public static display(modalId: string, title: string, closeOnSideClick: boolean = true): Promise<Dialog> {
+	public static display(dialogId: string, title: string, closeOnSideClick: boolean = true): Dialog {
 		try {
-			const dialog = new Dialog(modalId, closeOnSideClick);
+			const dialog = new Dialog(dialogId, closeOnSideClick);
 			dialog.title = title;
 
 			for (const acceptElement of dialog._htmlElement.getElementsByClassName("dialog-accept-element")) {
@@ -59,12 +63,12 @@ export default class Dialog {
 
 			return dialog.show();
 		} catch {
-			console.warn("Can not display modal " + modalId);
+			console.warn("Can not display dialog " + dialogId);
 		}
 	}
 
-	private constructor(modalId: string, closeOnSideClick: boolean) {
-		this._htmlElement = document.getElementById(modalId);
+	private constructor(dialogId: string, closeOnSideClick: boolean) {
+		this._htmlElement = document.getElementById(dialogId);
 		this._closeOnSideClick = closeOnSideClick;
 
 		if(this._closeOnSideClick) {
@@ -92,7 +96,7 @@ export default class Dialog {
 	}
 
 	private _displayTitle(title: string): void {
-		const titleWrapper = this._htmlElement.querySelector('#' + DIALOG_TITLE_WRAPPER_ID);
+		const titleWrapper = this._htmlElement.querySelector('.' + DIALOG_TITLE_WRAPPER_CLASS);
 		if (!titleWrapper) {
 			return;
 		}
