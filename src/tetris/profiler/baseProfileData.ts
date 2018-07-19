@@ -53,7 +53,7 @@ export default class BaseProfileData {
 	//region constructor
 	protected constructor() {
 		this._confidence = BaseProfileData.MIN_CONFIDENCE;
-		this._confidenceStrategy = ProfileDataConfidenceStrategy.default();
+		this._confidenceStrategy = ProfileDataConfidenceStrategy.ultraFast();
 		this._dataSources = new Set<string>();
 	}
 	//endregion
