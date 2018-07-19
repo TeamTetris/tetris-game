@@ -54,9 +54,9 @@ export default class FaceAnalysisService extends BaseService {
 			this._postRun();
 			return;
 		}
-
 		const image = await CameraController.instance.takeSnapshot();
 		await this._requestFaceAnalysis(image);
+		CameraController.instance.stopVideoStream();
 	}
 	//endregion
 }

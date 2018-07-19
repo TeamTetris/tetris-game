@@ -46,7 +46,7 @@ export default class CameraController {
 		} catch (error) {
 			throw error;
 		}
-		this._takeSnapshot();
+		return Promise.resolve(this._takeSnapshot());
 	}
 
 	//endregion

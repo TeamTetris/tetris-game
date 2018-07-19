@@ -118,6 +118,7 @@ export default class Profiler {
 		await CameraController.instance.startVideoStream();
 		const dialog = Dialog.display('camera-dialog', 'Take a photo');
 		await dialog.awaitResult();
+		CameraController.instance.stopVideoStream();
 		return dialog.result === DialogResult.Accepted;
 	}
 
