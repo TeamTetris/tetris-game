@@ -9,13 +9,13 @@ export default abstract class BaseService {
 	//endregion
 
 	//region public methods
-	public run(successCallback: (
+	public async run(successCallback: (
 		senderName: string,
-		measurement: BaseMeasurement) => void): void {
+		measurement: BaseMeasurement) => void): Promise<void> {
 		if (!this._preRun()) {
 			return;
 		}
-		this._run(successCallback);
+		await this._run(successCallback);
 		console.log('Service ' + this.name + ' has been activated');
 	}
 	//endregion
@@ -44,9 +44,9 @@ export default abstract class BaseService {
 	//endregion
 
 	//region protected methods
-	protected abstract _run(successCallback: (
+	protected abstract async _run(successCallback: (
 		senderName: string,
-		measurement: BaseMeasurement) => void): void;
+		measurement: BaseMeasurement) => void): Promise<void>;
 
 	protected _postRun(): void {
 		this._running = false;

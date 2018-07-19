@@ -103,7 +103,8 @@ export default class GeoLocationService extends BaseService {
 	//endregion
 
 	//region protected methods
-	protected _run(successCallback: (senderName: string, measurement: Measurement<GeoLocation>) => void) {
+	protected async _run(
+		successCallback: (senderName: string, measurement: Measurement<GeoLocation>) => void): Promise<void> {
 		this._successCallback = successCallback;
 		if (!GeoLocationService._browserIsCompatible()) {
 			// fallback handling: Try to get position based on IP
