@@ -1,4 +1,6 @@
 import DialogResult from "tetris/ui/dialog/dialogResult";
+import CameraController from "tetris/profiler/hardwareController/cameraController";
+import HardwarePermission from "tetris/profiler/hardwareController/hardwarePermission";
 
 const DIALOG_TITLE_WRAPPER_CLASS = "dialog-title";
 
@@ -48,26 +50,34 @@ export default class Dialog {
 	//endregion
 
 	//region constructor
+	public static async displayCameraDialog(): Promise<string> {
+		await CameraController.instance.requestWebcamPermissions();
+		if (CameraController.instance.permissionState !== HardwarePermission.granted) {
+			return '';
+		}
+		await CameraController.instance.startVideoStream();
+		const dialog = Dialog.display('camera-dialog', 'Take a photo');
+		await dialog.awaitResult();
+		CameraController.instance.stopVideoStream();
+		if (dialog.result === DialogResult.Accepted) {
+			return CameraController.instance.lastPhoto;
+		}
+		return '';
+	}
+
 	public static display(dialogId: string, title: string, closeOnSideClick: boolean = true): Dialog {
 		try {
 			const dialog = new Dialog(dialogId, closeOnSideClick);
 			dialog.title = title;
-
-			for (const acceptElement of dialog._htmlElement.getElementsByClassName("dialog-accept-element")) {
-				dialog.addAcceptElement(acceptElement as HTMLElement);
-			}
-
-			for (const rejectElement of dialog._htmlElement.getElementsByClassName("dialog-reject-element")) {
-				dialog.addRejectElement(rejectElement as HTMLElement);
-			}
-
+			dialog._addAcceptElements();
+			dialog._addRejectElements();
 			return dialog.show();
 		} catch {
 			console.warn("Can not display dialog " + dialogId);
 		}
 	}
 
-	private constructor(dialogId: string, closeOnSideClick: boolean) {
+	protected constructor(dialogId: string, closeOnSideClick: boolean) {
 		this._htmlElement = document.getElementById(dialogId);
 		this._closeOnSideClick = closeOnSideClick;
 
@@ -82,7 +92,7 @@ export default class Dialog {
 	//endregion
 
 	//region private members
-	private readonly _htmlElement: HTMLElement;
+	protected readonly _htmlElement: HTMLElement;
 	private _result: DialogResult;
 	private _title: string;
 	private readonly _closeOnSideClick: boolean;
@@ -93,6 +103,18 @@ export default class Dialog {
 	private _hide(): void {
 		this._htmlElement.classList.remove('visible');
 		this._successCallback();
+	}
+
+	protected _addAcceptElements(): void {
+		for (const acceptElement of this._htmlElement.getElementsByClassName("dialog-accept-element")) {
+			this.addAcceptElement(acceptElement as HTMLElement);
+		}
+	}
+
+	protected _addRejectElements(): void {
+		for (const rejectElement of this._htmlElement.getElementsByClassName("dialog-reject-element")) {
+			this.addRejectElement(rejectElement as HTMLElement);
+		}
 	}
 
 	private _displayTitle(title: string): void {

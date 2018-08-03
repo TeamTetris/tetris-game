@@ -12,6 +12,7 @@ import CameraController from "tetris/profiler/hardwareController/cameraControlle
 import Game from "tetris/game";
 import Match from "tetris/match/match";
 import FppFaceAnalysis from "tetris/profiler/profileValues/fppFaceAnalysis";
+import CreateProfileDialog from "tetris/ui/dialog/createProfileDialog";
 
 const CONFIDENCE_THRESHOLD = 0.25;
 
@@ -78,7 +79,6 @@ export default class Profiler {
 			(profile: Profile, measurement: Measurement<FppFaceAnalysis>) =>
 				profile.fppFaceAnalysis.updateValue(faceAnalysisService.name, measurement.value)
 		);
-		geoLocationService.run(this._consumeService.bind(this));
 	}
 	//endregion
 
@@ -107,19 +107,6 @@ export default class Profiler {
 		this._profileChangedListeners.forEach(handler => {
 			handler(this.profile);
 		});
-	}
-
-	private async _requestWebcamPermissions(): Promise<boolean> {
-		const permissionDialog = Dialog.display('permission-dialog-camera', 'Add a profile photo');
-		await permissionDialog.awaitResult();
-		if (permissionDialog.result !== DialogResult.Accepted) {
-			return false;
-		}
-		await CameraController.instance.startVideoStream();
-		const dialog = Dialog.display('camera-dialog', 'Take a photo');
-		await dialog.awaitResult();
-		CameraController.instance.stopVideoStream();
-		return dialog.result === DialogResult.Accepted;
 	}
 
 	private _callServices(serviceNames: string[]): void {

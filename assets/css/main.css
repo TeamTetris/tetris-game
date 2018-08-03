@@ -8,3 +8,15 @@ div#game {
     margin: auto;
     text-align: center;
 }
+
+#profile-creation-dialog {
+    z-index: 6;
+}
+
+#permission-dialog-camera {
+    z-index: 7;
+}
+
+#camera-dialog {
+    z-index: 8;
+}

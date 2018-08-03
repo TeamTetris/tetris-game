@@ -9,6 +9,7 @@ import config from "tetris/config";
 import "tetris/styles/scss/styles.scss";
 import NetworkingClient from "tetris/networking/networkingClient";
 import Match from "tetris/match/match";
+import CreateProfileDialog from "tetris/ui/dialog/createProfileDialog";
 
 // main game configuration
 const gameConfig: GameConfig = {
@@ -46,6 +47,7 @@ export default class Game extends Phaser.Game {
 		this.scene.add(config.sceneKeys.playScene, playScene);
 		this.scene.add(config.sceneKeys.menuScene, menuScene, true);
 		this._activeScene = config.sceneKeys.menuScene;
+		this._createGameProfile();
 	}
 	
 	public step(time: number, delta: number): void {
@@ -98,6 +100,11 @@ export default class Game extends Phaser.Game {
 	//endregion
 
 	//region private methods
+	private async _createGameProfile(): Promise<void> {
+		const createProfileDialog = CreateProfileDialog.display();
+		createProfileDialog.show();
+		await createProfileDialog.awaitResult();
+	}
 	//endregion
 }
 

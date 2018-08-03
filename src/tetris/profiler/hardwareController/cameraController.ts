@@ -1,4 +1,6 @@
 import HardwarePermission from "tetris/profiler/hardwareController/hardwarePermission";
+import DialogResult from "tetris/ui/dialog/dialogResult";
+import Dialog from "tetris/ui/dialog/dialog";
 
 export default class CameraController {
 
@@ -6,9 +8,35 @@ export default class CameraController {
 	public get permissionState(): HardwarePermission {
 		return this._permissionState;
 	}
+
+	public get lastPhoto(): string {
+		return this._lastPhotoTaken;
+	}
 	//endregion
 
 	//region public methods
+
+	public async requestWebcamPermissions(): Promise<boolean> {
+		if (this.permissionState === HardwarePermission.granted) {
+			return true;
+		}
+		if (this.permissionState === HardwarePermission.denied) {
+			return false;
+		}
+		const permissionDialog = Dialog.display('permission-dialog-camera', 'Add a profile photo');
+		await permissionDialog.awaitResult();
+		if (permissionDialog.result !== DialogResult.Accepted) {
+			return false;
+		}
+		try {
+			await CameraController.instance.startVideoStream();
+			CameraController.instance.stopVideoStream();
+		} catch {
+			return false;
+		}
+		return true;
+	}
+
 	public async startVideoStream(): Promise<MediaStream> {
 		if (this.permissionState === HardwarePermission.denied) {
 			return Promise.reject(new Error('No Permissions granted'));
@@ -81,6 +109,7 @@ export default class CameraController {
 	private readonly  _photoPreview: HTMLImageElement;
 	private _permissionState: HardwarePermission;
 	private _videoStream: MediaStream;
+	private _lastPhotoTaken: string;
 	//endregion
 
 	//region private methods
@@ -105,8 +134,8 @@ export default class CameraController {
 	private async _takePhotoButtonClicked(event: Event): Promise<void> {
 		event.preventDefault();
 
-		const image = await this.takeSnapshot();
-		this._photoPreview.src = "data:image/png;base64, " + image;
+		this._lastPhotoTaken = await this.takeSnapshot();
+		this._photoPreview.src = "data:image/png;base64, " + this._lastPhotoTaken;
 		this._photoPreview.classList.add('visible');
 		this._deletePhotoButton.classList.remove('disabled');
 		this._videoElement.pause();
