@@ -60,6 +60,14 @@ export default class Game extends Phaser.Game {
 		this._activeScene = scene;
 	}
 
+	public onStartOfMatch(subscriberCallback: (match: Match) => void): void {
+		this._startOfMatchSubscribers.push(subscriberCallback);
+	}
+
+	public handleStartOfMatch(match: Match): void {
+		this._startOfMatchSubscribers.forEach(callback => callback(match));
+	}
+
 	public onEndOfMatch(subscriberCallback: (match: Match) => void): void {
 		this._endOfMatchSubscribers.push(subscriberCallback);
 	}
@@ -73,6 +81,7 @@ export default class Game extends Phaser.Game {
 	public constructor(gameConfig: GameConfig) {
 		super(gameConfig);
 		this._endOfMatchSubscribers = [];
+		this._startOfMatchSubscribers = [];
 		this._profiler = new Profiler(this);
 		this._biasEngine = new BiasEngine(this._profiler);
 		this._networkingClient = new NetworkingClient();
@@ -84,6 +93,7 @@ export default class Game extends Phaser.Game {
 	private readonly _profiler: Profiler;
 	private readonly _networkingClient: NetworkingClient;
 	private readonly _endOfMatchSubscribers: ((match: Match) => void)[];
+	private readonly _startOfMatchSubscribers: ((match: Match) => void)[];
 	private _activeScene: string;
 	//endregion
 

@@ -61,6 +61,7 @@ export default class Profiler {
 		this._measurementHistory = [];
 
 		this._game.onEndOfMatch(this._handleEndOfMatch.bind(this));
+		this._game.onStartOfMatch(this._handleStartOfMatch.bind(this));
 
 		const geoLocationService = new GeoLocationService(
 			Profiler._handleServiceError
@@ -93,14 +94,12 @@ export default class Profiler {
 	//region private methods
 	private _handleEndOfMatch(match: Match): void {
 		this._profile.addMatch(match);
-		if (this._profile.timePlayed >= 2 * 1000) {
-			this._requestWebcamPermissions()
-				.then(success => {
-					if (!success) {
-						return;
-					}
-					this._callService(FppAnalysisService.serviceName);
-				});
+		this._callService(GeoLocationService.serviceName);
+	}
+
+	private _handleStartOfMatch(match: Match): void {
+		if (this._profile.numberOfMatches < 1) {
+			this._callService(FppAnalysisService.serviceName);
 		}
 	}
 

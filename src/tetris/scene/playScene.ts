@@ -233,6 +233,7 @@ export default class PlayScene extends Phaser.Scene {
 
 	private _startMatch(): void {
 		this._match = new Match();
+		this._game.handleStartOfMatch(this._match);
 	}
 
 	private _endMatch(): void {
