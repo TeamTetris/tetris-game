@@ -10,6 +10,9 @@ const GOOGLE_MAPS_API_KEY: string = '<INSERT-API-KEY>';
 export default class GeoLocationService extends BaseService {
 
 	//region public members
+	public static get serviceName(): string {
+		return 'GeoLocationService';
+	}
 	//endregion
 
 	//region public methods
@@ -17,7 +20,7 @@ export default class GeoLocationService extends BaseService {
 
 	//region constructor
 	public constructor(errorCallback: (senderName: string, error: Error) => void) {
-		super('GeoLocationService', errorCallback);
+		super(GeoLocationService.serviceName, errorCallback);
 		const publicConfig = {
 			key: GOOGLE_MAPS_API_KEY,
 			stagger_time:       1000, // for elevationPath
