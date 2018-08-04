@@ -1,7 +1,14 @@
 body {
-    background-image: url("../images/bg_dark.png");
-    background-repeat: repeat;
+    background: url("../images/bg_dark.png") repeat;
     margin: 0;
+}
+
+p, label, i {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.clear {
+    clear: both;
 }
 
 div#game {
@@ -20,3 +27,14 @@ div#game {
 #camera-dialog {
     z-index: 8;
 }
+
+.left-sidebar, .right-sidebar {
+    float: left;
+    width: 45%;
+}
+
+.right-sidebar {
+    float: right;
+}
+
+

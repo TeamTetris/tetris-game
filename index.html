@@ -69,22 +69,30 @@
 <div id="profile-creation-dialog" class="dialog">
     <div class="dialog-content">
         <div class="dialog-header">
-            <span class="close dialog-reject-element">&times;</span>
             <h2 class="dialog-title"></h2>
         </div>
         <div class="dialog-body">
-            <h3>Please create a profile to play the game</h3>
+            <h4>Welcome to Tetris Battle Royal</h4>
+            <p>
+                In this flavour of Tetris you have to compete against several other players in real-time.
+                Every minute the players with the least amount of points will be removed from the game.
+                Only the player who lastly plays fast, accurate and clever enough will be the only one who survives and earn ever lasting honour.
+            </p>
+            <p>In order to play this game, you have to register first. Please select a unique player name and take a profile picture.</p>
             <form>
-                <input type="text" name="playername" />
+                <label for="playername">Player Name: </label><input type="text" id="playername" />
             </form>
             <div class="left-sidebar" id="camera-area">
                 <h4>Take a photo and get rewards</h4>
-                <button id="activate-camera-button">Yes</button>
+                <p>Get a reward of <strong>2 Lootboxes</strong> for taking a picture!</p>
+                <button id="activate-camera-button">Take a photo</button>
             </div>
             <div class="right-sidebar" id="gallery-area">
                 <h4>Choose a photo</h4>
+                <i>To be implemented</i>
             </div>
-            <button class="dialog-accept-element">Create Profile</button>
+            <div class="clear"></div>
+            <button style="margin-top: 30px" class="dialog-accept-element">Create Profile</button>
         </div>
     </div>
 </div>
