@@ -6,13 +6,9 @@ import BaseMeasurement from "tetris/profiler/measurement/baseMeasurement";
 import BaseProfileData from "tetris/profiler/baseProfileData";
 import FppAnalysisService from "tetris/profiler/service/fppAnalysisService";
 import BaseService from "tetris/profiler/service/baseService";
-import DialogResult from "tetris/ui/dialog/dialogResult";
-import Dialog from "tetris/ui/dialog/dialog";
-import CameraController from "tetris/profiler/hardwareController/cameraController";
 import Game from "tetris/game";
 import Match from "tetris/match/match";
 import FppFaceAnalysis from "tetris/profiler/profileValues/fppFaceAnalysis";
-import CreateProfileDialog from "tetris/ui/dialog/createProfileDialog";
 
 const CONFIDENCE_THRESHOLD = 0.25;
 
