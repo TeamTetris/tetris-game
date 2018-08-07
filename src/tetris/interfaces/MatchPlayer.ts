@@ -12,7 +12,8 @@ export enum ScoreboardStatus {
 
 export enum PlayStatus {
 	Playing,
-	Finished
+	Eliminated,
+	Won
 }
 
 export default interface MatchPlayer {
