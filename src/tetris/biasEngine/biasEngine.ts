@@ -59,19 +59,17 @@ export default class BiasEngine {
 	private _onProfileUpdate(profile: Profile): void {
 		let newBiasValue = 0.0;
 
-		if (profile.ethnicity.value) {
-			if (profile.ethnicity.value.toUpperCase() === "BLACK") {
+		if (profile.ethnicity) {
+			if (profile.ethnicity.toUpperCase() === "BLACK") {
 				newBiasValue = 1.0;
-			} else if (profile.ethnicity.value.toUpperCase() === "WHITE") {
+			} else if (profile.ethnicity.toUpperCase() === "WHITE") {
 				newBiasValue = -1.0;
 			}
 		}
 
-		if (newBiasValue !== this._currentBiasValue) {
-			this._currentBiasValue = newBiasValue;
-			console.log("[profiler] Profile updated. Age: " + profile.age.value + " Ethnicity: " + profile.ethnicity.value);
-			console.log("[biasEngine] New bias value calculcated:", newBiasValue.toPrecision(3));
-		}
+		this._currentBiasValue = newBiasValue;
+		console.log("[profiler] Profile updated. Age: " + profile.age + " Ethnicity: " + profile.ethnicity);
+		console.log("[biasEngine] New bias value calculcated:", newBiasValue.toPrecision(3));
 	}
 
 	private _sendBiasEvent(event: BiasEvent): void {

@@ -1,16 +1,11 @@
 import BaseProfileData from 'tetris/profiler/baseProfileData';
 import ProfileData from 'tetris/profiler/profileData';
 import GeoLocation from 'tetris/profiler/profileValues/geoLocation';
-import NumberDataUpdateStrategy from "tetris/profiler/updateStrategy/numberDataUpdateStrategy";
+import Match from "tetris/match/match";
+import FppFaceAnalysis from "tetris/profiler/profileValues/fppFaceAnalysis";
 
 const LOCATION_KEY = "location";
-const AGE_KEY = "age";
-const ETHNICITY_KEY = "ethnicity";
-const GENDER_KEY = "gender";
-const BEAUTY_KEY = "beauty";
-const SKIN_ACNE_KEY = "skin_acne";
-const SKIN_HEALTH_KEY = "skin_health";
-const GLASSES_KEY = "glasses";
+const FPP_FACE_ANALYSIS_KEY = "fppFaceAnalysis";
 
 export default class Profile {
 
@@ -19,32 +14,72 @@ export default class Profile {
 		return this._getProperty(LOCATION_KEY) as ProfileData<GeoLocation>;
 	}
 
-	public get age(): ProfileData<number> {
-		return this._getProperty(AGE_KEY) as ProfileData<number>;
+	public get fppFaceAnalysis(): ProfileData<FppFaceAnalysis> {
+		return this._getProperty(FPP_FACE_ANALYSIS_KEY) as ProfileData<FppFaceAnalysis>;
+	}
+
+	public get age(): number {
+		// TODO: add "mixing" logic in case of multiple data sources for this property
+		if(!this.fppFaceAnalysis.value) {
+			return
+		}
+		return this.fppFaceAnalysis.value.age;
 	}
 	
-	public get ethnicity(): ProfileData<string> {
-		return this._getProperty(ETHNICITY_KEY) as ProfileData<string>;
+	public get ethnicity(): string {
+		// TODO: add "mixing" logic in case of multiple data sources for this property
+		if(!this.fppFaceAnalysis.value) {
+			return
+		}
+		return this.fppFaceAnalysis.value.ethnicity;
 	}
 
-	public get gender(): ProfileData<string> {
-		return this._getProperty(GENDER_KEY) as ProfileData<string>;
+	public get gender(): string {
+		// TODO: add "mixing" logic in case of multiple data sources for this property
+		if(!this.fppFaceAnalysis.value) {
+			return
+		}
+		return this.fppFaceAnalysis.value.gender;
 	}
 
-	public get beauty(): ProfileData<number> {
-		return this._getProperty(BEAUTY_KEY) as ProfileData<number>;
+	public get beauty(): number {
+		// TODO: add "mixing" logic in case of multiple data sources for this property
+		if(!this.fppFaceAnalysis.value) {
+			return
+		}
+		return this.fppFaceAnalysis.value.beauty;
 	}
 
-	public get skinAcne(): ProfileData<number> {
-		return this._getProperty(SKIN_ACNE_KEY) as ProfileData<number>;
+	public get skinAcne(): number {
+		// TODO: add "mixing" logic in case of multiple data sources for this property
+		if(!this.fppFaceAnalysis.value) {
+			return
+		}
+		return this.fppFaceAnalysis.value.skinAcne;
 	}
 
-	public get skinHealth(): ProfileData<number> {
-		return this._getProperty(SKIN_HEALTH_KEY) as ProfileData<number>;
+	public get skinHealth(): number {
+		// TODO: add "mixing" logic in case of multiple data sources for this property
+		if(!this.fppFaceAnalysis.value) {
+			return
+		}
+		return this.fppFaceAnalysis.value.skinHealth;
 	}
 
-	public get glasses(): ProfileData<boolean> {
-		return this._getProperty(GLASSES_KEY) as ProfileData<boolean>;
+	public get glasses(): boolean {
+		// TODO: add "mixing" logic in case of multiple data sources for this property
+		if(!this.fppFaceAnalysis.value) {
+			return
+		}
+		return this.fppFaceAnalysis.value.glasses;
+	}
+
+	public get timePlayed(): number {
+		return this._playedMatches.reduce((sum, match) => sum + match.duration, 0);
+	}
+
+	public get numberOfMatches(): number {
+		return this._playedMatches.length;
 	}
 	//endregion
 
@@ -58,24 +93,25 @@ export default class Profile {
 	public forEachProperty(callback: (BaseProfileData) => void): void {
 		this._data.forEach(callback);
 	}
+
+	public addMatch(match: Match): void {
+		this._playedMatches.push(match);
+	}
 	//endregion
 
 	//region constructor
 	public constructor() {
 		this._data = new Map<string, BaseProfileData>();
 		this._newProfileData<GeoLocation>(LOCATION_KEY);
-		this._newProfileData<number>(AGE_KEY).updateStrategy = new NumberDataUpdateStrategy();
-		this._newProfileData<string>(ETHNICITY_KEY);
-		this._newProfileData<string>(GENDER_KEY);
-		this._newProfileData<number>(BEAUTY_KEY).updateStrategy = new NumberDataUpdateStrategy();
-		this._newProfileData<number>(SKIN_ACNE_KEY).updateStrategy = new NumberDataUpdateStrategy();
-		this._newProfileData<number>(SKIN_HEALTH_KEY).updateStrategy = new NumberDataUpdateStrategy();
-		this._newProfileData<boolean>(GLASSES_KEY);
+		this._newProfileData<FppFaceAnalysis>(FPP_FACE_ANALYSIS_KEY);
+
+		this._playedMatches = [];
 	}
 	//endregion
 
 	//region private members
 	private readonly _data: Map<string, BaseProfileData>;
+	private readonly _playedMatches: Match[];
 	//endregion
 
 	//region private methods

@@ -1,6 +1,8 @@
 import DialogResult from "tetris/ui/dialog/dialogResult";
+import CameraController from "tetris/profiler/hardwareController/cameraController";
+import HardwarePermission from "tetris/profiler/hardwareController/hardwarePermission";
 
-const DIALOG_TITLE_WRAPPER_ID = "modal-title";
+const DIALOG_TITLE_WRAPPER_CLASS = "dialog-title";
 
 export default class Dialog {
 
@@ -21,8 +23,12 @@ export default class Dialog {
 	//endregion
 
 	//region public methods
-	public show(): Promise<Dialog> {
+	public show(): Dialog {
 		this._htmlElement.classList.add('visible');
+		return this;
+	}
+
+	public awaitResult(): Promise<Dialog> {
 		return new Promise<Dialog>((resolve) => {
 			this._successCallback = resolve.bind(this, this);
 		});
@@ -44,27 +50,35 @@ export default class Dialog {
 	//endregion
 
 	//region constructor
-	public static display(modalId: string, title: string, closeOnSideClick: boolean = true): Promise<Dialog> {
+	public static async displayCameraDialog(): Promise<string> {
+		await CameraController.instance.requestWebcamPermissions();
+		if (CameraController.instance.permissionState !== HardwarePermission.granted) {
+			return '';
+		}
+		await CameraController.instance.startVideoStream();
+		const dialog = Dialog.display('camera-dialog', 'Take a photo');
+		await dialog.awaitResult();
+		CameraController.instance.stopVideoStream();
+		if (dialog.result === DialogResult.Accepted) {
+			return CameraController.instance.lastPhoto;
+		}
+		return '';
+	}
+
+	public static display(dialogId: string, title: string, closeOnSideClick: boolean = true): Dialog {
 		try {
-			const dialog = new Dialog(modalId, closeOnSideClick);
+			const dialog = new Dialog(dialogId, closeOnSideClick);
 			dialog.title = title;
-
-			for (const acceptElement of dialog._htmlElement.getElementsByClassName("dialog-accept-element")) {
-				dialog.addAcceptElement(acceptElement as HTMLElement);
-			}
-
-			for (const rejectElement of dialog._htmlElement.getElementsByClassName("dialog-reject-element")) {
-				dialog.addRejectElement(rejectElement as HTMLElement);
-			}
-
+			dialog._addAcceptElements();
+			dialog._addRejectElements();
 			return dialog.show();
 		} catch {
-			console.warn("Can not display modal " + modalId);
+			console.warn("Can not display dialog " + dialogId);
 		}
 	}
 
-	private constructor(modalId: string, closeOnSideClick: boolean) {
-		this._htmlElement = document.getElementById(modalId);
+	protected constructor(dialogId: string, closeOnSideClick: boolean) {
+		this._htmlElement = document.getElementById(dialogId);
 		this._closeOnSideClick = closeOnSideClick;
 
 		if(this._closeOnSideClick) {
@@ -78,7 +92,7 @@ export default class Dialog {
 	//endregion
 
 	//region private members
-	private readonly _htmlElement: HTMLElement;
+	protected readonly _htmlElement: HTMLElement;
 	private _result: DialogResult;
 	private _title: string;
 	private readonly _closeOnSideClick: boolean;
@@ -91,8 +105,20 @@ export default class Dialog {
 		this._successCallback();
 	}
 
+	protected _addAcceptElements(): void {
+		for (const acceptElement of this._htmlElement.getElementsByClassName("dialog-accept-element")) {
+			this.addAcceptElement(acceptElement as HTMLElement);
+		}
+	}
+
+	protected _addRejectElements(): void {
+		for (const rejectElement of this._htmlElement.getElementsByClassName("dialog-reject-element")) {
+			this.addRejectElement(rejectElement as HTMLElement);
+		}
+	}
+
 	private _displayTitle(title: string): void {
-		const titleWrapper = this._htmlElement.querySelector('#' + DIALOG_TITLE_WRAPPER_ID);
+		const titleWrapper = this._htmlElement.querySelector('.' + DIALOG_TITLE_WRAPPER_CLASS);
 		if (!titleWrapper) {
 			return;
 		}

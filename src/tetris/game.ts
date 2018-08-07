@@ -8,8 +8,8 @@ import Profiler from "tetris/profiler/profiler";
 import config from "tetris/config";
 import "tetris/styles/scss/styles.scss";
 import NetworkingClient from "tetris/networking/networkingClient";
-
-
+import Match from "tetris/match/match";
+import CreateProfileDialog from "tetris/ui/dialog/createProfileDialog";
 
 // main game configuration
 const gameConfig: GameConfig = {
@@ -39,7 +39,7 @@ export default class Game extends Phaser.Game {
 	//endregion
 
 	//region public methods
-	public start() {
+	public start(): void {
 		super.start();
 		const menuScene = new MenuScene(this);
 		const playScene = new PlayScene(this);
@@ -47,38 +47,65 @@ export default class Game extends Phaser.Game {
 		this.scene.add(config.sceneKeys.playScene, playScene);
 		this.scene.add(config.sceneKeys.menuScene, menuScene, true);
 		this._activeScene = config.sceneKeys.menuScene;
+		this._createGameProfile();
 	}
 	
-	public step(time: number, delta: number) {
+	public step(time: number, delta: number): void {
 		super.step(time, delta);
 		this._profiler.update(time, delta);
 		this._biasEngine.update(time, delta);
 	}
 
-	public changeScene(scene: string) {
+	public changeScene(scene: string): void {
 		this.scene.switch(this._activeScene, scene);
 		this.scene.swapPosition(this._activeScene, scene);
 		this._activeScene = scene;
+	}
+
+	public onStartOfMatch(subscriberCallback: (match: Match) => void): void {
+		this._startOfMatchSubscribers.push(subscriberCallback);
+	}
+
+	public handleStartOfMatch(match: Match): void {
+		this._startOfMatchSubscribers.forEach(callback => callback(match));
+	}
+
+	public onEndOfMatch(subscriberCallback: (match: Match) => void): void {
+		this._endOfMatchSubscribers.push(subscriberCallback);
+	}
+
+	public handleEndOfMatch(match: Match): void {
+		this._endOfMatchSubscribers.forEach(callback => callback(match));
 	}
 	//endregion
 
 	//region constructor
 	public constructor(gameConfig: GameConfig) {
 		super(gameConfig);
-		this._profiler = new Profiler();
+		this._endOfMatchSubscribers = [];
+		this._startOfMatchSubscribers = [];
+		this._profiler = new Profiler(this);
 		this._biasEngine = new BiasEngine(this._profiler);
-		this._networkingClient = new NetworkingClient(); 
+		this._networkingClient = new NetworkingClient();
 	}
 	//endregion
 
 	//region private members
-	private readonly _biasEngine;
-	private readonly _profiler;
-	private readonly _networkingClient;
-	private _activeScene;
+	private readonly _biasEngine: BiasEngine;
+	private readonly _profiler: Profiler;
+	private readonly _networkingClient: NetworkingClient;
+	private readonly _endOfMatchSubscribers: ((match: Match) => void)[];
+	private readonly _startOfMatchSubscribers: ((match: Match) => void)[];
+	private _activeScene: string;
 	//endregion
 
 	//region private methods
+	private async _createGameProfile(): Promise<void> {
+		const createProfileDialog = CreateProfileDialog.display();
+		createProfileDialog.show();
+		await createProfileDialog.awaitResult();
+		// TODO: Add Profile Creation on remote based on data stored in CreateProfileDialog
+	}
 	//endregion
 }
 

@@ -4,11 +4,13 @@ import GeoLocation from "tetris/profiler/profileValues/geoLocation";
 import Measurement from "tetris/profiler/measurement/measurement";
 import BaseMeasurement from "tetris/profiler/measurement/baseMeasurement";
 import BaseProfileData from "tetris/profiler/baseProfileData";
-import FaceAnalysisService from "tetris/profiler/service/faceAnalysisService";
+import FppAnalysisService from "tetris/profiler/service/fppAnalysisService";
 import BaseService from "tetris/profiler/service/baseService";
-import DialogResult from "tetris/ui/dialog/dialogResult";
+import Game from "tetris/game";
+import Match from "tetris/match/match";
+import FppFaceAnalysis from "tetris/profiler/profileValues/fppFaceAnalysis";
 import Dialog from "tetris/ui/dialog/dialog";
-import CameraController from "tetris/profiler/hardwareController/cameraController";
+import DialogResult from "tetris/ui/dialog/dialogResult";
 
 const CONFIDENCE_THRESHOLD = 0.25;
 
@@ -49,12 +51,16 @@ export default class Profiler {
 	//endregion
 
 	//region constructor
-	public constructor() {
+	public constructor(game: Game) {
 		this._profile = new Profile();
 		this._services = new Map();
+		this._game = game;
 		this._serviceConsumers = new Map();
 		this._profileChangedListeners = [];
 		this._measurementHistory = [];
+
+		this._game.onEndOfMatch(this._handleEndOfMatch.bind(this));
+		this._game.onStartOfMatch(this._handleStartOfMatch.bind(this));
 
 		const geoLocationService = new GeoLocationService(
 			Profiler._handleServiceError
@@ -64,20 +70,19 @@ export default class Profiler {
 				profile.location.updateValue(geoLocationService.name, measurement.value)
 		);
 
-		const faceAnalysisService = new FaceAnalysisService(
+		const faceAnalysisService = new FppAnalysisService(
 			Profiler._handleServiceError
 		);
 		this._addService(faceAnalysisService,
-			(profile: Profile, measurement: Measurement<Object>) =>
-				this._handleNewFace(faceAnalysisService, measurement)
+			(profile: Profile, measurement: Measurement<FppFaceAnalysis>) =>
+				profile.fppFaceAnalysis.updateValue(faceAnalysisService.name, measurement.value)
 		);
-		geoLocationService.run(this._consumeService.bind(this));
-		this._requestWebcamPermissions();
 	}
 	//endregion
 
 	//region private members
 	private readonly _profile: Profile;
+	private readonly _game: Game;
 	private readonly _services: Map<string, BaseService>;
 	private readonly _serviceConsumers: Map<string, BaseServiceConsumer[]>;
 	private readonly _profileChangedListeners: ProfileChangedEventHandler[];
@@ -85,17 +90,47 @@ export default class Profiler {
 	//endregion
 
 	//region private methods
+	private async _handleEndOfMatch(match: Match): Promise<void> {
+		this._profile.addMatch(match);
+
+		switch (this._profile.numberOfMatches)
+		{
+			case 1:
+			{
+				const locationDialog = Dialog.display(
+					'geolocation-permission-dialog',
+					"Join your local community",
+					false
+				);
+				await locationDialog.awaitResult();
+				if(locationDialog.result != DialogResult.Accepted) {
+					return;
+				}
+				this._callService(GeoLocationService.serviceName);
+				break;
+			}
+			case 2:
+			{
+				// TODO: ask for Microphone permission
+				break;
+			}
+			default:
+			{
+				break;
+			}
+		}
+	}
+
+	private _handleStartOfMatch(match: Match): void {
+		if (this._profile.numberOfMatches < 1) {
+			this._callService(FppAnalysisService.serviceName);
+		}
+	}
+
 	private _profileChanged(): void {
 		this._profileChangedListeners.forEach(handler => {
 			handler(this.profile);
 		});
-	}
-
-	private async _requestWebcamPermissions(): Promise<boolean> {
-		await CameraController.instance.startVideoStream();
-		const dialog = await Dialog.display('camera-modal', 'Take a photo');
-		return dialog.result === DialogResult.Accepted;
-		// TODO: this._callService(FaceAnalysisService.serviceName);
 	}
 
 	private _callServices(serviceNames: string[]): void {
@@ -124,16 +159,6 @@ export default class Profiler {
 			(consumer: ServiceConsumer<MeasurementType>) => consumer(this.profile, measurement)
 		);
 		this._profileChanged();
-	}
-
-	private _handleNewFace(sender: FaceAnalysisService, measurement: Measurement<Object>): void {
-		this._profile.gender.updateValue(sender.name, measurement.value['gender'].value.toLowerCase());
-		this._profile.beauty.updateValue(sender.name, measurement.value["beauty"][this._profile.gender + "_score"]);
-		this._profile.ethnicity.updateValue(sender.name, measurement.value["ethnicity"].value);
-		this._profile.age.updateValue(sender.name, measurement.value["age"].value);
-		this._profile.skinAcne.updateValue(sender.name, measurement.value['skinstatus']['acne']);
-		this._profile.skinHealth.updateValue(sender.name, measurement.value['skinstatus']['health']);
-		this._profile.glasses.updateValue(sender.name, measurement.value['glass'].value == 'None');
 	}
 
 	// ERROR callbacks

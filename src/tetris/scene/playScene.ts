@@ -13,6 +13,7 @@ import CountdownWidget from "tetris/ui/countdownWidget";
 import ScoreboardWidget from "tetris/ui/scoreboardWidget";
 import ScoreWidget from "tetris/ui/scoreWidget";
 import Game from "tetris/game";
+import Match from "tetris/match/match";
 
 const PLAYER_FIELD_DRAW_OFFSET: Vector2 = new Vector2(
 	(config.graphics.width - config.field.width * config.field.blockSize) / 2, 
@@ -82,6 +83,7 @@ export default class PlayScene extends Phaser.Scene {
 
 	public create(): void {
 		this._createUi();
+		this._startMatch();
 
 		this._playerFieldBackground = this._createFieldBackground(PLAYER_FIELD_DRAW_OFFSET);
 
@@ -133,6 +135,7 @@ export default class PlayScene extends Phaser.Scene {
 	private _player: Player;
 	private _localPlayerField: Field;
 	private _paused: boolean = false;
+	private _match: Match;
 	private _pauseKey: Phaser.Input.Keyboard.Key;
 	private _remotePlayerFields: Map<string, RemoteField>;
 	private _remotePlayerFieldIndex = 0;
@@ -203,7 +206,7 @@ export default class PlayScene extends Phaser.Scene {
 		background.fillRect(0, 0, config.graphics.width, config.graphics.height);
 
 		const spacing: number = 5;
-		this._pauseButton = new TextButton(this, 0, 0, "blue_button07.png", "blue_button08.png", "ii", () => this._game.changeScene(config.sceneKeys.menuScene));
+		this._pauseButton = new TextButton(this, 0, 0, "blue_button07.png", "blue_button08.png", "ii", () => this._endMatch());
 		this._pauseButton.x =  config.graphics.width - this._pauseButton.width / 2 - spacing;
 		this._pauseButton.y = this._pauseButton.height / 2 + spacing;
 
@@ -226,6 +229,17 @@ export default class PlayScene extends Phaser.Scene {
 
 	private _updateShaders(time: number): void {
 		this._pipeline.setFloat1('uTime', time / 800);
+	}
+
+	private _startMatch(): void {
+		this._match = new Match();
+		this._game.handleStartOfMatch(this._match);
+	}
+
+	private _endMatch(): void {
+		this._match.end(this._localPlayerField.score);
+		this._game.handleEndOfMatch(this._match);
+		this._game.changeScene(config.sceneKeys.menuScene);
 	}
 	//endregion
 }

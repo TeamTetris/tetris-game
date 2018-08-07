@@ -27,12 +27,17 @@ export default class ProfileDataConfidenceStrategy {
 	public static fast(): ProfileDataConfidenceStrategy {
 		return ProfileDataConfidenceStrategy._fastDecrease;
 	}
+
+	public static ultraFast(): ProfileDataConfidenceStrategy {
+		return ProfileDataConfidenceStrategy._ultraFastDecrease;
+	}
 	//endregion
 
 	//region private members
 	private static readonly _slowDecrease: ProfileDataConfidenceStrategy = new ProfileDataConfidenceStrategy(0.01 / 30);
 	private static readonly _defaultDecrease: ProfileDataConfidenceStrategy = new ProfileDataConfidenceStrategy(0.01 / 15);
 	private static readonly _fastDecrease: ProfileDataConfidenceStrategy = new ProfileDataConfidenceStrategy(0.01 / 5);
+	private static readonly _ultraFastDecrease: ProfileDataConfidenceStrategy = new ProfileDataConfidenceStrategy(0.01 / 0.5);
 	private readonly _decreasePerSecond: number;
 	//endregion
 

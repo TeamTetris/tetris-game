@@ -6,9 +6,30 @@ export default class CameraController {
 	public get permissionState(): HardwarePermission {
 		return this._permissionState;
 	}
+
+	public get lastPhoto(): string {
+		return this._lastPhotoTaken;
+	}
 	//endregion
 
 	//region public methods
+
+	public async requestWebcamPermissions(): Promise<boolean> {
+		if (this.permissionState === HardwarePermission.granted) {
+			return true;
+		}
+		if (this.permissionState === HardwarePermission.denied) {
+			return false;
+		}
+		try {
+			await CameraController.instance.startVideoStream();
+			CameraController.instance.stopVideoStream();
+		} catch {
+			return false;
+		}
+		return true;
+	}
+
 	public async startVideoStream(): Promise<MediaStream> {
 		if (this.permissionState === HardwarePermission.denied) {
 			return Promise.reject(new Error('No Permissions granted'));
@@ -33,12 +54,12 @@ export default class CameraController {
 			return;
 		}
 		this._videoElement.pause();
-		this._videoStream.stop();
+		this._videoStream.getTracks()[0].stop();
 		this._videoElement.src = null;
 	}
 
 	public async takeSnapshot(): Promise<string> {
-		if (this._videoStream) {
+		if (this._videoStream && this._videoStream.active) {
 			return Promise.resolve(this._takeSnapshot());
 		}
 		try {
@@ -46,7 +67,7 @@ export default class CameraController {
 		} catch (error) {
 			throw error;
 		}
-		this._takeSnapshot();
+		return Promise.resolve(this._takeSnapshot());
 	}
 
 	//endregion
@@ -81,6 +102,7 @@ export default class CameraController {
 	private readonly  _photoPreview: HTMLImageElement;
 	private _permissionState: HardwarePermission;
 	private _videoStream: MediaStream;
+	private _lastPhotoTaken: string;
 	//endregion
 
 	//region private methods
@@ -95,16 +117,18 @@ export default class CameraController {
 			this._videoElement.videoHeight
 		);
 
-		return this._canvas
+		const base64Image = this._canvas
 			.toDataURL('image/png')
 			.replace(/^data:image\/(png|jpg);base64,/, "");
+		console.log('Snapshot taken: ' + base64Image.substr(base64Image.length - 20));
+		return base64Image;
 	}
 
 	private async _takePhotoButtonClicked(event: Event): Promise<void> {
 		event.preventDefault();
 
-		const image = await this.takeSnapshot();
-		this._photoPreview.src = "data:image/png;base64, " + image;
+		this._lastPhotoTaken = await this.takeSnapshot();
+		this._photoPreview.src = "data:image/png;base64, " + this._lastPhotoTaken;
 		this._photoPreview.classList.add('visible');
 		this._deletePhotoButton.classList.remove('disabled');
 		this._videoElement.pause();

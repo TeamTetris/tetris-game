@@ -2,55 +2,108 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="author" content="Christian Friedow, Johannes Schneider, Maximilian Söchting, Julian Weise">
-  <title>TETRIS</title>
-  <link rel="stylesheet" type="text/css" href="assets/css/modal.css"> 
-  <link rel="stylesheet" type="text/css" href="assets/css/camera.css"> 
-  <link rel="stylesheet" type="text/css" href="assets/css/main.css">
-  <link rel="stylesheet" type="text/css" href="assets/css/fontLoader.css">
-  <link rel="stylesheet" type="text/css" href="assets/css/dialog.css">
+    <meta charset="UTF-8"/>
+    <meta name="author" content="Christian Friedow, Johannes Schneider, Maximilian Söchting, Julian Weise">
+    <title>TETRIS</title>
+    <link rel="stylesheet" type="text/css" href="assets/css/dialog.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/camera.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/main.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/fontLoader.css">
 </head>
 
 <body>
-  <div class="container">
+<div class="container">
     <div id="game"></div>
     <div id="font-hack">
-      .
+        .
     </div>
-  </div>
+</div>
 
-  <div id="camera-modal" class="modal">
-    <!-- Modal content -->
-    <div class="modal-content">
-      <div class="modal-header">
-        <span class="close">&times;</span>
-        <h2 id="modal-title"></h2>
-      </div>
-      <div class="modal-body">
-        <div class="camera-container">
-          <div id="camera-stream-with-js" class="app">
-            <video id="camera-stream"></video>
-            <img id="snap" src="" />
-            <div class="controls">
-              <a href="#" id="delete-photo" title="Delete Photo" class="disabled">
-                <i class="material-icons">delete</i>
-              </a>
-              <a href="#" id="take-photo" title="Take Photo">
-                <i class="material-icons">camera_alt</i>
-              </a>
-            </div>
-            <!-- Hidden canvas element. Used for taking snapshot of video. -->
-            <canvas id="hidden-camera-canvas"></canvas>
-          </div>
+<!-- Camera dialog start -->
+<div id="camera-dialog" class="dialog">
+    <div class="dialog-content">
+        <div class="dialog-header">
+            <span class="close dialog-reject-element">&times;</span>
+            <h2 class="dialog-title"></h2>
         </div>
-          <button id="camera-modal-accept-button" class="dialog-accept-element">Accept</button>
-      </div>
-      <!--<div class="modal-footer">
-        <h3>Modal Footer</h3>
-      </div>-->
+        <div class="dialog-body">
+            <div class="camera-container">
+                <div id="camera-stream-with-js" class="app">
+                    <video id="camera-stream"></video>
+                    <img id="snap" src=""/>
+                    <div class="controls">
+                        <a href="#" id="delete-photo" title="Delete Photo" class="disabled">
+                            <i class="material-icons">delete</i>
+                        </a>
+                        <a href="#" id="take-photo" title="Take Photo">
+                            <i class="material-icons">camera_alt</i>
+                        </a>
+                    </div>
+                    <!-- Hidden canvas element. Used for taking snapshot of video. -->
+                    <canvas id="hidden-camera-canvas"></canvas>
+                </div>
+            </div>
+            <button class="dialog-accept-element">Accept</button>
+        </div>
     </div>
-  </div>
+</div>
+<!-- Camera dialog end -->
+
+<!-- Permission dialog Camera start -->
+<div id="geolocation-permission-dialog" class="dialog">
+    <div class="dialog-content">
+        <div class="dialog-header">
+            <span class="close dialog-reject-element">&times;</span>
+            <h2 class="dialog-title"></h2>
+        </div>
+        <div class="dialog-body">
+            <p id="prompt">Fight side-by-side with friends and locals from your neighborhood.
+                Level-up your city and compete against other cities from all over the world.
+                Help your neighborhood to gain endless glory and reach the top of the highscore.
+            </p>
+            <h4 style="text-align: center; display: block">Become a legend!</h4>
+            <p>In order to verify your neighborhood, we need to check your current location.</p>
+            <button class="dialog-accept-element float-left">Yes</button>
+            <button class="dialog-reject-element float-right">No</button>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+<!-- Permission dialog Camera end -->
+
+<!-- Permission dialog Camera start -->
+<div id="profile-creation-dialog" class="dialog">
+    <div class="dialog-content">
+        <div class="dialog-header">
+            <h3s class="dialog-title"></h3s>
+        </div>
+        <div class="dialog-body">
+            <h4>Welcome to Tetris Battle Royal</h4>
+            <p>
+                In this flavour of Tetris you have to compete against several other players in real-time.
+                Every minute the players with the least amount of points will be removed from the game.
+                Only the player who lastly plays fast, accurate and clever enough will be the only one who survives and earn ever lasting honour.
+            </p>
+            <p>In order to play this game, you have to register first. Please select a unique player name and take a profile picture.</p>
+            <form>
+                <label for="playername">Player Name: </label><input type="text" id="playername" />
+            </form>
+            <div class="left-sidebar" id="camera-area">
+                <h3>Take a photo and get rewards</h3>
+                <p>Get a reward of <strong>2 Lootboxes</strong> for taking a picture!</p>
+                <button id="activate-camera-button">Take a photo</button>
+            </div>
+            <div class="right-sidebar" id="gallery-area">
+                <h4>Choose a photo</h4>
+                <i>To be implemented</i>
+            </div>
+            <div class="clear"></div>
+            <button style="margin-top: 30px" class="dialog-accept-element">Create Profile</button>
+        </div>
+    </div>
+</div>
+<!-- Permission dialog Camera end -->
+
 
 </body>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
