@@ -7,23 +7,52 @@ import Field from "tetris/field/field";
 import BrickBias from "tetris/brick/brickBias";
 import Profiler from "tetris/profiler/profiler";
 import Profile from "tetris/profiler/profile";
+import Ethnicity from "tetris/profiler/profileValues/ethnicity";
+import Gender from "tetris/profiler/profileValues/gender";
+
+interface CalculateBiasForProfileData {
+	(profile: Profile): number
+}
 
 export default class BiasEngine {
 
 	//region public members
+	public static get MAX_NEGATIVE_BIAS_VALUE(): number {
+		return 0.0;
+	}
+
+	public static get MAX_POSITIVE_BIAS_VALUE(): number {
+		return 2.0;
+	}
+
+	public static get BIAS_RANGE(): number {
+		return BiasEngine.MAX_POSITIVE_BIAS_VALUE - BiasEngine.MAX_NEGATIVE_BIAS_VALUE;
+	}
+
+	public static get NEUTRAL_BIAS_VALUE(): number {
+		return BiasEngine.BIAS_RANGE * 0.5;
+	}
+
+	public static get BIAS_PROFILE_WEIGHTS(): Map<CalculateBiasForProfileData, number> {
+		const biasProfileWeights = new Map();
+		biasProfileWeights.set(BiasEngine._calculateEthnicityBias, 0.5);
+		biasProfileWeights.set(BiasEngine._calculateGenderBias, 0.15);
+		biasProfileWeights.set(BiasEngine._calculateAgeBias, 0.1);
+		return biasProfileWeights;
+	}
 	//endregion
 
 	//region public methods
 	public update(time: number, delta: number): void {
-		if (time > this._lastBiasEvent + this._biasEventInterval) {
-			this._lastBiasEvent = time;
+		if (time > this._timestampOfLastBiasEvent + this._biasEventTimeInterval) {
+			this._timestampOfLastBiasEvent = time;
 			this._spawnBiasEvent();
 		}
 	}
 
 	public newEventReceiver(): BiasEventReceiver {
 		const receiver = new BiasEventReceiver();
-		this._eventReceivers = this._eventReceivers.concat(receiver);
+		this._biasEventReceivers = this._biasEventReceivers.concat(receiver);
 
 		return receiver;
 	}
@@ -42,42 +71,104 @@ export default class BiasEngine {
 
 	//region private members
 	private static POSSIBLE_EVENTS: BiasEventType[];
-	private _lastBiasEvent: number = 0;
-	private _biasEventInterval: number = 10000;
-	private _eventReceivers: BiasEventReceiver[] = [];
-	/*
-		Bias Value:
-		-1.0: Maximum negatively biased game experience
-		 0.0: Normal game experience
-		 1.0: Maximum positively biased game experience
-	*/
-	private _currentBiasValue: number = 0.0; 
+	private _timestampOfLastBiasEvent: number = 0;
+	private _biasEventTimeInterval: number = 10000;
+	private _biasEventReceivers: BiasEventReceiver[] = [];
+	private _currentBiasValue: number = BiasEngine.NEUTRAL_BIAS_VALUE;
 	private _profiler: Profiler;
 	//endregion
 
 	//region private methods
+	private get currentBiasValue(): number {
+		return this._currentBiasValue;
+	}
+
+	private set currentBiasValue(value: number) {
+		this._currentBiasValue = Math.min(BiasEngine.MAX_POSITIVE_BIAS_VALUE, Math.max(BiasEngine.MAX_NEGATIVE_BIAS_VALUE, value));
+	}
+
 	private _onProfileUpdate(profile: Profile): void {
-		let newBiasValue = 0.0;
+		let newBiasValue = BiasEngine.NEUTRAL_BIAS_VALUE;
 
-		if (profile.ethnicity) {
-			if (profile.ethnicity.toUpperCase() === "BLACK") {
-				newBiasValue = 1.0;
-			} else if (profile.ethnicity.toUpperCase() === "WHITE") {
-				newBiasValue = -1.0;
-			}
-		}
+		BiasEngine.BIAS_PROFILE_WEIGHTS.forEach((weight, profileDataHandler) => {
+			 newBiasValue += weight * profileDataHandler(profile);
+		});
+		this.currentBiasValue = newBiasValue;
 
-		this._currentBiasValue = newBiasValue;
-		console.log("[profiler] Profile updated. Age: " + profile.age + " Ethnicity: " + profile.ethnicity);
-		console.log("[biasEngine] New bias value calculcated:", newBiasValue.toPrecision(3));
+		console.log("[profiler] Profile updated. Age: " + profile.age + " Ethnicity: " + profile.ethnicity + " Gender: " + profile.gender);
+		console.log("[biasEngine] New bias value calculated:", newBiasValue.toPrecision(3));
 	}
 
 	private _sendBiasEvent(event: BiasEvent): void {
-		this._eventReceivers.forEach((eventReceiver) => eventReceiver.receiveEvent(event));
+		this._biasEventReceivers.forEach((eventReceiver) => eventReceiver.receiveEvent(event));
 	}
 
 	private _spawnBiasEvent(): void {
 
 	}
+
+	// Profile Bias Values START
+	private static positiveBias(factor: number): number {
+		factor = Math.min(1, Math.max(0, factor));
+		return (BiasEngine.MAX_POSITIVE_BIAS_VALUE - BiasEngine.NEUTRAL_BIAS_VALUE) * factor;
+	}
+
+	private static negativeBias(factor: number): number {
+		factor = Math.min(1, Math.max(0, factor));
+		return (BiasEngine.MAX_NEGATIVE_BIAS_VALUE - BiasEngine.NEUTRAL_BIAS_VALUE) * factor;
+	}
+
+	private static _calculateEthnicityBias(profile: Profile): number {
+		if(!profile.ethnicity) {
+			return BiasEngine.positiveBias(0);
+		}
+		switch (profile.ethnicity) {
+			case Ethnicity.WHITE: {
+				return BiasEngine.negativeBias(1);
+			}
+			case Ethnicity.ASIAN: {
+				return BiasEngine.positiveBias(0.25);
+			}
+			case Ethnicity.INDIAN: {
+				return BiasEngine.positiveBias(0.2);
+			}
+			case Ethnicity.BLACK: {
+				return BiasEngine.positiveBias(1);
+			}
+			default: {
+				return BiasEngine.negativeBias(0.7);
+			}
+		}
+	}
+
+	private static _calculateGenderBias(profile: Profile): number {
+		if (!profile.gender) {
+			return BiasEngine.positiveBias(0);
+		}
+		switch(profile.gender) {
+			case Gender.MALE: {
+				return BiasEngine.negativeBias(1);
+			}
+			case Gender.FEMALE: {
+				return BiasEngine.positiveBias(1);
+			}
+			case Gender.OTHER: {
+				return BiasEngine.positiveBias(0.5);
+			}
+			default: {
+				return BiasEngine.negativeBias(0.7);
+			}
+		}
+	}
+
+	private static _calculateAgeBias(profile: Profile): number {
+		if (!profile.age) {
+			return BiasEngine.positiveBias(0);
+		}
+		const relativeAge = profile.age - 40;
+		const factor = Math.abs(relativeAge / 40);
+		return relativeAge >= 0? BiasEngine.positiveBias(factor): BiasEngine.negativeBias(factor);
+	}
+	// Profile Bias Values END
 	//endregion
 }
