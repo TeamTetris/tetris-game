@@ -154,7 +154,7 @@ export default class PlayScene extends Phaser.Scene {
 		this._match = match;
 		for (const [index, player] of match.players.entries()) {
 			this._scoreboardWidget.update(match.players);
-			if (index < 3) {
+			if (index < 2) {
 				this._remotePlayerFields[index].updateSprites(player.field);
 			}
 			// TODO: Update remote player names, scores and ranks
