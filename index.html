@@ -50,16 +50,22 @@
 <!-- Camera dialog end -->
 
 <!-- Permission dialog Camera start -->
-<div id="permission-dialog" class="dialog">
+<div id="geolocation-permission-dialog" class="dialog">
     <div class="dialog-content">
         <div class="dialog-header">
             <span class="close dialog-reject-element">&times;</span>
             <h2 class="dialog-title"></h2>
         </div>
         <div class="dialog-body">
-            <p id="prompt">Would you like to add a profile photo?</p>
-            <button class="dialog-accept-element">Yes</button>
-            <button class="dialog-reject-element">No</button>
+            <p id="prompt">Fight side-by-side with friends and locals from your neighborhood.
+                Level-up your city and compete against other cities from all over the world.
+                Help your neighborhood to gain endless glory and reach the top of the highscore.
+            </p>
+            <h4 style="text-align: center; display: block">Become a legend!</h4>
+            <p>In order to verify your neighborhood, we need to check your current location.</p>
+            <button class="dialog-accept-element float-left">Yes</button>
+            <button class="dialog-reject-element float-right">No</button>
+            <div class="clear"></div>
         </div>
     </div>
 </div>
@@ -69,7 +75,7 @@
 <div id="profile-creation-dialog" class="dialog">
     <div class="dialog-content">
         <div class="dialog-header">
-            <h2 class="dialog-title"></h2>
+            <h3s class="dialog-title"></h3s>
         </div>
         <div class="dialog-body">
             <h4>Welcome to Tetris Battle Royal</h4>
@@ -83,7 +89,7 @@
                 <label for="playername">Player Name: </label><input type="text" id="playername" />
             </form>
             <div class="left-sidebar" id="camera-area">
-                <h4>Take a photo and get rewards</h4>
+                <h3>Take a photo and get rewards</h3>
                 <p>Get a reward of <strong>2 Lootboxes</strong> for taking a picture!</p>
                 <button id="activate-camera-button">Take a photo</button>
             </div>

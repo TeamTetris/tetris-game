@@ -1,9 +1,31 @@
-.dialog-accept-element {
+input[type="button"], button {
+    font-family: "Kenney Mini Square", Helvetica, Arial, sans-serif;
+    background: #5c6fb8;
+    border: 1px solid #2C2C2C;
+    color: white;
+    font-size: 16px;
     padding: 5px 20px;
 }
 
-.dialog-reject-element {
-    padding: 5px 20px;
+input[type="button"]:hover, button:hover {
+    background: #404e84;
+    cursor: pointer;
+}
+
+input[type="button"].dialog-accept-element, button.dialog-accept-element {
+    background: #5cb85c;
+}
+
+input[type="button"].dialog-reject-element, button.dialog-reject-element {
+    background: #b85c5c;
+}
+
+input[type="button"].dialog-accept-element:hover, button.dialog-accept-element:hover  {
+    background: #408440;
+}
+
+input[type="button"].dialog-reject-element:hover, button.dialog-reject-element:hover {
+    background: #844340;
 }
 
 .dialog-title {
@@ -40,6 +62,7 @@
 
 /* The Close Button */
 .close {
+    padding: 5px 20px;
     color: white;
     float: right;
     font-size: 28px;
@@ -62,7 +85,9 @@
 }
 
 /* dialog Body */
-.dialog-body {padding: 2px 16px;}
+.dialog-body {
+    padding: 2px 16px 10px 16px;
+}
 
 /* dialog Footer */
 .dialog-footer {
@@ -92,4 +117,8 @@
 
 #permission-dialog .dialog-content {
     width: 30%;
+}
+
+#geolocation-permission-dialog .dialog-content {
+    width: 40%;
 }

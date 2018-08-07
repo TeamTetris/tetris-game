@@ -11,6 +11,14 @@ p, label, i {
     clear: both;
 }
 
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
 div#game {
     margin: auto;
     text-align: center;

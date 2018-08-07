@@ -9,6 +9,8 @@ import BaseService from "tetris/profiler/service/baseService";
 import Game from "tetris/game";
 import Match from "tetris/match/match";
 import FppFaceAnalysis from "tetris/profiler/profileValues/fppFaceAnalysis";
+import Dialog from "tetris/ui/dialog/dialog";
+import DialogResult from "tetris/ui/dialog/dialogResult";
 
 const CONFIDENCE_THRESHOLD = 0.25;
 
@@ -88,14 +90,22 @@ export default class Profiler {
 	//endregion
 
 	//region private methods
-	private _handleEndOfMatch(match: Match): void {
+	private async _handleEndOfMatch(match: Match): Promise<void> {
 		this._profile.addMatch(match);
 
 		switch (this._profile.numberOfMatches)
 		{
 			case 1:
 			{
-				// TODO: ask for GeoLocation permission
+				const locationDialog = Dialog.display(
+					'geolocation-permission-dialog',
+					"Join your local community",
+					false
+				);
+				await locationDialog.awaitResult();
+				if(locationDialog.result != DialogResult.Accepted) {
+					return;
+				}
 				this._callService(GeoLocationService.serviceName);
 				break;
 			}

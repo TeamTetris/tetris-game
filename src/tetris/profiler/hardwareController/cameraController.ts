@@ -1,7 +1,4 @@
 import HardwarePermission from "tetris/profiler/hardwareController/hardwarePermission";
-import DialogResult from "tetris/ui/dialog/dialogResult";
-import Dialog from "tetris/ui/dialog/dialog";
-import PermissionRequestDialog from "tetris/ui/dialog/permissionRequestDialog";
 
 export default class CameraController {
 
@@ -22,11 +19,6 @@ export default class CameraController {
 			return true;
 		}
 		if (this.permissionState === HardwarePermission.denied) {
-			return false;
-		}
-		const permissionDialog = PermissionRequestDialog.displayCameraPermissionRequest();
-		await permissionDialog.awaitResult();
-		if (permissionDialog.result !== DialogResult.Accepted) {
 			return false;
 		}
 		try {
