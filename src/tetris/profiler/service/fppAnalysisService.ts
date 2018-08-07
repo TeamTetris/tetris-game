@@ -1,9 +1,7 @@
 import BaseService from "tetris/profiler/service/baseService";
 import Measurement from "tetris/profiler/measurement/measurement";
 import CameraController from "tetris/profiler/hardwareController/cameraController";
-import HardwarePermission from "tetris/profiler/hardwareController/hardwarePermission";
 import FppFaceAnalysis from "tetris/profiler/profileValues/fppFaceAnalysis";
-
 
 export default class FppAnalysisService extends BaseService {
 	//region public members
