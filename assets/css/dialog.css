@@ -90,6 +90,6 @@
     to {top: 0; opacity: 1}
 }
 
-#permission-dialog-camera .dialog-content {
+#permission-dialog .dialog-content {
     width: 30%;
 }

@@ -25,7 +25,7 @@ export default class CreateProfileDialog extends Dialog {
 		dialog.title = "Create a player profile";
 		dialog._addAcceptElements();
 		dialog._addRejectElements();
-		return dialog;
+		return dialog.show() as CreateProfileDialog;
 	}
 
 	protected constructor(dialogId: string) {

@@ -90,7 +90,25 @@ export default class Profiler {
 	//region private methods
 	private _handleEndOfMatch(match: Match): void {
 		this._profile.addMatch(match);
-		this._callService(GeoLocationService.serviceName);
+
+		switch (this._profile.numberOfMatches)
+		{
+			case 1:
+			{
+				// TODO: ask for GeoLocation permission
+				this._callService(GeoLocationService.serviceName);
+				break;
+			}
+			case 2:
+			{
+				// TODO: ask for Microphone permission
+				break;
+			}
+			default:
+			{
+				break;
+			}
+		}
 	}
 
 	private _handleStartOfMatch(match: Match): void {

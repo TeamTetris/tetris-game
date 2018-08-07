@@ -1,6 +1,7 @@
 import HardwarePermission from "tetris/profiler/hardwareController/hardwarePermission";
 import DialogResult from "tetris/ui/dialog/dialogResult";
 import Dialog from "tetris/ui/dialog/dialog";
+import PermissionRequestDialog from "tetris/ui/dialog/permissionRequestDialog";
 
 export default class CameraController {
 
@@ -23,7 +24,7 @@ export default class CameraController {
 		if (this.permissionState === HardwarePermission.denied) {
 			return false;
 		}
-		const permissionDialog = Dialog.display('permission-dialog-camera', 'Add a profile photo');
+		const permissionDialog = PermissionRequestDialog.displayCameraPermissionRequest();
 		await permissionDialog.awaitResult();
 		if (permissionDialog.result !== DialogResult.Accepted) {
 			return false;
