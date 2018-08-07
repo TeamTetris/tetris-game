@@ -26,7 +26,7 @@ export default class Profile {
 		return this.fppFaceAnalysis.value.age;
 	}
 	
-	public get ethnicity(): string {
+	public get ethnicity(): Ethnicity {
 		// TODO: add "mixing" logic in case of multiple data sources for this property
 		if(!this.fppFaceAnalysis.value) {
 			return

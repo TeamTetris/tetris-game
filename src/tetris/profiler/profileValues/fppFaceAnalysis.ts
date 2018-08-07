@@ -5,7 +5,7 @@ export default class FppFaceAnalysis {
 		return this._age;
 	}
 
-	public get ethnicity(): string {
+	public get ethnicity(): Ethnicity {
 		return this._ethnicity;
 	}
 
@@ -46,7 +46,7 @@ export default class FppFaceAnalysis {
 		const attributes: object = fppResponse["faces"][0]["attributes"];
 
 		this._age = attributes["age"].value;
-		this._ethnicity = attributes["ethnicity"].value;
+		this._ethnicity = this._parseEthnicity(attributes["ethnicity"].value);
 		this._gender = attributes["gender"].value.toLowerCase();
 		this._beauty = attributes["beauty"][this._gender + "_score"];
 		this._skinAcne = attributes["skinstatus"]["acne"];
@@ -57,7 +57,7 @@ export default class FppFaceAnalysis {
 
 	//region private members
 	private readonly _age: number;
-	private readonly _ethnicity: string;
+	private readonly _ethnicity: Ethnicity;
 	private readonly _gender: string;
 	private readonly _beauty: number;
 	private readonly _skinAcne: number;
@@ -66,5 +66,9 @@ export default class FppFaceAnalysis {
 	//endregion
 
 	//region private methods
+	private _parseEthnicity(value: string): Ethnicity {
+		const key = Object.keys(Ethnicity).find(key => key.toUpperCase() === value.toUpperCase());
+		return key? Ethnicity[key] : Ethnicity.UNDETECTED;
+	}
 	//endregion
 }
