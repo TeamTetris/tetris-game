@@ -16,9 +16,9 @@ export enum PlayStatus {
 }
 
 export default interface MatchPlayer {
-	rank: string;
-    name: string;
-    score: string;
+	placement: number;
+    displayName: string;
+    points: number;
 	connectionStatus: ConnectionStatus;
 	scoreboardStatus: ScoreboardStatus;
 	playStatus: PlayStatus;
