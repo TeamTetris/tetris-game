@@ -3,6 +3,7 @@ import ProfileData from 'tetris/profiler/profileData';
 import GeoLocation from 'tetris/profiler/profileValues/geoLocation';
 import Match from "tetris/match/match";
 import FppFaceAnalysis from "tetris/profiler/profileValues/fppFaceAnalysis";
+import Ethnicity from "tetris/profiler/profileValues/ethnicity";
 
 const LOCATION_KEY = "location";
 const FPP_FACE_ANALYSIS_KEY = "fppFaceAnalysis";

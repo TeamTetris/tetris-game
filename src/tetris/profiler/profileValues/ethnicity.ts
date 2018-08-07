@@ -5,3 +5,5 @@ enum Ethnicity {
 	INDIAN = "INDIAN",
 	UNDETECTED = "UNDETECTED"
 }
+
+export default Ethnicity;

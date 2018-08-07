@@ -1,3 +1,5 @@
+import Ethnicity from "tetris/profiler/profileValues/ethnicity";
+
 export default class FppFaceAnalysis {
 
 	//region public members
