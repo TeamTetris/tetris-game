@@ -58,7 +58,7 @@ export default class FppAnalysisService extends BaseService {
 	//region protected methods
 	protected async _run(successCallback: (senderName: string, measurement: Measurement<Object>) => void): Promise<void> {
 		this._successCallback = successCallback;
-		if (CameraController.instance.permissionState !== HardwarePermission.granted) {
+		if (!await CameraController.instance.requestWebcamPermissions()) {
 			this._errorCallback(this.name, new Error('Can not access camera'));
 			this._postRun();
 			return;
