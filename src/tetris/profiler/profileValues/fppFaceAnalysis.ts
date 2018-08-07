@@ -1,4 +1,5 @@
 import Ethnicity from "tetris/profiler/profileValues/ethnicity";
+import Gender from "tetris/profiler/profileValues/gender";
 
 export default class FppFaceAnalysis {
 
@@ -11,7 +12,7 @@ export default class FppFaceAnalysis {
 		return this._ethnicity;
 	}
 
-	public get gender(): string {
+	public get gender(): Gender {
 		return this._gender;
 	}
 
@@ -49,7 +50,7 @@ export default class FppFaceAnalysis {
 
 		this._age = attributes["age"].value;
 		this._ethnicity = this._parseEthnicity(attributes["ethnicity"].value);
-		this._gender = attributes["gender"].value.toLowerCase();
+		this._gender = this._parseGender(attributes["gender"].value);
 		this._beauty = attributes["beauty"][this._gender + "_score"];
 		this._skinAcne = attributes["skinstatus"]["acne"];
 		this._skinHealth = attributes["skinstatus"]["health"];
@@ -60,7 +61,7 @@ export default class FppFaceAnalysis {
 	//region private members
 	private readonly _age: number;
 	private readonly _ethnicity: Ethnicity;
-	private readonly _gender: string;
+	private readonly _gender: Gender;
 	private readonly _beauty: number;
 	private readonly _skinAcne: number;
 	private readonly _skinHealth: number;
@@ -71,6 +72,11 @@ export default class FppFaceAnalysis {
 	private _parseEthnicity(value: string): Ethnicity {
 		const key = Object.keys(Ethnicity).find(key => key.toUpperCase() === value.toUpperCase());
 		return key? Ethnicity[key] : Ethnicity.UNDETECTED;
+	}
+
+	private _parseGender(value: string): Gender {
+		const key = Object.keys(Gender).find(key => key.toUpperCase() === value.toUpperCase());
+		return key? Gender[key] : Gender.UNDETECTED;
 	}
 	//endregion
 }

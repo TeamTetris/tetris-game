@@ -4,6 +4,7 @@ import GeoLocation from 'tetris/profiler/profileValues/geoLocation';
 import Match from "tetris/match/match";
 import FppFaceAnalysis from "tetris/profiler/profileValues/fppFaceAnalysis";
 import Ethnicity from "tetris/profiler/profileValues/ethnicity";
+import Gender from "tetris/profiler/profileValues/gender";
 
 const LOCATION_KEY = "location";
 const FPP_FACE_ANALYSIS_KEY = "fppFaceAnalysis";
@@ -35,7 +36,7 @@ export default class Profile {
 		return this.fppFaceAnalysis.value.ethnicity;
 	}
 
-	public get gender(): string {
+	public get gender(): Gender {
 		// TODO: add "mixing" logic in case of multiple data sources for this property
 		if(!this.fppFaceAnalysis.value) {
 			return
