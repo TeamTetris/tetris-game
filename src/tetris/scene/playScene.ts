@@ -14,6 +14,8 @@ import ScoreboardWidget from "tetris/ui/scoreboardWidget";
 import ScoreWidget from "tetris/ui/scoreWidget";
 import Game from "tetris/game";
 import Match from "tetris/interfaces/Match";
+import { PlayStatus } from "tetris/interfaces/MatchPlayer";
+import { callbackify } from "util";
 
 const PLAYER_FIELD_DRAW_OFFSET: Vector2 = new Vector2(
 	(config.graphics.width - config.field.width * config.field.blockSize) / 2, 
@@ -143,16 +145,44 @@ export default class PlayScene extends Phaser.Scene {
 	private readonly _game: Game;
 	private _rainbowPipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
 	private _match: Match;
+	private _startTimerStarted: boolean;
+	private _localSocketId: String;
 	//endregion
 
 	//region private methods
 	private _registerNetworkEvents(): void {
 		this._game.networkingClient.receive("matchUpdate", this._updateMatch.bind(this));
+		this._game.networkingClient.receive("yourSocketId", function(data) { this._localSocketId = data.yourSocketId; }.bind(this));
+	}
+
+	private _startMatch(): void {
+		console.log('starting match');
+		this._localPlayerField.reset();
 	}
 
 	private _updateMatch(match: Match) {
 		this._match = match;
+		if (!this._startTimerStarted && Date.parse(match.startTime) > Date.now()) {
+			this._startTimerStarted = true;
+			setTimeout(this._startMatch.bind(this), Date.parse(match.startTime) - Date.now(), {});
+		}
 		for (const [index, player] of match.players.entries()) {
+			if (player.socketId === this._localSocketId) {
+				if (player.playStatus === PlayStatus.Eliminated && this._localPlayerField.fieldState !== FieldState.Loss) {
+					// Local player got eliminated
+					console.log('Local player got eliminated');
+					this._localPlayerField.fieldState = FieldState.Loss;
+					this._localPlayerField.activeBrick.destroy();
+					this._localPlayerField.activeBrick = null;
+				}
+				if (player.playStatus === PlayStatus.Won && this._localPlayerField.fieldState !== FieldState.Victory) {
+					// Local player won
+					console.log('Local player won');
+					this._localPlayerField.fieldState = FieldState.Victory;
+					this._localPlayerField.activeBrick.destroy();
+					this._localPlayerField.activeBrick = null;
+				}
+			}
 			this._scoreboardWidget.update(match.players);
 			if (index < 2) {
 				this._remotePlayerFields[index].updateSprites(player.field);

@@ -18,7 +18,8 @@ export enum PlayStatus {
 
 export default interface MatchPlayer {
 	placement: number;
-    displayName: string;
+	displayName: string;
+	socketId: string;
     points: number;
 	connectionStatus: ConnectionStatus;
 	scoreboardStatus: ScoreboardStatus;

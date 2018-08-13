@@ -47,9 +47,17 @@ export default class Field {
 	public get fieldState(): FieldState {
 		return this._fieldState;
 	}
+	
+	public set fieldState(fieldState: FieldState) {
+		this._fieldState = fieldState;
+	}
 
 	public get activeBrick(): Brick {
 		return this._activeBrick;
+	}
+	
+	public set activeBrick(brick: Brick) {
+		this._activeBrick = brick;
 	}
 
 	public get blocks(): Block[][] {
@@ -133,6 +141,19 @@ export default class Field {
 			|| (checkCeiling && position.y < 0)
 			|| position.x >= this.width
 			|| position.y >= this.height);
+	}
+
+	public reset(): void {
+		for (const blockRow of this._blockRows)  {
+			for (const block of blockRow) {
+				if (block) {
+					block.destroy();
+				}
+			}
+		}
+		this._setupField();
+		this.activeBrick.destroy();
+		this.activeBrick = null;
 	}
 	//endregion
 

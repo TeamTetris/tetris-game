@@ -31,11 +31,9 @@ export default class Block {
 
 	//region public methods
 	public destroy(): void {
-		if (this._brick) {
-			this._brick.blocks.splice(this._brick.blocks.indexOf(this), 1);
-		}
-		this._sprite.setVisible(false);
+		//this._sprite.setVisible(false);
 		this._sprite.destroy();
+		this._sprite = null;
 	}
 
 	public rotate(clockwise: boolean): void {
@@ -52,6 +50,9 @@ export default class Block {
 	}
 	
 	public preDraw(fieldDrawOffset: Vector2, drawScale: number = 1): void {
+		if (!this.sprite) {
+			return;
+		}
 		// only display blocks that are below the field ceiling
 		if (this.currentPosition.y < 0) {
 			this._sprite.setVisible(false);

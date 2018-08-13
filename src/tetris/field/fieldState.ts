@@ -1,7 +1,7 @@
 
 enum FieldState {
 	Playing,
-    //Victory, TODO: implement
+    Victory,
     //Paused, TODO: implement
     Loss
 }
