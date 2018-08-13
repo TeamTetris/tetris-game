@@ -36,6 +36,14 @@ export default class Field {
 		this._blockStateChanged = changed;
 	}
 
+	public get fieldStateChanged(): boolean {
+		return this._fieldStateChanged;
+	}
+
+	public set fieldStateChanged(fieldState: boolean) {
+		this._fieldStateChanged = fieldState;
+	}
+
 	public get fieldState(): FieldState {
 		return this._fieldState;
 	}
@@ -155,6 +163,7 @@ export default class Field {
 	private _score: number = 0;
 
 	private _fieldState: FieldState = FieldState.Playing;
+	private _fieldStateChanged: boolean = false;
 
 	// contains only stuck bricks
 	private readonly _bricks: Brick[];
@@ -167,7 +176,9 @@ export default class Field {
 		this._activeBrick = this._brickFactory.newBrick(this);
 		this._nextActiveBrickDrop = time + this._activeBrickDropInterval;
 		if (this._activeBrick.checkIfStuck()) {
+			console.log('brick stuck')
 			this._fieldState = FieldState.Loss;
+			this._fieldStateChanged = true;
 		}
 	}
 

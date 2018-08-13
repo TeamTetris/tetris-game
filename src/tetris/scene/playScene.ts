@@ -219,6 +219,11 @@ export default class PlayScene extends Phaser.Scene {
 	}
 
 	private _pushMultiplayerUpdate() {
+		if (this._localPlayerField.fieldStateChanged && this._localPlayerField.fieldState == FieldState.Loss) {
+			this._localPlayerField.fieldStateChanged = false;
+			this._game.networkingClient.emit("selfEliminated", {});
+		}
+
 		if (this._localPlayerField.fieldState == FieldState.Playing && this._localPlayerField.blockStateChanged) {
 			this._localPlayerField.blockStateChanged = false;
 			const matchUpdate = {
