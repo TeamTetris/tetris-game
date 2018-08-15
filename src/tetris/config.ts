@@ -33,15 +33,19 @@ const config = {
         fonts: {
             scoreboard: {
                 size: 18,
-                font: {font: "16px Kenney Mini Square", fill: "#fff"},
+                font: {font: "16px Kenney Mini Square", fill: "#fff", align: 'center'},
+            },
+            countdown: {
+                size: 32,
+                font: {font: "30px Kenney Mini Square", fill: "#fff", align: 'center'},
             },
             small: {
                 size: 22,
-                font: {font: "20px Kenney Mini Square", fill: "#fff"},
+                font: {font: "20px Kenney Mini Square", fill: "#fff", align: 'center'},
             },
             large: {
                 size: 42,
-                font: {font: "40px Kenney Mini Square", fill: "#fff"},
+                font: {font: "40px Kenney Mini Square", fill: "#fff", align: 'center'},
             },
         },
     },

@@ -107,7 +107,12 @@ export default class PlayScene extends Phaser.Scene {
 
 		// Update UI widgets
 		this._scoreWidget.update(this._localPlayerField.score.toString());
-		this._countdownWidget.update(Math.max(0, (new Date(this._match.nextElimination).valueOf() - new Date().valueOf()) / 1000), 60);
+		
+		const nextElimination = new Date(this._match.nextElimination).valueOf() / 1000;
+		const matchStart = new Date(this._match.startTime).valueOf() / 1000;
+		const currentTime = new Date().valueOf() / 1000;
+		const preGame = currentTime < matchStart;
+		this._countdownWidget.update(Math.max(0, nextElimination - currentTime), Math.max(nextElimination - matchStart, matchStart - currentTime), preGame);
 
 		this._pushMultiplayerUpdate();
 		this._updateShaders(time);
