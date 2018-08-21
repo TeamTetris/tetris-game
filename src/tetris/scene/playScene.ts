@@ -20,58 +20,6 @@ const PLAYER_FIELD_DRAW_OFFSET: Vector2 = new Vector2(
 	(config.graphics.width - config.field.width * config.field.blockSize) / 2, 
 	(config.graphics.height - config.field.height * config.field.blockSize) / 1.5);
 
-const players = [
-	{
-		rank: '1',
-		name: 'KDA Player ;)',
-		score: '9001',
-		danger: false,
-		ownScore: false,
-	}, {
-		rank: '2',
-		name: 'Diamond Smurf 1337',
-		score: '8442',
-		danger: false,
-		ownScore: false,
-	}, {
-		rank: '3',
-		name: 'Rank 3 - Sad AF',
-		score: '8245',
-		danger: false,
-		ownScore: false,
-	}, {
-		rank: '23',
-		name: 'Some noob above you',
-		score: '4520',
-		danger: false,
-		ownScore: false,
-	}, {
-		rank: '24',
-		name: 'You',
-		score: '4473',
-		danger: false,
-		ownScore: true,
-	}, {
-		rank: '25',
-		name: 'Random player',
-		score: '4320',
-		danger: false,
-		ownScore: false,
-	}, {
-		rank: '36',
-		name: 'Bad Player',
-		score: '3520',
-		danger: true,
-		ownScore: false,
-	}, {
-		rank: '37',
-		name: 'AFK all day long',
-		score: '892',
-		danger: true,
-		ownScore: false,
-	}
-];
-
 export default class PlayScene extends Phaser.Scene {
 
 	//region public members
