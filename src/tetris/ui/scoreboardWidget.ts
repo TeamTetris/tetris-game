@@ -1,7 +1,7 @@
 /// <reference path="../../../definitions/phaser.d.ts"/>
 
 import config from "tetris/config";
-import MatchPlayer, { ScoreboardStatus } from "tetris/interfaces/MatchPlayer";
+import MatchPlayer, { ScoreboardStatus, PlayStatus } from "tetris/interfaces/MatchPlayer";
 
 export interface Font {
     size: number,
@@ -127,7 +127,11 @@ export default class ScoreboardWidget {
             this.scores[index].setText(players[index].points.toString());
 
             // Set text color
-            if (players[index].scoreboardStatus === ScoreboardStatus.Endangered) {
+            if (players[index].playStatus === PlayStatus.Eliminated) {
+                this.ranks[index].setColor(config.ui.colors.grey.string);
+                this.names[index].setColor(config.ui.colors.grey.string);
+                this.scores[index].setColor(config.ui.colors.grey.string)
+            } else if (players[index].scoreboardStatus === ScoreboardStatus.Endangered) {
                 this.ranks[index].setColor(config.ui.colors.red.string);
                 this.names[index].setColor(config.ui.colors.red.string);
                 this.scores[index].setColor(config.ui.colors.red.string);

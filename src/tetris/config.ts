@@ -14,6 +14,10 @@ const config = {
                 hex: 0xFFFFFF,
                 string: '#FFFFFF',
             },
+            grey: {
+                hex: 0xA4A4A4,
+                string: '#A4A4A4',
+            },
             yellow: {
                 hex: 0xFFFF00,
                 string: '#FFFF00',
