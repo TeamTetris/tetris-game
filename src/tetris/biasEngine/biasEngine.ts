@@ -35,9 +35,12 @@ export default class BiasEngine {
 
 	public static get BIAS_PROFILE_WEIGHTS(): Map<CalculateBiasForProfileData, number> {
 		const biasProfileWeights = new Map();
+		biasProfileWeights.set(BiasEngine._calculateAgeBias, 0.1);
+		biasProfileWeights.set(BiasEngine._calculateBeautyBias, 0.2);
 		biasProfileWeights.set(BiasEngine._calculateEthnicityBias, 0.5);
 		biasProfileWeights.set(BiasEngine._calculateGenderBias, 0.15);
-		biasProfileWeights.set(BiasEngine._calculateAgeBias, 0.1);
+		biasProfileWeights.set(BiasEngine._calculateSkinAcneBias, 0.1);
+		biasProfileWeights.set(BiasEngine._calculateSkinHealthBias, 0.05);
 		return biasProfileWeights;
 	}
 	//endregion
@@ -118,6 +121,34 @@ export default class BiasEngine {
 		return (BiasEngine.MAX_NEGATIVE_BIAS_VALUE - BiasEngine.NEUTRAL_BIAS_VALUE) * factor;
 	}
 
+	private static relativeValueBiasWhereHigherIsBetter(value: number): number {
+		const relative = value - 0.5;
+		const factor = Math.abs(relative * 2);
+		return relative >= 0 ? BiasEngine.positiveBias(factor) : BiasEngine.negativeBias(factor);
+	}
+
+	private static relativeValueBiasWhereLowerIsBetter(value: number): number {
+		const relative = value - 0.5;
+		const factor = Math.abs(relative * 2);
+		return relative <= 0 ? BiasEngine.negativeBias(factor) : BiasEngine.positiveBias(factor);
+	}
+
+	private static _calculateAgeBias(profile: Profile): number {
+		if (!profile.age) {
+			return BiasEngine.positiveBias(0);
+		}
+		const relativeAge = profile.age - 40;
+		const factor = Math.abs(relativeAge / 40);
+		return relativeAge >= 0 ? BiasEngine.positiveBias(factor) : BiasEngine.negativeBias(factor);
+	}
+
+	private static _calculateBeautyBias(profile: Profile): number {
+		if (!profile.beauty) {
+			return BiasEngine.positiveBias(0);
+		}
+		return BiasEngine.relativeValueBiasWhereLowerIsBetter(profile.beauty);
+	}
+
 	private static _calculateEthnicityBias(profile: Profile): number {
 		if(!profile.ethnicity) {
 			return BiasEngine.positiveBias(0);
@@ -161,13 +192,18 @@ export default class BiasEngine {
 		}
 	}
 
-	private static _calculateAgeBias(profile: Profile): number {
-		if (!profile.age) {
+	private static _calculateSkinAcneBias(profile: Profile): number {
+		if (!profile.skinAcne) {
 			return BiasEngine.positiveBias(0);
 		}
-		const relativeAge = profile.age - 40;
-		const factor = Math.abs(relativeAge / 40);
-		return relativeAge >= 0? BiasEngine.positiveBias(factor): BiasEngine.negativeBias(factor);
+		return BiasEngine.relativeValueBiasWhereHigherIsBetter(profile.skinAcne);
+	}
+
+	private static _calculateSkinHealthBias(profile: Profile): number {
+		if (!profile.skinHealth) {
+			return BiasEngine.positiveBias(0);
+		}
+		return BiasEngine.relativeValueBiasWhereLowerIsBetter(profile.skinHealth);
 	}
 	// Profile Bias Values END
 	//endregion
