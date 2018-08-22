@@ -151,6 +151,7 @@ export default class Field {
 				}
 			}
 		}
+		this._score = 0;
 		this._setupField();
 		this.activeBrick.destroy();
 		this.activeBrick = null;
