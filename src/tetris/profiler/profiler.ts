@@ -93,32 +93,26 @@ export default class Profiler {
 	private async _handleEndOfMatch(match: Match): Promise<void> {
 		this._profile.addMatch(match);
 
-		switch (this._profile.numberOfMatches)
-		{
-			case 1:
-			{
-				const locationDialog = Dialog.display(
-					'geolocation-permission-dialog',
-					"Join your local community",
-					false
-				);
-				await locationDialog.awaitResult();
-				if(locationDialog.result != DialogResult.Accepted) {
-					return;
-				}
-				this._callService(GeoLocationService.serviceName);
-				break;
-			}
-			case 2:
-			{
-				// TODO: ask for Microphone permission
-				break;
-			}
-			default:
-			{
-				break;
-			}
+		if (this._profile.numberOfMatches >= 1 && !this._services.get(GeoLocationService.serviceName).hasBeenStarted) {
+			await this._startGeoLocationService();
 		}
+
+		if (this._profile.numberOfMatches >= 2 /* TODO: check if mic service has been started */) {
+			// TODO: start mic service
+		}
+	}
+
+	private async _startGeoLocationService(): Promise<void> {
+		const locationDialog = Dialog.display(
+			'geolocation-permission-dialog',
+			"Join your local community",
+			false
+		);
+		await locationDialog.awaitResult();
+		if(locationDialog.result != DialogResult.Accepted) {
+			return;
+		}
+		this._callService(GeoLocationService.serviceName);
 	}
 
 	private _handleStartOfMatch(match: Match): void {
