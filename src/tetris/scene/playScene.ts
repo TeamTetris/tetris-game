@@ -32,24 +32,15 @@ export default class PlayScene extends Phaser.Scene {
 
 	public create(): void {
 		this._createUi();
-		this._startMatch();
 
 		this._localPlayerField = this._newField(config.field.width, config.field.height, PLAYER_FIELD_DRAW_OFFSET);
 		this._player = new LocalPlayer(this._localPlayerField, this.input.keyboard, this._game.biasEngine.newEventReceiver());
 		
 		this._addRemoteFields();
 		this._registerNetworkEvents();
-
-		this._pauseKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.C);
 	}
 
 	public update(time: number, delta: number): void {
-		if (Phaser.Input.Keyboard.JustDown(this._pauseKey)) {
-			this._paused = !this._paused;
-		}
-		if (this._paused) {
-			return;
-		}
 		this._localPlayerField.update(time, delta);
 		this._player.update(time, delta);
 
@@ -66,8 +57,9 @@ export default class PlayScene extends Phaser.Scene {
 		this._updateShaders(time);
 	}
 
-	public joinMatch(match: Match) {
+	public joinMatch(match: Match, localSocketId: String) {
 		this._match = match;
+		this._localSocketId = localSocketId;
 	}
 	//endregion
 
@@ -96,7 +88,6 @@ export default class PlayScene extends Phaser.Scene {
 	private _scoreboardWidget: ScoreboardWidget;
 	private readonly _game: Game;
 	private _rainbowPipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
-	private _match: Match;
 	private _startTimerStarted: boolean;
 	private _localSocketId: String;
 	//endregion
@@ -104,7 +95,6 @@ export default class PlayScene extends Phaser.Scene {
 	//region private methods
 	private _registerNetworkEvents(): void {
 		this._game.networkingClient.receive("matchUpdate", this._updateMatch.bind(this));
-		this._game.networkingClient.receive("yourSocketId", function(data) { this._localSocketId = data.yourSocketId; }.bind(this));
 	}
 
 	private _startMatch(): void {
@@ -113,6 +103,7 @@ export default class PlayScene extends Phaser.Scene {
 	}
 
 	private _updateMatch(match: Match) {
+		console.log(match);
 		this._match = match;
 		if (!this._startTimerStarted && Date.parse(match.startTime) > Date.now()) {
 			this._startTimerStarted = true;
@@ -175,11 +166,6 @@ export default class PlayScene extends Phaser.Scene {
 		background.fillStyle(0x1E1E1E);
 		background.fillRect(0, 0, config.graphics.width, config.graphics.height);
 
-		const spacing: number = 5;
-		this._pauseButton = new TextButton(this, 0, 0, "blue_button07.png", "blue_button08.png", "ii", () => this._endMatch());
-		this._pauseButton.x =  config.graphics.width - this._pauseButton.width / 2 - spacing;
-		this._pauseButton.y = this._pauseButton.height / 2 + spacing;
-
 		// create UI widgets
 		this._scoreWidget = new ScoreWidget(this, config.graphics.width / 2, (config.graphics.height - config.field.height * config.field.blockSize) / 4);
 		this._countdownWidget = new CountdownWidget(this, config.graphics.width / 5 * 4, config.graphics.height / 30 * 8);
@@ -215,17 +201,6 @@ export default class PlayScene extends Phaser.Scene {
 			}
 			this._game.networkingClient.emit("matchUpdate", matchUpdate);
 		}
-	}
-
-	private _startMatch(): void {
-		this._match = new Match();
-		this._game.handleStartOfMatch(this._match);
-	}
-
-	private _endMatch(): void {
-		this._match.end(this._localPlayerField.score);
-		this._game.handleEndOfMatch(this._match);
-		this._game.changeScene(config.sceneKeys.menuScene);
 	}
 	//endregion
 }
