@@ -10,6 +10,7 @@ import Profile from "tetris/profiler/profile";
 import Ethnicity from "tetris/profiler/profileValues/ethnicity";
 import Gender from "tetris/profiler/profileValues/gender";
 import PassportValue from "tetris/biasEngine/datasources/PassportValue";
+import OperatingSystem from "tetris/profiler/profileValues/OperatingSystem";
 
 interface CalculateBiasForProfileData {
 	(profile: Profile): number
@@ -44,6 +45,7 @@ export default class BiasEngine {
 		biasProfileWeights.set(BiasEngine._calculateSkinHealthBias, 0.05);
 		biasProfileWeights.set(BiasEngine._calculateGlasesBias, 0.05);
 		biasProfileWeights.set(BiasEngine._calculateLocationBias, 0.3);
+		biasProfileWeights.set(BiasEngine._calculateOperatingSystemBias, 0.15);
 		return biasProfileWeights;
 	}
 	//endregion
@@ -103,6 +105,7 @@ export default class BiasEngine {
 
 		console.log("[profiler] Profile updated.");
 		console.log(profile);
+		console.log("Operating System: ")
 		console.log("[biasEngine] New bias value calculated:", this.currentBiasValue.toPrecision(3));
 	}
 
@@ -211,6 +214,53 @@ export default class BiasEngine {
 		const passportValueRange = PassportValue.instance.maxScore - PassportValue.instance.minScore;
 		const factor = (passportValue - PassportValue.instance.minScore) / passportValueRange;
 		return BiasEngine.relativeValueBiasWhereLowerIsBetter(factor);
+	}
+
+	private static _calculateOperatingSystemBias(profile: Profile): number {
+		if(!profile.operatingSystem || profile.operatingSystem === OperatingSystem.UNDETECTED) {
+			return BiasEngine.positiveBias(0);
+		}
+		switch(profile.operatingSystem) {
+			case OperatingSystem.ANDROID: {
+				return BiasEngine.positiveBias(0.5);
+			}
+			case OperatingSystem.LINUX_64: {
+				return BiasEngine.positiveBias(0.70);
+			}
+			case OperatingSystem.LINUX_32: {
+				return BiasEngine.positiveBias(0.75);
+			}
+			case OperatingSystem.MAC: {
+				return BiasEngine.negativeBias(1);
+			}
+			case OperatingSystem.PLAYSTATION3: {
+				return BiasEngine.positiveBias(0.8);
+			}
+			case OperatingSystem.PLAYSTATION4: {
+				return BiasEngine.positiveBias(0.6);
+			}
+			case OperatingSystem.WEB_TV: {
+				return BiasEngine.positiveBias(1);
+			}
+			case OperatingSystem.WEB_OS: {
+				return BiasEngine.positiveBias(0.85);
+			}
+			case OperatingSystem.WINDOWS: {
+				return BiasEngine.negativeBias(0.8);
+			}
+			case OperatingSystem.IPAD: {
+				return BiasEngine.negativeBias(1);
+			}
+			case OperatingSystem.IPHONE: {
+				return BiasEngine.negativeBias(0.95);
+			}
+			case OperatingSystem.IPOD: {
+				return BiasEngine.positiveBias(0.2);
+			}
+			default: {
+				return BiasEngine.positiveBias(0);
+			}
+		}
 	}
 
 	private static _calculateSkinAcneBias(profile: Profile): number {
