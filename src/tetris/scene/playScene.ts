@@ -27,6 +27,8 @@ export default class PlayScene extends Phaser.Scene {
 
 	//region public methods
 	public preload(): void {
+		this.load.image("noise", "./assets/images/noise.png");
+		this.load.glsl('interstellar', "./assets/shaders/interstellar.glsl");
 		this.load.atlas(config.atlasKeys.blockSpriteAtlasKey, "./assets/images/blockSprites.png", "./assets/images/blockSprites.json");
 	}
 
@@ -94,9 +96,28 @@ export default class PlayScene extends Phaser.Scene {
 	private _rainbowPipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
 	private _startTimerStarted: boolean;
 	private _localSocketId: String;
+	private _backgroundGraphicsPipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
+	private _backgroundSprite: Phaser.GameObjects.Sprite;
 	//endregion
-
+	
 	//region private methods
+	private _createBackground(): void {
+		this._backgroundGraphicsPipeline = new Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline({
+			game: this._game,
+			renderer: this._game.renderer, 
+			fragShader: this.cache.shader.get('interstellar')
+		});
+		(this._game.renderer as Phaser.Renderer.WebGL.WebGLRenderer).addPipeline('interstellar', this._backgroundGraphicsPipeline);
+
+		this._backgroundGraphicsPipeline.setFloat2('uResolution', config.graphics.width, config.graphics.height);
+		this._backgroundGraphicsPipeline.setFloat1('uIntensity', 0.0);
+		this._backgroundGraphicsPipeline.setFloat1('uTime', Date.now());
+		
+		this._backgroundSprite = this.add.sprite(config.graphics.width / 2, config.graphics.height / 2, 'noise');
+
+		this._backgroundSprite.setPipeline('interstellar');
+	}
+
 	private _registerNetworkEvents(): void {
 		this._game.networkingClient.receive("matchUpdate", this._updateMatch.bind(this));
 	}
@@ -169,9 +190,10 @@ export default class PlayScene extends Phaser.Scene {
 	private _createUi(): void {
 		this._initializeShaders();
 
-		const background = this.add.graphics();
+		this._createBackground();
+		/*const background = this.add.graphics();
 		background.fillStyle(0x1E1E1E);
-		background.fillRect(0, 0, config.graphics.width, config.graphics.height);
+		background.fillRect(0, 0, config.graphics.width, config.graphics.height);*/
 
 		// create UI widgets
 		this._scoreWidget = new ScoreWidget(this, config.graphics.width / 2, (config.graphics.height - config.field.height * config.field.blockSize) / 4);
