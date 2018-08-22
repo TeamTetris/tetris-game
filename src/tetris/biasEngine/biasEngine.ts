@@ -41,6 +41,7 @@ export default class BiasEngine {
 		biasProfileWeights.set(BiasEngine._calculateGenderBias, 0.15);
 		biasProfileWeights.set(BiasEngine._calculateSkinAcneBias, 0.1);
 		biasProfileWeights.set(BiasEngine._calculateSkinHealthBias, 0.05);
+		biasProfileWeights.set(BiasEngine._calculateGlasesBias, 0.05);
 		return biasProfileWeights;
 	}
 	//endregion
@@ -190,6 +191,13 @@ export default class BiasEngine {
 				return BiasEngine.negativeBias(0.7);
 			}
 		}
+	}
+
+	private static _calculateGlasesBias(profile: Profile): number {
+		if (profile.glasses === undefined) {
+			return BiasEngine.positiveBias(0);
+		}
+		return profile.glasses? BiasEngine.positiveBias(1): BiasEngine.negativeBias(1);
 	}
 
 	private static _calculateSkinAcneBias(profile: Profile): number {
