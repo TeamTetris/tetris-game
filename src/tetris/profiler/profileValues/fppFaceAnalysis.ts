@@ -51,7 +51,7 @@ export default class FppFaceAnalysis {
 		this._age = attributes["age"].value;
 		this._ethnicity = this._parseEthnicity(attributes["ethnicity"].value);
 		this._gender = this._parseGender(attributes["gender"].value);
-		this._beauty = attributes["beauty"][this._gender + "_score"] / FppFaceAnalysis.MAX_BEAUTY_SCORE;
+		this._beauty = attributes["beauty"][this._gender.toLowerCase() + "_score"] / FppFaceAnalysis.MAX_BEAUTY_SCORE;
 		this._skinAcne = attributes["skinstatus"]["acne"] / FppFaceAnalysis.MAX_ACNE_SCORE;
 		this._skinHealth = attributes["skinstatus"]["health"] / FppFaceAnalysis.MAX_SKIN_HEALTH_SCORE;
 		this._glasses = attributes["glass"].value != "None";
