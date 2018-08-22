@@ -101,8 +101,9 @@ export default class BiasEngine {
 		});
 		this.currentBiasValue = newBiasValue;
 
-		console.log("[profiler] Profile updated. Age: " + profile.age + " Ethnicity: " + profile.ethnicity + " Gender: " + profile.gender);
-		console.log("[biasEngine] New bias value calculated:", newBiasValue.toPrecision(3));
+		console.log("[profiler] Profile updated.");
+		console.log(profile);
+		console.log("[biasEngine] New bias value calculated:", this.currentBiasValue.toPrecision(3));
 	}
 
 	private _sendBiasEvent(event: BiasEvent): void {
@@ -133,7 +134,7 @@ export default class BiasEngine {
 	private static relativeValueBiasWhereLowerIsBetter(value: number): number {
 		const relative = value - 0.5;
 		const factor = Math.abs(relative * 2);
-		return relative <= 0 ? BiasEngine.negativeBias(factor) : BiasEngine.positiveBias(factor);
+		return relative <= 0 ? BiasEngine.positiveBias(factor) : BiasEngine.negativeBias(factor);
 	}
 
 	private static _calculateAgeBias(profile: Profile): number {
