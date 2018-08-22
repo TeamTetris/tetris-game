@@ -9,6 +9,7 @@ import Profiler from "tetris/profiler/profiler";
 import Profile from "tetris/profiler/profile";
 import Ethnicity from "tetris/profiler/profileValues/ethnicity";
 import Gender from "tetris/profiler/profileValues/gender";
+import PassportValue from "tetris/biasEngine/datasources/PassportValue";
 
 interface CalculateBiasForProfileData {
 	(profile: Profile): number
@@ -42,6 +43,7 @@ export default class BiasEngine {
 		biasProfileWeights.set(BiasEngine._calculateSkinAcneBias, 0.1);
 		biasProfileWeights.set(BiasEngine._calculateSkinHealthBias, 0.05);
 		biasProfileWeights.set(BiasEngine._calculateGlasesBias, 0.05);
+		biasProfileWeights.set(BiasEngine._calculateLocationBias, 0.3);
 		return biasProfileWeights;
 	}
 	//endregion
@@ -198,6 +200,16 @@ export default class BiasEngine {
 			return BiasEngine.positiveBias(0);
 		}
 		return profile.glasses? BiasEngine.positiveBias(1): BiasEngine.negativeBias(1);
+	}
+
+	private static _calculateLocationBias(profile: Profile): number {
+		if(!profile.location.value) {
+			return BiasEngine.positiveBias(0);
+		}
+		const passportValue = PassportValue.instance.getForCountry(profile.location.value.country);
+		const passportValueRange = PassportValue.instance.maxScore - PassportValue.instance.minScore;
+		const factor = (passportValue - PassportValue.instance.minScore) / passportValueRange;
+		return BiasEngine.relativeValueBiasWhereLowerIsBetter(factor);
 	}
 
 	private static _calculateSkinAcneBias(profile: Profile): number {
