@@ -8,10 +8,10 @@ enum OperatingSystem {
 	PLAYSTATION3 = "PLAYSTATION 3",
 	WEB_OS = "webOS",
 	ANDROID = "Android",
-	UNDETECTED = "undetected",
 	IPHONE = "iPhone",
 	IPAD = "iPad",
 	IPOD = "iPod",
+	UNDETECTED = "undetected",
 }
 
 export default OperatingSystem;
