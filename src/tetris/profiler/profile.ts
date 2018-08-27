@@ -89,10 +89,6 @@ export default class Profile {
 	public get timePlayed(): number {
 		return this._playedMatches.reduce((sum, match) => sum + match.duration, 0);
 	}
-
-	public get userAgent(): string {
-		return window.navigator.userAgent;
-	}
 	//endregion
 
 	//region public methods
