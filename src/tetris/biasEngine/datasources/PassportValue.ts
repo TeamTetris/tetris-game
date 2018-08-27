@@ -13,7 +13,7 @@ export default class PassportValue {
 	//endregion
 
 	//region public methods
-	public getForCountry(country: string): number {
+	public getScoreForCountry(country: string): number {
 		const countryDataSet = dataSource.find(dataSet => dataSet.country === country);
 		return countryDataSet ? countryDataSet.score : 0;
 	}
