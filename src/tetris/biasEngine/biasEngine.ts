@@ -78,7 +78,6 @@ export default class BiasEngine {
 	//endregion
 
 	//region private members
-	private static POSSIBLE_EVENTS: BiasEventType[];
 	private _timestampOfLastBiasEvent: number = 0;
 	private _biasEventTimeInterval: number = 10000;
 	private _biasEventReceivers: BiasEventReceiver[] = [];
@@ -105,7 +104,7 @@ export default class BiasEngine {
 
 		console.log("[profiler] Profile updated.");
 		console.log(profile);
-		console.log("Operating System: ")
+		console.log("Operating System: " + profile.operatingSystem);
 		console.log("[biasEngine] New bias value calculated:", this.currentBiasValue.toPrecision(3));
 	}
 
