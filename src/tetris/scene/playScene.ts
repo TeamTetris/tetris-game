@@ -68,6 +68,11 @@ export default class PlayScene extends Phaser.Scene {
 		this._match = match;
 		this._localSocketId = localSocketId;
 	}
+
+	public adjustBackgroundParameters(intensity: number, color: Array<number>) {
+		this._backgroundGraphicsPipeline.setFloat1('uIntensity', intensity);
+		this._backgroundGraphicsPipeline.setFloat3('uColor', color[0], color[1], color[2]);
+	}
 	//endregion
 
 	//region constructor
@@ -111,9 +116,8 @@ export default class PlayScene extends Phaser.Scene {
 		(this._game.renderer as Phaser.Renderer.WebGL.WebGLRenderer).addPipeline('interstellar', this._backgroundGraphicsPipeline);
 
 		this._backgroundGraphicsPipeline.setFloat2('uResolution', config.graphics.width, config.graphics.height);
-		this._backgroundGraphicsPipeline.setFloat1('uIntensity', 0.2);
-		//this._backgroundGraphicsPipeline.setFloat3('uColor', 1.0, 0.0, 0.0);
 		this._backgroundGraphicsPipeline.setFloat1('uTime', 0.0);
+		this.adjustBackgroundParameters(0.10, [0.2, 0.2, 0.2]);
 
 		this._backgroundSprite = this.add.sprite(config.graphics.width / 2, config.graphics.height / 2, 'noise');
 		const scaleX = config.graphics.width / 256.0;
@@ -128,10 +132,12 @@ export default class PlayScene extends Phaser.Scene {
 	}
 
 	private _startMatch(): void {
-		console.log('starting match');
-		if (this._localPlayerField.fieldState !== FieldState.Loss) {
-			this._localPlayerField.reset();
+		if (this._localPlayerField.fieldState === FieldState.Loss) {
+			return;
 		}
+		console.log('starting match');
+		this.adjustBackgroundParameters(0.25, [0.7, 0.7, 0.7]);
+		this._localPlayerField.reset();
 	}
 
 	private _updateMatch(match: Match) {
@@ -146,17 +152,11 @@ export default class PlayScene extends Phaser.Scene {
 			if (player.socketId === this._localSocketId) {
 				if (player.playStatus === PlayStatus.Eliminated && this._localPlayerField.fieldState !== FieldState.Loss) {
 					// Local player got eliminated
-					console.log('Local player got eliminated');
-					this._localPlayerField.fieldState = FieldState.Loss;
-					this._localPlayerField.activeBrick.destroy();
-					this._localPlayerField.activeBrick = null;
+					this._processLoss();
 				}
 				if (player.playStatus === PlayStatus.Won && this._localPlayerField.fieldState !== FieldState.Victory) {
 					// Local player won
-					console.log('Local player won');
-					this._localPlayerField.fieldState = FieldState.Victory;
-					this._localPlayerField.activeBrick.destroy();
-					this._localPlayerField.activeBrick = null;
+					this._processWin();
 				}
 			}
 			this._scoreboardWidget.update(match.players);
@@ -179,6 +179,26 @@ export default class PlayScene extends Phaser.Scene {
 		}
 	}
 
+	private _processLoss(): void {
+		console.log('Local player got eliminated');
+		this.adjustBackgroundParameters(0.08, [0.5, 0.0, 0.0]);
+		this._localPlayerField.fieldState = FieldState.Loss;
+		if (this._localPlayerField.activeBrick) {
+			this._localPlayerField.activeBrick.destroy();
+			this._localPlayerField.activeBrick = null;
+		}
+	}
+
+	private _processWin(): void {	
+		console.log('Local player won');		
+		this.adjustBackgroundParameters(0.08, [0.8, 0.6, 0.0]);
+		this._localPlayerField.fieldState = FieldState.Victory;
+		if (this._localPlayerField.activeBrick) {
+			this._localPlayerField.activeBrick.destroy();
+			this._localPlayerField.activeBrick = null;
+		}
+	}
+
 	private _createFieldBackground(offset: Vector2, drawScale: number = 1): Phaser.GameObjects.Graphics {
 		const fieldBackground = this.add.graphics();
 		fieldBackground.fillStyle(0x002d4f);
@@ -196,9 +216,6 @@ export default class PlayScene extends Phaser.Scene {
 		this._initializeShaders();
 
 		this._createBackground();
-		/*const background = this.add.graphics();
-		background.fillStyle(0x1E1E1E);
-		background.fillRect(0, 0, config.graphics.width, config.graphics.height);*/
 
 		// create UI widgets
 		this._scoreWidget = new ScoreWidget(this, config.graphics.width / 2, (config.graphics.height - config.field.height * config.field.blockSize) / 4);
@@ -224,6 +241,7 @@ export default class PlayScene extends Phaser.Scene {
 	private _pushMultiplayerUpdate() {
 		if (this._localPlayerField.fieldStateChanged && this._localPlayerField.fieldState == FieldState.Loss) {
 			this._localPlayerField.fieldStateChanged = false;
+			this._processLoss();
 			this._game.networkingClient.emit("selfEliminated", {});
 		}
 

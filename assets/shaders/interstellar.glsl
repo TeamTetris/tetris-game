@@ -60,5 +60,5 @@ void main()
 		col += 1.5*(1.0-z)*c*w;
 		pos += stp;
 	}
-	gl_FragColor = vec4(ToGamma(col),1.0);
+	gl_FragColor = vec4(ToGamma(col)*uColor,1.0);
 }
