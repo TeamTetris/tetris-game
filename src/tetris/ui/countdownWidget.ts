@@ -88,7 +88,7 @@ export default class CountdownWidget {
 		if (preGame) {
 			this.titleText.setText("Match\nstarts in")
 		} else {
-			this.titleText.setText("Next\nElemination")
+			this.titleText.setText("Next\nElimination")
 		}
 
 		if (percentage < 25) {

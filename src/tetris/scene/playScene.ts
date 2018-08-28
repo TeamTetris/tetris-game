@@ -15,6 +15,7 @@ import ScoreWidget from "tetris/ui/scoreWidget";
 import Game from "tetris/game";
 import Match from "tetris/interfaces/Match";
 import { PlayStatus } from "tetris/interfaces/MatchPlayer";
+import { ScaleModes } from "phaser";
 
 const PLAYER_FIELD_DRAW_OFFSET: Vector2 = new Vector2(
 	(config.graphics.width - config.field.width * config.field.blockSize) / 2, 
@@ -110,11 +111,15 @@ export default class PlayScene extends Phaser.Scene {
 		(this._game.renderer as Phaser.Renderer.WebGL.WebGLRenderer).addPipeline('interstellar', this._backgroundGraphicsPipeline);
 
 		this._backgroundGraphicsPipeline.setFloat2('uResolution', config.graphics.width, config.graphics.height);
-		this._backgroundGraphicsPipeline.setFloat1('uIntensity', 0.0);
-		this._backgroundGraphicsPipeline.setFloat1('uTime', Date.now());
-		
-		this._backgroundSprite = this.add.sprite(config.graphics.width / 2, config.graphics.height / 2, 'noise');
+		this._backgroundGraphicsPipeline.setFloat1('uIntensity', 0.2);
+		//this._backgroundGraphicsPipeline.setFloat3('uColor', 1.0, 0.0, 0.0);
+		this._backgroundGraphicsPipeline.setFloat1('uTime', 0.0);
 
+		this._backgroundSprite = this.add.sprite(config.graphics.width / 2, config.graphics.height / 2, 'noise');
+		const scaleX = config.graphics.width / 256.0;
+		const scaleY = config.graphics.height / 256.0;
+		this._backgroundSprite.setScale(scaleX, scaleY);
+		
 		this._backgroundSprite.setPipeline('interstellar');
 	}
 
@@ -213,6 +218,7 @@ export default class PlayScene extends Phaser.Scene {
 
 	private _updateShaders(time: number): void {
 		this._rainbowPipeline.setFloat1('uTime', time / 800);
+		this._backgroundGraphicsPipeline.setFloat1('uTime', time / 1200);
 	}
 
 	private _pushMultiplayerUpdate() {

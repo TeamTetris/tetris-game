@@ -6,10 +6,11 @@ precision mediump float;
 
 const float tau = 6.28318530717958647692;
 
-uniform sampler2D uNoiseTexture;
+uniform sampler2D uMainSampler;
 uniform vec2 uResolution;
 uniform float uTime;
 uniform float uIntensity;
+uniform vec3 uColor;
 
 // Gamma correction
 #define GAMMA (2.2)
@@ -17,28 +18,19 @@ uniform float uIntensity;
 vec3 ToLinear(vec3 col)
 {
 	// simulate a monitor, converting colour values into light values
-	return pow( col, vec3(GAMMA) );
+	return pow(col, vec3(GAMMA));
 }
 
 vec3 ToGamma(vec3 col)
 {
 	// convert back into colour values, so the correct light will come out of the monitor
-	return pow( col, vec3(1.0/GAMMA) );
+	return pow(col, vec3(1.0/GAMMA));
 }
 
 vec4 Noise(ivec2 x)
 {
-	return texture2D( uMainSampler, (vec2(x)+0.5)/256.0, -100.0 );
+	return texture2D(uMainSampler, (vec2(x)+0.5)/(256.0), -100.0);
 }
-
-vec4 Rand(int x)
-{
-	vec2 uv;
-	uv.x = (float(x)+0.5)/256.0;
-	uv.y = (floor(uv.x)+0.5)/256.0;
-	return texture2D( uMainSampler, uv, -100.0 );
-}
-
 
 void main()
 {
@@ -68,7 +60,5 @@ void main()
 		col += 1.5*(1.0-z)*c*w;
 		pos += stp;
 	}
-	
 	gl_FragColor = vec4(ToGamma(col),1.0);
-	gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
 }
