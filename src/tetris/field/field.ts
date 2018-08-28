@@ -82,6 +82,10 @@ export default class Field {
 	//endregion
 
 	//region public methods
+	public addMoveBonusPoints(rows: number = 1) {
+		this._score += 3 * rows;
+	}
+
 	public update(time: number, delta: number): void {
 		if (this._fieldState != FieldState.Playing) {
 			return;
@@ -256,7 +260,7 @@ export default class Field {
 	}
 
 	private _increaseScore(deletedRows: number): void {
-		this._score += deletedRows * 100;
+		this._score += deletedRows * 1000;
 	}
 	//endregion
 }
