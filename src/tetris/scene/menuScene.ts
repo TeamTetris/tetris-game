@@ -23,6 +23,7 @@ export default class MenuScene extends Phaser.Scene {
 		this._createBackground();
 		this._createButtons();
 		this._registerNetworkEvents();
+		this._game.networkingClient.connect();
 	}
 
 	public update(time: number, delta: number): void {
@@ -50,7 +51,6 @@ export default class MenuScene extends Phaser.Scene {
 	private _optionsButton: TextButton;
 	private readonly _game: Game;
 	private _pipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
-	private _localSocketId: String;
 	private _localPlayerName: String;
 	//endregion
 
@@ -99,7 +99,6 @@ export default class MenuScene extends Phaser.Scene {
 	private _registerNetworkEvents(): void {
 		this._game.networkingClient.receive("matchmakingUpdate", this._updateMatchmakingInfo.bind(this));
 		this._game.networkingClient.receive("matchReady", this._joinMatch.bind(this));
-		this._game.networkingClient.receive("yourSocketId", function(data) { this._localSocketId = data.yourSocketId; }.bind(this));
 	}
 
 	private _updateMatchmakingInfo(matchmakingUpdate: MatchmakingInfo) {
@@ -112,7 +111,7 @@ export default class MenuScene extends Phaser.Scene {
 			console.log('joinresult: ', JSON.stringify(result));
 			if (result.success) {
 				this._game.changeScene(config.sceneKeys.playScene);
-				(this.scene.get(config.sceneKeys.playScene) as PlayScene).joinMatch(result.match, this._localSocketId);
+				(this.scene.get(config.sceneKeys.playScene) as PlayScene).joinMatch(result.match, this._game.networkingClient.getSocketId());
 			} else {
 				// TODO: Display Matchmaking Error
 				console.error(`Could not join match ${match.id}. ${result.message}`);

@@ -20,6 +20,10 @@ export default class NetworkingClient {
   public connect() {
     this._socket.connect();
   }
+
+  public getSocketId(): string {
+    return this._socket.id;
+  }
 	//endregion
 
   //region constructor
