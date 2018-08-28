@@ -36,6 +36,10 @@ export default class Game extends Phaser.Game {
 	public get profiler(): Profiler {
 		return this._profiler;
 	}
+
+	public exit(): void {
+
+	}
 	//endregion
 
 	//region public methods

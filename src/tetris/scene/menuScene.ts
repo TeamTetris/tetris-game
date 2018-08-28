@@ -49,6 +49,7 @@ export default class MenuScene extends Phaser.Scene {
 	//region private members
 	private _background: Phaser.GameObjects.Sprite;
 	private _playButton: TextButton;
+	private _exitButton: TextButton;
 	private _optionsButton: TextButton;
 	private readonly _game: Game;
 	private _pipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
@@ -81,13 +82,15 @@ export default class MenuScene extends Phaser.Scene {
 	}
 
 	private _createButtons(): void {
-		const menuStartX: number = config.graphics.width / 2;
+		const buttonsXPosition: number = config.graphics.width / 2;
 		const menuStartY: number = config.graphics.height / 3;
 		const spacing: number = 20;
-		this._playButton = new TextButton(this, menuStartX, 0, "blue_button00.png", "blue_button01.png", "Join Matchmaking", this._joinMatchmaking.bind(this));
-		this._optionsButton = new TextButton(this, menuStartX, 0, "blue_button00.png", "blue_button01.png", "Leave Matchmaking", this._leaveMatchmaking.bind(this));
+		this._playButton = new TextButton(this, buttonsXPosition, 0, "blue_button00.png", "blue_button01.png", "Join Matchmaking", this._joinMatchmaking.bind(this));
+		this._optionsButton = new TextButton(this, buttonsXPosition, 0, "blue_button00.png", "blue_button01.png", "Leave Matchmaking", this._leaveMatchmaking.bind(this));
+		this._exitButton = new TextButton(this, buttonsXPosition, 0, "blue_button00.png", "blue_button01.png", "Exit Game", this._game.exit);
 		this._playButton.y = menuStartY;
 		this._optionsButton.y = menuStartY + this._playButton.height + spacing;
+		this._exitButton.y = this._optionsButton.y + this._optionsButton.height + spacing;
 	}
 
 	private _joinMatchmaking(): void {
