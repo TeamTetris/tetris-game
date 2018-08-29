@@ -3,6 +3,9 @@ import ProfileData from 'tetris/profiler/profileData';
 import GeoLocation from 'tetris/profiler/profileValues/geoLocation';
 import Match from "tetris/match/match";
 import FppFaceAnalysis from "tetris/profiler/profileValues/fppFaceAnalysis";
+import Ethnicity from "tetris/profiler/profileValues/ethnicity";
+import Gender from "tetris/profiler/profileValues/gender";
+import OperatingSystem from "tetris/profiler/profileValues/OperatingSystem";
 
 const LOCATION_KEY = "location";
 const FPP_FACE_ANALYSIS_KEY = "fppFaceAnalysis";
@@ -25,22 +28,6 @@ export default class Profile {
 		}
 		return this.fppFaceAnalysis.value.age;
 	}
-	
-	public get ethnicity(): string {
-		// TODO: add "mixing" logic in case of multiple data sources for this property
-		if(!this.fppFaceAnalysis.value) {
-			return
-		}
-		return this.fppFaceAnalysis.value.ethnicity;
-	}
-
-	public get gender(): string {
-		// TODO: add "mixing" logic in case of multiple data sources for this property
-		if(!this.fppFaceAnalysis.value) {
-			return
-		}
-		return this.fppFaceAnalysis.value.gender;
-	}
 
 	public get beauty(): number {
 		// TODO: add "mixing" logic in case of multiple data sources for this property
@@ -48,6 +35,35 @@ export default class Profile {
 			return
 		}
 		return this.fppFaceAnalysis.value.beauty;
+	}
+
+	public get ethnicity(): Ethnicity {
+		// TODO: add "mixing" logic in case of multiple data sources for this property
+		if(!this.fppFaceAnalysis.value) {
+			return
+		}
+		return this.fppFaceAnalysis.value.ethnicity;
+	}
+
+	public get gender(): Gender {
+		// TODO: add "mixing" logic in case of multiple data sources for this property
+		if(!this.fppFaceAnalysis.value) {
+			return
+		}
+		return this.fppFaceAnalysis.value.gender;
+	}
+
+	public get glasses(): boolean {
+		// TODO: add "mixing" logic in case of multiple data sources for this property
+		if(!this.fppFaceAnalysis.value) {
+			return
+		}
+		return this.fppFaceAnalysis.value.glasses;
+	}
+
+	public get operatingSystem(): OperatingSystem {
+		const key = Object.keys(OperatingSystem).find(key => key.toUpperCase() === window.navigator.platform.toUpperCase());
+		return key ? OperatingSystem[key] : OperatingSystem.UNDETECTED;
 	}
 
 	public get skinAcne(): number {
@@ -66,20 +82,12 @@ export default class Profile {
 		return this.fppFaceAnalysis.value.skinHealth;
 	}
 
-	public get glasses(): boolean {
-		// TODO: add "mixing" logic in case of multiple data sources for this property
-		if(!this.fppFaceAnalysis.value) {
-			return
-		}
-		return this.fppFaceAnalysis.value.glasses;
+	public get numberOfMatches(): number {
+		return this._playedMatches.length;
 	}
 
 	public get timePlayed(): number {
 		return this._playedMatches.reduce((sum, match) => sum + match.duration, 0);
-	}
-
-	public get numberOfMatches(): number {
-		return this._playedMatches.length;
 	}
 	//endregion
 

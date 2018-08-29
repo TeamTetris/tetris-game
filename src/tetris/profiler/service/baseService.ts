@@ -6,6 +6,10 @@ export default abstract class BaseService {
 	public get name(): string {
 		return this._name;
 	}
+
+	public get hasBeenStarted(): boolean {
+		return this._hasBeenStarted;
+	}
 	//endregion
 
 	//region public methods
@@ -15,6 +19,7 @@ export default abstract class BaseService {
 		if (!this._preRun()) {
 			return;
 		}
+		this._hasBeenStarted = true;
 		await this._run(successCallback);
 		console.log('Service ' + this.name + ' has been activated');
 	}
@@ -24,12 +29,14 @@ export default abstract class BaseService {
 	protected constructor(name: string, errorCallback: (senderName: string, error: Error) => void) {
 		this._name = name;
 		this._errorCallback = errorCallback;
+		this._hasBeenStarted = false;
 	}
 	//endregion
 
 	//region private members
 	private readonly _name: string;
 	private _running: boolean;
+	private _hasBeenStarted: boolean;
 	protected readonly _errorCallback: (senderName: string, error: Error) => void;
 	//endregion
 

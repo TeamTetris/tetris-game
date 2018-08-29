@@ -1,3 +1,6 @@
+import Ethnicity from "tetris/profiler/profileValues/ethnicity";
+import Gender from "tetris/profiler/profileValues/gender";
+
 export default class FppFaceAnalysis {
 
 	//region public members
@@ -5,11 +8,11 @@ export default class FppFaceAnalysis {
 		return this._age;
 	}
 
-	public get ethnicity(): string {
+	public get ethnicity(): Ethnicity {
 		return this._ethnicity;
 	}
 
-	public get gender(): string {
+	public get gender(): Gender {
 		return this._gender;
 	}
 
@@ -46,25 +49,46 @@ export default class FppFaceAnalysis {
 		const attributes: object = fppResponse["faces"][0]["attributes"];
 
 		this._age = attributes["age"].value;
-		this._ethnicity = attributes["ethnicity"].value;
-		this._gender = attributes["gender"].value.toLowerCase();
-		this._beauty = attributes["beauty"][this._gender + "_score"];
-		this._skinAcne = attributes["skinstatus"]["acne"];
-		this._skinHealth = attributes["skinstatus"]["health"];
+		this._ethnicity = this._parseEthnicity(attributes["ethnicity"].value);
+		this._gender = this._parseGender(attributes["gender"].value);
+		this._beauty = attributes["beauty"][this._gender.toLowerCase() + "_score"] / FppFaceAnalysis.MAX_BEAUTY_SCORE;
+		this._skinAcne = attributes["skinstatus"]["acne"] / FppFaceAnalysis.MAX_ACNE_SCORE;
+		this._skinHealth = attributes["skinstatus"]["health"] / FppFaceAnalysis.MAX_SKIN_HEALTH_SCORE;
 		this._glasses = attributes["glass"].value != "None";
 	}
 	//endregion
 
 	//region private members
 	private readonly _age: number;
-	private readonly _ethnicity: string;
-	private readonly _gender: string;
+	private readonly _ethnicity: Ethnicity;
+	private readonly _gender: Gender;
 	private readonly _beauty: number;
 	private readonly _skinAcne: number;
 	private readonly _skinHealth: number;
 	private readonly _glasses: boolean;
+
+	private static get MAX_BEAUTY_SCORE(): number {
+		return 100.0;
+	}
+
+	private static get MAX_ACNE_SCORE(): number {
+		return 100.0;
+	}
+
+	private static get MAX_SKIN_HEALTH_SCORE(): number {
+		return 100.0;
+	}
 	//endregion
 
 	//region private methods
+	private _parseEthnicity(value: string): Ethnicity {
+		const key = Object.keys(Ethnicity).find(key => key.toUpperCase() === value.toUpperCase());
+		return key? Ethnicity[key] : Ethnicity.UNDETECTED;
+	}
+
+	private _parseGender(value: string): Gender {
+		const key = Object.keys(Gender).find(key => key.toUpperCase() === value.toUpperCase());
+		return key? Gender[key] : Gender.UNDETECTED;
+	}
 	//endregion
 }

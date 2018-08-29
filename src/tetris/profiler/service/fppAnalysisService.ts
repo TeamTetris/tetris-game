@@ -1,9 +1,7 @@
 import BaseService from "tetris/profiler/service/baseService";
 import Measurement from "tetris/profiler/measurement/measurement";
 import CameraController from "tetris/profiler/hardwareController/cameraController";
-import HardwarePermission from "tetris/profiler/hardwareController/hardwarePermission";
 import FppFaceAnalysis from "tetris/profiler/profileValues/fppFaceAnalysis";
-
 
 export default class FppAnalysisService extends BaseService {
 	//region public members
@@ -58,7 +56,7 @@ export default class FppAnalysisService extends BaseService {
 	//region protected methods
 	protected async _run(successCallback: (senderName: string, measurement: Measurement<Object>) => void): Promise<void> {
 		this._successCallback = successCallback;
-		if (CameraController.instance.permissionState !== HardwarePermission.granted) {
+		if (!await CameraController.instance.requestWebcamPermissions()) {
 			this._errorCallback(this.name, new Error('Can not access camera'));
 			this._postRun();
 			return;

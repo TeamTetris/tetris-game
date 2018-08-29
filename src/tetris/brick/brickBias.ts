@@ -1,6 +1,7 @@
 import Vector2 = Phaser.Math.Vector2;
 import BrickChances from "tetris/brick/brickChances"
 import Field from "tetris/field/field"
+import BiasEngine from "tetris/biasEngine/biasEngine";
 
 export default class BrickBias {
 
@@ -33,13 +34,13 @@ export default class BrickBias {
 		
 		const distanceBetween = (a, b) => Math.pow(Math.abs(a - b), 2);
 		
-		brickBias.chances.setChanceI(distanceBetween(biasValue, -1.0));
-		brickBias.chances.setChanceO(distanceBetween(biasValue, -1.0));
-		brickBias.chances.setChanceL(distanceBetween(biasValue, -0.5));
-		brickBias.chances.setChanceJ(distanceBetween(biasValue, -0.5));
-		brickBias.chances.setChanceT(distanceBetween(biasValue, 0.5));
-		brickBias.chances.setChanceS(distanceBetween(biasValue, 1.0));
-		brickBias.chances.setChanceZ(distanceBetween(biasValue, 1.0));
+		brickBias.chances.setChanceI(distanceBetween(biasValue, BiasEngine.MAX_NEGATIVE_BIAS_VALUE));
+		brickBias.chances.setChanceO(distanceBetween(biasValue, BiasEngine.MAX_NEGATIVE_BIAS_VALUE));
+		brickBias.chances.setChanceL(distanceBetween(biasValue, BiasEngine.NEUTRAL_BIAS_VALUE));
+		brickBias.chances.setChanceJ(distanceBetween(biasValue, BiasEngine.NEUTRAL_BIAS_VALUE));
+		brickBias.chances.setChanceT(distanceBetween(biasValue, BiasEngine.NEUTRAL_BIAS_VALUE));
+		brickBias.chances.setChanceS(distanceBetween(biasValue, BiasEngine.MAX_POSITIVE_BIAS_VALUE));
+		brickBias.chances.setChanceZ(distanceBetween(biasValue, BiasEngine.MAX_POSITIVE_BIAS_VALUE));
 
 		return brickBias;
 	}
