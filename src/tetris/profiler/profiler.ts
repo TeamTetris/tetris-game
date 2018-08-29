@@ -104,7 +104,7 @@ export default class Profiler {
 
 	private async _startGeoLocationService(): Promise<void> {
 		const locationDialog = Dialog.display(
-			'geolocation-permission-dialog',
+			"geolocation-permission-dialog",
 			"Join your local community",
 			false
 		);
