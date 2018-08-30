@@ -8,6 +8,11 @@ export interface Font {
     font: {},
 }
 
+export interface Color {
+    string: string,
+    hex: number,
+}
+
 const DISPLAYED_PLAYERS = 8;
 
 export default class ScoreboardWidget {
@@ -130,31 +135,31 @@ export default class ScoreboardWidget {
 
             // Set text color
             if (players[index].playStatus === PlayStatus.Eliminated) {
-                this.ranks[index].setColor(config.ui.colors.grey.string);
-                this.names[index].setColor(config.ui.colors.grey.string);
-                this.scores[index].setColor(config.ui.colors.grey.string)
+                this._changeTextColor(index, config.ui.colors.grey);
             } else if (players[index].scoreboardStatus === ScoreboardStatus.Endangered) {
-                this.ranks[index].setColor(config.ui.colors.red.string);
-                this.names[index].setColor(config.ui.colors.red.string);
-                this.scores[index].setColor(config.ui.colors.red.string);
+                this._changeTextColor(index, config.ui.colors.red);
             } else if (players[index].scoreboardStatus === ScoreboardStatus.Spotlighted) {
-                this.ranks[index].setPipeline('rainbow-text');
-                this.names[index].setPipeline('rainbow-text');
-                this.scores[index].setPipeline('rainbow-text');
+                this._changeTextColor(index, 'rainbow-text');
             } else if (players[index].socketId === this._localSocketId) {
-                this.ranks[index].setColor(config.ui.colors.yellow.string);
-                this.names[index].setColor(config.ui.colors.yellow.string);
-                this.scores[index].setColor(config.ui.colors.yellow.string);
+                this._changeTextColor(index, config.ui.colors.yellow);
             } else {
-                this.ranks[index].setColor(config.ui.colors.white.string);
-                this.names[index].setColor(config.ui.colors.white.string);
-                this.scores[index].setColor(config.ui.colors.white.string);
+                this._changeTextColor(index, config.ui.colors.white);
             }
         }
         this._adjustTextX();
     }
 
-    
+    private _changeTextColor(index: number, color: Color | string) {
+        if (typeof color === 'string') {
+            this.ranks[index].setPipeline(color);
+            this.names[index].setPipeline(color);
+            this.scores[index].setPipeline(color);
+        } else {
+            this.ranks[index].setColor(color.string);
+            this.names[index].setColor(color.string);
+            this.scores[index].setColor(color.string);
+        }
+    }
 
     private _adjustTextX(): void {
         for (let index = 0; index < DISPLAYED_PLAYERS; index++) {
