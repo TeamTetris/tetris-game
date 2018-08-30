@@ -159,7 +159,7 @@ export default class PlayScene extends Phaser.Scene {
 					this._processWin();
 				}
 			}
-			this._scoreboardWidget.update(match.players);
+			this._scoreboardWidget.update(this._localSocketId, match.players);
 			if (index < 2) {
 				this._remotePlayerFields[index].updateSprites(player.field);
 			}

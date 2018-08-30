@@ -54,7 +54,8 @@ export default class ScoreboardWidget {
         this._adjustDividerY();
 	}
 
-	public update(players: MatchPlayer[]): void {
+	public update(localSocketId: String, players: MatchPlayer[]): void {
+        this._localSocketId = localSocketId;
         this._updatePlayerText(players);
         this._updateDividers(players);
 	}
@@ -76,6 +77,7 @@ export default class ScoreboardWidget {
     private _x: number = 0;
     private _y: number = 0;
     private _font: Font;
+    private _localSocketId: String;
 	//endregion
 
     //region private methods
@@ -139,10 +141,10 @@ export default class ScoreboardWidget {
                 this.ranks[index].setPipeline('rainbow-text');
                 this.names[index].setPipeline('rainbow-text');
                 this.scores[index].setPipeline('rainbow-text');
-            // } else if (players[index].scoreboardStatus === ScoreboardStatus.You) {
-            //     this.ranks[index].setColor(config.ui.colors.yellow.string);
-            //     this.names[index].setColor(config.ui.colors.yellow.string);
-            //     this.scores[index].setColor(config.ui.colors.yellow.string);
+            } else if (players[index].socketId === this._localSocketId) {
+                this.ranks[index].setColor(config.ui.colors.yellow.string);
+                this.names[index].setColor(config.ui.colors.yellow.string);
+                this.scores[index].setColor(config.ui.colors.yellow.string);
             } else {
                 this.ranks[index].setColor(config.ui.colors.white.string);
                 this.names[index].setColor(config.ui.colors.white.string);
