@@ -5,7 +5,7 @@ enum NetworkingEvents {
     MatchReady = "matchReady",
     JoinMatch = "joinMatch",
     MatchUpdate = "matchUpdate",
-
+    SelfEliminated = "selfEliminated",
 }
 
 export default NetworkingEvents;

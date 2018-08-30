@@ -51,7 +51,7 @@ export default class PlayScene extends Phaser.Scene {
 		this._scoreWidget.update(this._localPlayerField.score.toString());
 
 		const matchStart = new Date(this._match.startTime).valueOf() / 1000;
-		const currentTime = new Date().valueOf() / 1000;
+		const currentTime = Date.now() / 1000;
 		const preGame = currentTime < matchStart;		
 		if (!preGame && this._match.nextElimination) {
 			const nextElimination = new Date(this._match.nextElimination).valueOf() / 1000;
@@ -128,7 +128,7 @@ export default class PlayScene extends Phaser.Scene {
 	}
 
 	private _registerNetworkEvents(): void {
-		this._game.networkingClient.receive("matchUpdate", this._updateMatch.bind(this));
+		this._game.networkingClient.receive(NetworkingEvents.MatchUpdate, this._updateMatch.bind(this));
 	}
 
 	private _startMatch(): void {
@@ -247,7 +247,7 @@ export default class PlayScene extends Phaser.Scene {
 		if (this._localPlayerField.fieldStateChanged && this._localPlayerField.fieldState == FieldState.Loss) {
 			this._localPlayerField.fieldStateChanged = false;
 			this._processLoss();
-			this._game.networkingClient.emit("selfEliminated", {});
+			this._game.networkingClient.emit(NetworkingEvents.SelfEliminated, {});
 		}
 
 		if (this._localPlayerField.fieldState == FieldState.Playing && this._localPlayerField.blockStateChanged) {
