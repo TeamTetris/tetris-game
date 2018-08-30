@@ -15,7 +15,7 @@ import ScoreWidget from "tetris/ui/scoreWidget";
 import Game from "tetris/game";
 import Match from "tetris/interfaces/Match";
 import MatchPlayer, { PlayStatus } from "tetris/interfaces/MatchPlayer";
-import { ScaleModes } from "phaser";
+import NetworkingEvents from "tetris/networking/networkingEvents";
 
 const PLAYER_FIELD_DRAW_OFFSET: Vector2 = new Vector2(
 	(config.graphics.width - config.field.width * config.field.blockSize) / 2, 
@@ -243,7 +243,7 @@ export default class PlayScene extends Phaser.Scene {
 		this._backgroundGraphicsPipeline.setFloat1('uTime', time / 1200);
 	}
 
-	private _pushMultiplayerUpdate() {
+	private _pushMultiplayerUpdate(): void {
 		if (this._localPlayerField.fieldStateChanged && this._localPlayerField.fieldState == FieldState.Loss) {
 			this._localPlayerField.fieldStateChanged = false;
 			this._processLoss();
@@ -257,7 +257,7 @@ export default class PlayScene extends Phaser.Scene {
 				points: this._localPlayerField.score,
 				field: this._localPlayerField.serializedBlockState,
 			}
-			this._game.networkingClient.emit("matchUpdate", matchUpdate);
+			this._game.networkingClient.emit(NetworkingEvents.MatchUpdate, matchUpdate);
 		}
 	}
 	//endregion

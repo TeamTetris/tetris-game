@@ -7,6 +7,7 @@ import PlayScene from "tetris/scene/playScene";
 import MatchmakingInfo from "tetris/interfaces/MatchmakingInfo";
 import Match from "tetris/interfaces/Match";
 import JoinResult from "tetris/interfaces/JoinResult";
+import NetworkingEvents from "tetris/networking/networkingEvents";
 
 export default class MenuScene extends Phaser.Scene {
 
@@ -55,7 +56,7 @@ export default class MenuScene extends Phaser.Scene {
 	//endregion
 
 	//region private methods
-	private async _setLocalPlayerName(): Promise<void> {
+	private _setLocalPlayerName(): void {
 		const input: HTMLInputElement = document.querySelector('#playername');
 		this._localPlayerName = input.value;
 	}
@@ -90,16 +91,16 @@ export default class MenuScene extends Phaser.Scene {
 	}
 
 	private _joinMatchmaking(): void {
-		this._game.networkingClient.emit("joinMatchmaking", {});
+		this._game.networkingClient.emit(NetworkingEvents.JoinMatchmaking, {});
 	}
 
 	private _leaveMatchmaking(): void {
-		this._game.networkingClient.emit("leaveMatchmaking", {});
+		this._game.networkingClient.emit(NetworkingEvents.LeaveMatchmaking, {});
 	}
 
 	private _registerNetworkEvents(): void {
-		this._game.networkingClient.receive("matchmakingUpdate", this._updateMatchmakingInfo.bind(this));
-		this._game.networkingClient.receive("matchReady", this._joinMatch.bind(this));
+		this._game.networkingClient.receive(NetworkingEvents.MatchmakingUpdate, this._updateMatchmakingInfo.bind(this));
+		this._game.networkingClient.receive(NetworkingEvents.MatchReady, this._joinMatch.bind(this));
 	}
 
 	private _updateMatchmakingInfo(matchmakingUpdate: MatchmakingInfo): void {
@@ -108,11 +109,11 @@ export default class MenuScene extends Phaser.Scene {
 	}
 
 	private _joinMatch(match: Match): void {
-		this._game.networkingClient.emit("joinMatch", { matchId: match.id, displayName: this._localPlayerName }, (result: JoinResult) => {
+		this._game.networkingClient.emit(NetworkingEvents.JoinMatch, { matchId: match.id, displayName: this._localPlayerName }, (result: JoinResult) => {
 			console.log('joinresult: ', JSON.stringify(result));
 			if (result.success) {
 				this._game.changeScene(config.sceneKeys.playScene);
-				(this.scene.get(config.sceneKeys.playScene) as PlayScene).joinMatch(result.match, this._game.networkingClient.getSocketId());
+				(this.scene.get(config.sceneKeys.playScene) as PlayScene).joinMatch(result.match, this._game.networkingClient.socketId);
 			} else {
 				// TODO: Display Matchmaking Error
 				console.error(`Could not join match ${match.id}. ${result.message}`);
