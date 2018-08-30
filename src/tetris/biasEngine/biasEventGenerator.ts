@@ -3,6 +3,7 @@ import BiasEvent from "tetris/biasEngine/biasEvent";
 import BiasEventDisableInput from "tetris/biasEngine/events/biasEventDisableInput";
 import BiasEventDuplicateInput from "tetris/biasEngine/events/biasEventDuplicateInput";
 import BiasEventReceiver from "tetris/biasEngine/biasEventReceiver";
+import Utility from "tetris/utility";
 
 export default class BiasEventGenerator {
     //region public members
@@ -77,7 +78,7 @@ export default class BiasEventGenerator {
     }
 
     private set currentDetectionLevel(level: number) {
-        this._detectionLevel = Math.max(BiasEventGenerator.MIN_DETECTION_LEVEL, Math.min(BiasEventGenerator.MAX_DETECTION_LEVEL, level));
+    	this._detectionLevel = Utility.limitValueBetweenMinAndMax(level, BiasEventGenerator.MIN_DETECTION_LEVEL, BiasEventGenerator.MAX_DETECTION_LEVEL);
     }
     //endregion
 
@@ -99,7 +100,7 @@ export default class BiasEventGenerator {
 	private _calculateTargetDetectionLevel(currentBias: number): number {
     	const relativeBias = currentBias - BiasEngine.NEUTRAL_BIAS_VALUE;
     	let targetDetectionLevel = 0.25 /* offset */ + Math.min(0.8, relativeBias) * 0.75;
-    	return Math.max(BiasEventGenerator.MIN_DETECTION_LEVEL, Math.min(BiasEventGenerator.MAX_DETECTION_LEVEL, targetDetectionLevel));
+    	return Utility.limitValueBetweenMinAndMax(targetDetectionLevel, BiasEventGenerator.MIN_DETECTION_LEVEL, BiasEventGenerator.MAX_DETECTION_LEVEL);
 	}
 
 	private _readyForBiasEvent(targetDetectionLevel: number): boolean {

@@ -3,6 +3,7 @@
 import BiasEventType from "tetris/biasEngine/biasEventType"
 import BiasEventGenerator from "tetris/biasEngine/biasEventGenerator";
 import BiasEngine from "tetris/biasEngine/biasEngine";
+import Utility from "tetris/utility";
 
 export default abstract class BiasEvent {
 
@@ -56,7 +57,7 @@ export default abstract class BiasEvent {
 
 		const now = Date.now();
 		clone._startTime = now;
-		clone._endTime = now + Math.max(this.minDurationInMs, Math.min(this.maxDurationInMs, duration));
+		clone._endTime = now + Utility.limitValueBetweenMinAndMax(duration, this.minDurationInMs, this.maxDurationInMs);
 
 		return clone;
 	}

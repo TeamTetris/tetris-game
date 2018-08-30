@@ -12,6 +12,7 @@ import Gender from "tetris/profiler/profileValues/gender";
 import PassportValue from "tetris/biasEngine/datasources/PassportValue";
 import OperatingSystem from "tetris/profiler/profileValues/OperatingSystem";
 import BiasEventGenerator from "tetris/biasEngine/biasEventGenerator";
+import Utility from "tetris/utility";
 
 interface CalculateBiasForProfileData {
 	(profile: Profile): number
@@ -87,7 +88,7 @@ export default class BiasEngine {
 	//region private methods
 	// @ts-ignore
 	private set currentBiasValue(value: number) {
-		this._currentBiasValue = Math.min(BiasEngine.MAX_POSITIVE_BIAS_VALUE, Math.max(BiasEngine.MAX_NEGATIVE_BIAS_VALUE, value));
+		this._currentBiasValue = Utility.limitValueBetweenMinAndMax(value, BiasEngine.MAX_NEGATIVE_BIAS_VALUE, BiasEngine.MAX_POSITIVE_BIAS_VALUE);
 	}
 
 	private _onProfileUpdate(profile: Profile): void {
@@ -98,20 +99,17 @@ export default class BiasEngine {
 		});
 		this.currentBiasValue = newBiasValue;
 
-		//console.log("[profiler] Profile updated.");
-		//console.log(profile);
-		//console.log("Operating System: " + profile.operatingSystem);
 		console.log("[biasEngine] New bias value calculated: ", this.currentBiasValue.toPrecision(3));
 	}
 
 	// Profile Bias Values START
 	private static positiveBias(factor: number): number {
-		factor = Math.min(1, Math.max(0, factor));
+		factor = Utility.limitValueBetweenMinAndMax(factor, 0.0, 1.0);
 		return (BiasEngine.MAX_POSITIVE_BIAS_VALUE - BiasEngine.NEUTRAL_BIAS_VALUE) * factor;
 	}
 
 	private static negativeBias(factor: number): number {
-		factor = Math.min(1, Math.max(0, factor));
+		factor = Utility.limitValueBetweenMinAndMax(factor, 0.0, 1.0);
 		return (BiasEngine.MAX_NEGATIVE_BIAS_VALUE - BiasEngine.NEUTRAL_BIAS_VALUE) * factor;
 	}
 

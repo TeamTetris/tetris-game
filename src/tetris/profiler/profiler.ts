@@ -157,7 +157,7 @@ export default class Profiler {
 
 	// ERROR callbacks
 	private static _handleServiceError(senderName: string, error: Error): void {
-		//console.log(senderName + " ==> " + error);
+		console.log(senderName + " ==> " + error);
 	}
 	//endregion
 }

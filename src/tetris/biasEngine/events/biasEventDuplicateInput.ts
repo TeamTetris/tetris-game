@@ -1,5 +1,6 @@
 import BiasEvent from "tetris/biasEngine/biasEvent";
 import BiasEventType from "tetris/biasEngine/biasEventType";
+import Utility from "tetris/utility";
 
 export default class BiasEventDuplicateInput extends BiasEvent {
 
@@ -9,7 +10,7 @@ export default class BiasEventDuplicateInput extends BiasEvent {
 	}
 
 	public set chance(chance: number) {
-		this._chance = Math.min(1.0, Math.max(0.0, chance));
+		this._chance = Utility.limitValueBetweenMinAndMax(chance, 0.0, 1.0);
 	}
 	//endregion
 

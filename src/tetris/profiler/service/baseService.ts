@@ -21,7 +21,6 @@ export default abstract class BaseService {
 		}
 		this._hasBeenStarted = true;
 		await this._run(successCallback);
-		//console.log('Service ' + this.name + ' has been activated');
 	}
 	//endregion
 

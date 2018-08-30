@@ -1,4 +1,5 @@
 import ProfileDataConfidenceStrategy from "tetris/profiler/confidenceStrategy/profileDataConfidenceStrategy";
+import Utility from "tetris/utility";
 
 export default class BaseProfileData {
 
@@ -28,7 +29,7 @@ export default class BaseProfileData {
 	}
 
 	public set confidence(confidence: number) {
-		this._confidence = Math.min(BaseProfileData.MAX_CONFIDENCE, Math.max(BaseProfileData.MIN_CONFIDENCE, confidence));
+		this._confidence = Utility.limitValueBetweenMinAndMax(confidence, BaseProfileData.MIN_CONFIDENCE, BaseProfileData.MAX_CONFIDENCE);
 	}
 
 	public get confidenceStrategy(): ProfileDataConfidenceStrategy {

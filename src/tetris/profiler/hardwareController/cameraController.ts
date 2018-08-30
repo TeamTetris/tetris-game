@@ -44,7 +44,7 @@ export default class CameraController {
 			return stream;
 		} catch(reason) {
 			this._permissionState = HardwarePermission.denied;
-			//console.log('Can not start video stream. Message: ' + reason);
+			console.log('Can not start video stream. Message: ' + reason);
 			throw reason;
 		}
 	}
@@ -120,7 +120,6 @@ export default class CameraController {
 		const base64Image = this._canvas
 			.toDataURL('image/png')
 			.replace(/^data:image\/(png|jpg);base64,/, "");
-		//console.log('Snapshot taken: ' + base64Image.substr(base64Image.length - 20));
 		return base64Image;
 	}
 
