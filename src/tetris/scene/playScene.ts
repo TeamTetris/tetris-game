@@ -14,7 +14,7 @@ import ScoreboardWidget from "tetris/ui/scoreboardWidget";
 import ScoreWidget from "tetris/ui/scoreWidget";
 import Game from "tetris/game";
 import Match from "tetris/interfaces/Match";
-import { PlayStatus } from "tetris/interfaces/MatchPlayer";
+import MatchPlayer, { PlayStatus } from "tetris/interfaces/MatchPlayer";
 import { ScaleModes } from "phaser";
 
 const PLAYER_FIELD_DRAW_OFFSET: Vector2 = new Vector2(
@@ -147,22 +147,22 @@ export default class PlayScene extends Phaser.Scene {
 			this._startTimerStarted = true;
 			setTimeout(this._startMatch.bind(this), Date.parse(match.startTime) - Date.now(), {});
 		}
-		for (const [index, player] of match.players.entries()) {
-			if (player.socketId === this._localSocketId) {
-				if (player.playStatus === PlayStatus.Eliminated && this._localPlayerField.fieldState !== FieldState.Loss) {
-					// Local player got eliminated
-					this._processLoss();
-				}
-				if (player.playStatus === PlayStatus.Won && this._localPlayerField.fieldState !== FieldState.Victory) {
-					// Local player won
-					this._processWin();
-				}
-			}
-			this._scoreboardWidget.update(this._localSocketId, match.players);
-			if (index < 2) {
-				this._remotePlayerFields[index].updateSprites(player.field);
-			}
-			// TODO: Update remote player names, scores and ranks
+		this._scoreboardWidget.update(this._localSocketId, match.players);
+		this._updateRemoteFields(match.players);
+		// TODO: Update remote player names, scores and ranks
+		this._determinePlayStatus(match.players);
+	}
+
+	private _determinePlayStatus(players: MatchPlayer[]) : void {
+		const currentPlayer = players.find(player => player.socketId === this._localSocketId);
+		
+		if (currentPlayer.playStatus === PlayStatus.Eliminated && this._localPlayerField.fieldState !== FieldState.Loss) {
+			// Local player got eliminated
+			this._processLoss();
+		}
+		if (currentPlayer.playStatus === PlayStatus.Won && this._localPlayerField.fieldState !== FieldState.Victory) {
+			// Local player won
+			this._processWin();
 		}
 	}
 
@@ -175,6 +175,12 @@ export default class PlayScene extends Phaser.Scene {
 				config.graphics.height / 4);
 			const remoteField = new RemoteField(this, config.field.width, config.field.height, position, this._createFieldBackground(position, drawScale), drawScale);
 			this._remotePlayerFields.push(remoteField);	
+		}
+	}
+
+	private _updateRemoteFields(players: MatchPlayer[]): void {
+		for (const [index, player] of players.slice(0, 2).entries()) {
+			this._remotePlayerFields[index].updateSprites(player.field);
 		}
 	}
 
