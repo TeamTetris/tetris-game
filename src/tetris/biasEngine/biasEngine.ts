@@ -98,10 +98,10 @@ export default class BiasEngine {
 		});
 		this.currentBiasValue = newBiasValue;
 
-		console.log("[profiler] Profile updated.");
-		console.log(profile);
-		console.log("Operating System: " + profile.operatingSystem);
-		console.log("[biasEngine] New bias value calculated:", this.currentBiasValue.toPrecision(3));
+		//console.log("[profiler] Profile updated.");
+		//console.log(profile);
+		//console.log("Operating System: " + profile.operatingSystem);
+		console.log("[biasEngine] New bias value calculated: ", this.currentBiasValue.toPrecision(3));
 	}
 
 	// Profile Bias Values START
@@ -197,7 +197,7 @@ export default class BiasEngine {
 		if(!profile.location.value) {
 			return BiasEngine.positiveBias(0);
 		}
-		const passportValue = PassportValue.instance.getForCountry(profile.location.value.country);
+		const passportValue = PassportValue.instance.getScoreForCountry(profile.location.value.country);
 		const passportValueRange = PassportValue.instance.maxScore - PassportValue.instance.minScore;
 		const factor = (passportValue - PassportValue.instance.minScore) / passportValueRange;
 		return BiasEngine.relativeValueBiasWhereLowerIsBetter(factor);

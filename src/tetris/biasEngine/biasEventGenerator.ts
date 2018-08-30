@@ -21,6 +21,12 @@ export default class BiasEventGenerator {
 
     //region public methods
     public update(time: number, delta: number): void {
+    	// TODO: check whether or not the player is actually playing right now
+
+	    this._biasEventReceivers.forEach(receiver => {
+	    	receiver.update(time, delta);
+	    });
+
     	const currentBias = this._biasEngine.currentBiasValue;
     	this._decreaseDetectionLevel(delta);
     	const targetDetectionLevel = this._calculateTargetDetectionLevel(currentBias);
@@ -30,6 +36,10 @@ export default class BiasEventGenerator {
 	    }
 
 	    const eventPrototype = this._selectEventPrototype();
+    	if (!eventPrototype) {
+    		return;
+	    }
+
     	const event = eventPrototype.initializeFromPrototype(targetDetectionLevel - this.currentDetectionLevel);
     	this.currentDetectionLevel += event.totalDetectionLevelIncrease;
     	this._sendBiasEvent(event);
@@ -58,7 +68,7 @@ export default class BiasEventGenerator {
 	private readonly _biasEngine: BiasEngine;
 	private readonly _biasEventPrototypes: BiasEvent[];
 	private readonly _biasEventReceivers: BiasEventReceiver[] = [];
-    private _detectionLevel: number;
+    private _detectionLevel: number = 0;
 
     private _latestBiasEvent: BiasEvent;
 
@@ -72,17 +82,18 @@ export default class BiasEventGenerator {
     //endregion
 
     //region private methods
-	private _decreaseDetectionLevel(deltaInSeconds: number): void {
-    	let decrease = this._calculateFallbackDetectionLevelDecrease(deltaInSeconds);
+	private _decreaseDetectionLevel(deltaInMs: number): void {
+    	let decrease = this._calculateFallbackDetectionLevelDecrease(deltaInMs);
     	if (this._latestBiasEvent) {
-    		decrease = this._latestBiasEvent.calculateDetectionLevelDecrease(deltaInSeconds);
+    		decrease = this._latestBiasEvent.calculateDetectionLevelDecrease(deltaInMs);
 	    }
 
 	    this.currentDetectionLevel = this.currentDetectionLevel - decrease;
 	}
 
-	private _calculateFallbackDetectionLevelDecrease(deltaInSeconds: number): number {
-    	return BiasEventGenerator.DETECTION_LEVEL_RANGE * 0.05 * deltaInSeconds;
+	private _calculateFallbackDetectionLevelDecrease(deltaInMs: number): number {
+    	// decrease at a rate of 5% per second
+    	return BiasEventGenerator.DETECTION_LEVEL_RANGE * 0.05 * (deltaInMs / 1000.0);
 	}
 
 	private _calculateTargetDetectionLevel(currentBias: number): number {
@@ -92,7 +103,7 @@ export default class BiasEventGenerator {
 	}
 
 	private _readyForBiasEvent(targetDetectionLevel: number): boolean {
-    	if (this.currentDetectionLevel > targetDetectionLevel) {
+    	if (this.currentDetectionLevel >= targetDetectionLevel) {
     		return false;
 	    }
 
@@ -100,7 +111,7 @@ export default class BiasEventGenerator {
 	    	return false;
 	    }
 
-	    if (Date.now() < this._latestBiasEvent.endTime + this._minBiasEventIntervalInMs) {
+	    if (this._latestBiasEvent && Date.now() < this._latestBiasEvent.endTime + this._minBiasEventIntervalInMs) {
 	    	return false;
 	    }
 
@@ -136,7 +147,9 @@ export default class BiasEventGenerator {
 	}
 
 	private _sendBiasEvent(event: BiasEvent): void {
-    	console.log("sending bias event: " + event);
+    	console.log("sending bias event: ");
+    	console.log(event);
+    	this._latestBiasEvent = event;
 		this._biasEventReceivers.forEach((eventReceiver) => eventReceiver.receiveEvent(event));
 	}
     //endregion

@@ -14,8 +14,6 @@ export default class LocalPlayer extends Player {
 
 	//region public methods
 	public update(time: number, delta: number): void {
-		// update bias events
-		this._biasEventReceiver.update(time, delta);
 		// apply bias
 		if (this._biasEventReceiver.has(BiasEventType.DisableInput)) {
 			return;
@@ -64,7 +62,7 @@ export default class LocalPlayer extends Player {
 			return;
 		}
 		const biasEvent = this._biasEventReceiver.get(BiasEventType.DuplicateInput) as BiasEventDuplicateInput;
-		if (biasEvent.chance <= Math.random()) {
+		if (biasEvent.chance >= Math.random()) {
 			moveOperation();
 		}
 	}

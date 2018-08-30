@@ -4,9 +4,6 @@ import BiasEventType from "tetris/biasEngine/biasEventType";
 export default class BiasEventDisableInput extends BiasEvent {
 
 	//region public members
-	public get maxDuration(): number {
-		return 2.5;
-	}
 	//endregion
 
 	//region public methods
@@ -15,7 +12,7 @@ export default class BiasEventDisableInput extends BiasEvent {
 	//region constructor
 	public constructor() {
 		super(BiasEventType.DisableInput);
-		this._setDetectionLevelIncreasePerSecond(0.1);
+		this._setDetectionLevelIncreasePerSecond(0.15);
 		this._setDetectionLevelDecreasePerSecond(0.025);
 		this._setNegativeSpawnBiasThreshold(0.75);
 	}

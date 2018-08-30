@@ -19,6 +19,9 @@ export default class BiasEventDuplicateInput extends BiasEvent {
 	//region constructor
 	public constructor() {
 		super(BiasEventType.DuplicateInput);
+		this._setDetectionLevelIncreasePerSecond(0.1);
+		this._setDetectionLevelDecreasePerSecond(0.035);
+		this._setNegativeSpawnBiasThreshold(0.5);
 	}
 	//endregion
 

@@ -7,16 +7,16 @@ import BiasEngine from "tetris/biasEngine/biasEngine";
 export default abstract class BiasEvent {
 
 	//region public members
-	public get minDuration(): number {
-		return 1.0;
+	public get minDurationInMs(): number {
+		return 3000;
 	}
 
-	public get maxDuration(): number {
-		return 5.0;
+	public get maxDurationInMs(): number {
+		return 6000;
 	}
 
 	public get durationRange(): number {
-		return this.maxDuration - this.minDuration;
+		return this.maxDurationInMs - this.minDurationInMs;
 	}
 
 	public get eventType(): BiasEventType {
@@ -32,7 +32,7 @@ export default abstract class BiasEvent {
 	}
 
 	public get totalDetectionLevelIncrease(): number {
-		return (this.endTime - this.startTime) * this._detectionLevelIncreasePerSecond;
+		return ((this.endTime - this.startTime) / 1000.0) * this._detectionLevelIncreasePerSecond;
 	}
 
 	public get isActive(): boolean {
@@ -51,12 +51,12 @@ export default abstract class BiasEvent {
 
 	//region public methods
 	public initializeFromPrototype(detectionLevelDelta: number): BiasEvent {
-		const now = Date.now();
 		let clone = this._clone();
-
 		const duration = this.durationRange * (detectionLevelDelta / this._detectionLevelIncreasePerSecond);
+
+		const now = Date.now();
 		clone._startTime = now;
-		clone._endTime = now + Math.max(this.minDuration, Math.min(this.maxDuration, duration));
+		clone._endTime = now + Math.max(this.minDurationInMs, Math.min(this.maxDurationInMs, duration));
 
 		return clone;
 	}
@@ -80,8 +80,8 @@ export default abstract class BiasEvent {
 		return Math.abs(relativeThreshold) / Math.abs(relativeBias);
 	}
 
-	public calculateDetectionLevelDecrease(deltaInSeconds: number): number {
-		return deltaInSeconds * this._detectionLevelDecreasePerSecond;
+	public calculateDetectionLevelDecrease(deltaInMs: number): number {
+		return (deltaInMs / 1000.0) * this._detectionLevelDecreasePerSecond;
 	}
 	//endregion
 
@@ -139,7 +139,7 @@ export default abstract class BiasEvent {
 
 	protected _setNegativeSpawnBiasThreshold(factor: number): void {
 		const range = BiasEngine.MAX_NEGATIVE_BIAS_VALUE - BiasEngine.NEUTRAL_BIAS_VALUE;
-		this._spawnBiasThreshold = BiasEngine.NEUTRAL_BIAS_VALUE - factor * range;
+		this._spawnBiasThreshold = BiasEngine.NEUTRAL_BIAS_VALUE + factor * range;
 	}
 
 	protected _setPositiveSpawnBiasThreshold(factor: number): void {
