@@ -85,12 +85,18 @@ export default class MenuScene extends Phaser.Scene {
 		const buttonsXPosition: number = config.graphics.width / 2;
 		const menuStartY: number = config.graphics.height / 3;
 		const spacing: number = 20;
-		this._playButton = new TextButton(this, buttonsXPosition, 0, "blue_button00.png", "blue_button01.png", "Join Matchmaking", this._joinMatchmaking.bind(this));
-		this._optionsButton = new TextButton(this, buttonsXPosition, 0, "blue_button00.png", "blue_button01.png", "Leave Matchmaking", this._leaveMatchmaking.bind(this));
-		this._exitButton = new TextButton(this, buttonsXPosition, 0, "blue_button00.png", "blue_button01.png", "Exit Game", this._game.exit);
+
+		this._playButton = new TextButton(this, buttonsXPosition, 0, "blue_button00.png", "blue_button01.png", "Start Game", () => this._game.changeScene(config.sceneKeys.playScene));
+		this._optionsButton = new TextButton(this, buttonsXPosition, 0, "blue_button00.png", "blue_button01.png", "Options", () => {});
+
 		this._playButton.y = menuStartY;
 		this._optionsButton.y = menuStartY + this._playButton.height + spacing;
-		this._exitButton.y = this._optionsButton.y + this._optionsButton.height + spacing;
+
+		if(this._game.profiler) {
+			this._exitButton = new TextButton(this, buttonsXPosition, 0, "blue_button00.png", "blue_button01.png", "Exit Game", this._game.exit);
+			this._exitButton.y = this._optionsButton.y + this._optionsButton.height + spacing;
+
+		}
 	}
 
 	private _joinMatchmaking(): void {

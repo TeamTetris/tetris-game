@@ -40,6 +40,7 @@ export default class Game extends Phaser.Game {
 
 	public exit(): void {
 		const evaluationDialog = EvaluationDialog.display();
+		evaluationDialog.profile = this._profiler.profile;
 	}
 	//endregion
 
@@ -91,7 +92,8 @@ export default class Game extends Phaser.Game {
 		this._startOfMatchSubscribers = [];
 		this._profiler = new Profiler(this);
 		this._biasEngine = new BiasEngine(this._profiler);
-		this._networkingClient = new NetworkingClient(); 
+		this._networkingClient = new NetworkingClient();
+		this.exit = this.exit.bind(this);
 	}
 	//endregion
 
