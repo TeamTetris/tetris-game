@@ -70,7 +70,7 @@ export default abstract class BiasEvent {
 			return 0.0;
 		}
 
-		if (!this._haveSameSign(relativeBias, relativeThreshold)) {
+		if (!Utility.haveSameSign(relativeBias, relativeThreshold)) {
 			return 0.0;
 		}
 
@@ -99,16 +99,6 @@ export default abstract class BiasEvent {
 	//endregion
 
 	//region private methods
-	private _haveSameSign(value1: number, value2: number): boolean {
-		if (value1 >= 0 && value2 >= 0) {
-			return true;
-		}
-		else if (value1 < 0 && value2 < 0) {
-			return true;
-		}
-
-		return false;
-	}
 	//endregion
 
 	//region protected members

@@ -3,6 +3,10 @@ export default class Utility {
 	public static limitValueBetweenMinAndMax(value: number, min: number, max: number): number {
 		return Math.max(min, Math.min(max, value));
 	}
+
+	public static haveSameSign(value1: number, value2: number): boolean {
+		return value1 * value2 >= 0;
+	}
 	//endregion
 
 	//region public members
