@@ -83,7 +83,7 @@ export default class Field {
 
 	//region public methods
 	public addMoveBonusPoints(rows: number = 1): void {
-		this._score += 3 * rows;
+		this._score += this._movePointsMultiplicator * rows;
 	}
 
 	public update(time: number, delta: number): void {
@@ -157,7 +157,9 @@ export default class Field {
 		}
 		this._score = 0;
 		this._setupField();
-		this.activeBrick.destroy();
+		if (this.activeBrick) {
+			this.activeBrick.destroy();
+		}
 		this.activeBrick = null;
 	}
 	//endregion
@@ -184,6 +186,7 @@ export default class Field {
 	private readonly _drawOffset: Vector2;
 	private readonly _brickFactory: BrickFactory;
 	private readonly _rowPointsMultiplicator: number = 1000;
+	private readonly _movePointsMultiplicator: number = 3;
 
 	private _nextActiveBrickDrop: number;
 	private _activeBrickDropInterval: number = 400;

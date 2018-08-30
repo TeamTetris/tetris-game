@@ -21,7 +21,7 @@ export default class NetworkingClient {
     this._socket.connect();
   }
 
-  public getSocketId(): string {
+  public get socketId(): string {
     return this._socket.id;
   }
 	//endregion
