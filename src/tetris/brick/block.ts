@@ -31,7 +31,6 @@ export default class Block {
 
 	//region public methods
 	public destroy(): void {
-		//this._sprite.setVisible(false);
 		this._sprite.destroy();
 		this._sprite = null;
 	}

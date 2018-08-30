@@ -140,8 +140,7 @@ export default class PlayScene extends Phaser.Scene {
 		this._localPlayerField.reset();
 	}
 
-	private _updateMatch(match: Match) {
-		console.log(match);
+	private _updateMatch(match: Match): void {
 		this._match = match;
 		const matchHasStarted = Date.now() > Date.parse(match.startTime);
 		if (!this._startTimerStarted && !matchHasStarted) {

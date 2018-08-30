@@ -56,7 +56,8 @@ export default class MenuScene extends Phaser.Scene {
 
 	//region private methods
 	private async _setLocalPlayerName(): Promise<void> {
-		this._localPlayerName = (document.querySelector('#playername') as any).value;
+		const input: HTMLInputElement = document.querySelector('#playername');
+		this._localPlayerName = input.value;
 	}
 
 	private _createBackground(): void {
@@ -101,7 +102,7 @@ export default class MenuScene extends Phaser.Scene {
 		this._game.networkingClient.receive("matchReady", this._joinMatch.bind(this));
 	}
 
-	private _updateMatchmakingInfo(matchmakingUpdate: MatchmakingInfo) {
+	private _updateMatchmakingInfo(matchmakingUpdate: MatchmakingInfo): void {
 		// TODO: Update Matchmaking Widget
 		console.log("matchmakingUpdate: " + JSON.stringify(matchmakingUpdate));
 	}

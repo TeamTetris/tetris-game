@@ -82,7 +82,7 @@ export default class Field {
 	//endregion
 
 	//region public methods
-	public addMoveBonusPoints(rows: number = 1) {
+	public addMoveBonusPoints(rows: number = 1): void {
 		this._score += 3 * rows;
 	}
 
@@ -183,6 +183,7 @@ export default class Field {
 	private readonly _height: integer;
 	private readonly _drawOffset: Vector2;
 	private readonly _brickFactory: BrickFactory;
+	private readonly _rowPointsMultiplicator: number = 1000;
 
 	private _nextActiveBrickDrop: number;
 	private _activeBrickDropInterval: number = 400;
@@ -202,7 +203,6 @@ export default class Field {
 		this._activeBrick = this._brickFactory.newBrick(this);
 		this._nextActiveBrickDrop = time + this._activeBrickDropInterval;
 		if (this._activeBrick.checkIfStuck()) {
-			console.log('brick stuck')
 			this._fieldState = FieldState.Loss;
 			this._fieldStateChanged = true;
 		}
@@ -260,7 +260,7 @@ export default class Field {
 	}
 
 	private _increaseScore(deletedRows: number): void {
-		this._score += deletedRows * 1000;
+		this._score += deletedRows * this._rowPointsMultiplicator;
 	}
 	//endregion
 }
