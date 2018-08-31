@@ -16,7 +16,7 @@ export default class BiasEventReceiver {
 
 	//region public methods
 	public update(time: number, delta: number): void {
-		this._removeExpiredEvents(time);
+		this._removeExpiredEvents();
 		this._triggerEventCallbacks();
 	}
 
@@ -43,7 +43,15 @@ export default class BiasEventReceiver {
 	}
 
 	public has(eventType: BiasEventType): boolean {
-		return this._events.has(eventType);
+		if (!this._events.has(eventType)) {
+			return false;
+		}
+
+		if (!this._events.get(eventType).isActive) {
+			return false;
+		}
+
+		return true;
 	}
 
 	public get(eventType: BiasEventType): BiasEvent {
@@ -51,7 +59,7 @@ export default class BiasEventReceiver {
 			return null;
 		}
 
-		return this._events[eventType];
+		return this._events.get(eventType);
 	}
 	//endregion
 
@@ -69,9 +77,10 @@ export default class BiasEventReceiver {
 	//endregion
 
 	//region private methods
-	private _removeExpiredEvents(time: number): void {
+	private _removeExpiredEvents(): void {
+		const now = Date.now();
 		this._events.forEach((value: BiasEvent, key: BiasEventType) => {
-			if (value.endTime >= time) {
+			if (value.endTime >= now) {
 				return;
 			}
 

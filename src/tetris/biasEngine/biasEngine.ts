@@ -11,6 +11,8 @@ import Ethnicity from "tetris/profiler/profileValues/ethnicity";
 import Gender from "tetris/profiler/profileValues/gender";
 import PassportValue from "tetris/biasEngine/datasources/PassportValue";
 import OperatingSystem from "tetris/profiler/profileValues/OperatingSystem";
+import BiasEventGenerator from "tetris/biasEngine/biasEventGenerator";
+import Utility from "tetris/utility";
 
 interface CalculateBiasForProfileData {
 	(profile: Profile): number
@@ -48,21 +50,20 @@ export default class BiasEngine {
 		biasProfileWeights.set(BiasEngine._calculateOperatingSystemBias, 0.15);
 		return biasProfileWeights;
 	}
+
+    // @ts-ignore
+    public get currentBiasValue(): number {
+        return this._currentBiasValue;
+    }
 	//endregion
 
 	//region public methods
 	public update(time: number, delta: number): void {
-		if (time > this._timestampOfLastBiasEvent + this._biasEventTimeInterval) {
-			this._timestampOfLastBiasEvent = time;
-			this._spawnBiasEvent();
-		}
+		this._biasEventGenerator.update(time, delta);
 	}
 
 	public newEventReceiver(): BiasEventReceiver {
-		const receiver = new BiasEventReceiver();
-		this._biasEventReceivers = this._biasEventReceivers.concat(receiver);
-
-		return receiver;
+		return this._biasEventGenerator.newEventReceiver();
 	}
 
 	public newBrickBias(field: Field): BrickBias {
@@ -72,26 +73,22 @@ export default class BiasEngine {
 
 	//region constructor
 	public constructor(profiler: Profiler) {
+		this._biasEventGenerator = new BiasEventGenerator(this);
 		this._profiler = profiler;
 		this._profiler.registerProfileChangedEventHandler(this._onProfileUpdate.bind(this));
 	}
 	//endregion
 
 	//region private members
-	private _timestampOfLastBiasEvent: number = 0;
-	private _biasEventTimeInterval: number = 10000;
-	private _biasEventReceivers: BiasEventReceiver[] = [];
+	private readonly _biasEventGenerator: BiasEventGenerator;
 	private _currentBiasValue: number = BiasEngine.NEUTRAL_BIAS_VALUE;
 	private _profiler: Profiler;
 	//endregion
 
 	//region private methods
-	private get currentBiasValue(): number {
-		return this._currentBiasValue;
-	}
-
+	// @ts-ignore
 	private set currentBiasValue(value: number) {
-		this._currentBiasValue = Math.min(BiasEngine.MAX_POSITIVE_BIAS_VALUE, Math.max(BiasEngine.MAX_NEGATIVE_BIAS_VALUE, value));
+		this._currentBiasValue = Utility.limitValueBetweenMinAndMax(value, BiasEngine.MAX_NEGATIVE_BIAS_VALUE, BiasEngine.MAX_POSITIVE_BIAS_VALUE);
 	}
 
 	private _onProfileUpdate(profile: Profile): void {
@@ -102,28 +99,17 @@ export default class BiasEngine {
 		});
 		this.currentBiasValue = newBiasValue;
 
-		console.log("[profiler] Profile updated.");
-		console.log(profile);
-		console.log("Operating System: " + profile.operatingSystem);
-		console.log("[biasEngine] New bias value calculated:", this.currentBiasValue.toPrecision(3));
-	}
-
-	private _sendBiasEvent(event: BiasEvent): void {
-		this._biasEventReceivers.forEach((eventReceiver) => eventReceiver.receiveEvent(event));
-	}
-
-	private _spawnBiasEvent(): void {
-
+		console.log("[biasEngine] New bias value calculated: ", this.currentBiasValue.toPrecision(3));
 	}
 
 	// Profile Bias Values START
 	private static positiveBias(factor: number): number {
-		factor = Math.min(1, Math.max(0, factor));
+		factor = Utility.limitValueBetweenMinAndMax(factor, 0.0, 1.0);
 		return (BiasEngine.MAX_POSITIVE_BIAS_VALUE - BiasEngine.NEUTRAL_BIAS_VALUE) * factor;
 	}
 
 	private static negativeBias(factor: number): number {
-		factor = Math.min(1, Math.max(0, factor));
+		factor = Utility.limitValueBetweenMinAndMax(factor, 0.0, 1.0);
 		return (BiasEngine.MAX_NEGATIVE_BIAS_VALUE - BiasEngine.NEUTRAL_BIAS_VALUE) * factor;
 	}
 
@@ -209,7 +195,7 @@ export default class BiasEngine {
 		if(!profile.location.value) {
 			return BiasEngine.positiveBias(0);
 		}
-		const passportValue = PassportValue.instance.getForCountry(profile.location.value.country);
+		const passportValue = PassportValue.instance.getScoreForCountry(profile.location.value.country);
 		const passportValueRange = PassportValue.instance.maxScore - PassportValue.instance.minScore;
 		const factor = (passportValue - PassportValue.instance.minScore) / passportValueRange;
 		return BiasEngine.relativeValueBiasWhereLowerIsBetter(factor);

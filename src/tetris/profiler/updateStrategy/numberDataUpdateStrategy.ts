@@ -1,6 +1,7 @@
 import ProfileDataUpdateStrategy from "tetris/profiler/updateStrategy/profileDataUpdateStrategy";
 import ProfileData from "tetris/profiler/profileData";
 import BaseProfileData from "tetris/profiler/baseProfileData";
+import Utility from "tetris/utility";
 
 export default class NumberDataUpdateStrategy extends ProfileDataUpdateStrategy<number> {
 
@@ -10,7 +11,7 @@ export default class NumberDataUpdateStrategy extends ProfileDataUpdateStrategy<
 	}
 
 	public set latestValueWeight(weight: number) {
-		this._latestValueWeight = Math.min(1, Math.max(0, Math.abs(weight)));
+		this._latestValueWeight = Utility.limitValueBetweenMinAndMax(Math.abs(weight), 0.0, 1.0);
 	}
 	//endregion
 

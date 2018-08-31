@@ -151,11 +151,9 @@ export default class PlayScene extends Phaser.Scene {
 	//region private methods
 	private _setupNetworkingClient(): void {
 		this._game.networkingClient.receive("playerLeft", (args) => {
-			console.log('playerLeft:', args.id);
 			this._removeRemoteField(args.id);
 		});
 		this._game.networkingClient.receive("playerJoined", (args) => {
-			console.log('playerJoined:', args.id);
 			this._addRemoteField(args.id);
 		});
 		this._game.networkingClient.receive("fieldUpdate", (args) => {
@@ -167,7 +165,6 @@ export default class PlayScene extends Phaser.Scene {
 			field.updateSprites(args.fieldState);
 		});
 		this._game.networkingClient.receive("currentPlayers", (args) => {
-			console.log("Received currentPlayers");
 			args.players.forEach(player => {
 				this._addRemoteField(player);
 				this._remotePlayerFields.get(player).updateSprites(args.fields[player]);
