@@ -45,7 +45,7 @@ export default class EvaluationDialog extends Dialog {
 		nodes.push(EvaluationDialog._createDataWrapper('skin-acne', this._profile.skinAcne));
 		nodes.push(EvaluationDialog._createDataWrapper('skin-health', this._profile.skinHealth));
 		nodes.push(EvaluationDialog._createDataWrapper('number-of-matches', this._profile.numberOfMatches));
-		nodes.push(EvaluationDialog._createDataWrapper('time-played', this._profile.timePlayed));
+		nodes.push(EvaluationDialog._createDataWrapper('time-played', this._profile.timePlayed / 1000));
 
 		nodes.forEach(datum => this._displayDatum(datum));
 	}
@@ -65,7 +65,8 @@ export default class EvaluationDialog extends Dialog {
 		wrapper.classList.add("evaluation-data-wrapper");
 		wrapper.classList.add(key);
 		wrapper.setAttribute("id", "evaluation-" + key);
-		wrapper.innerHTML = "<strong>" + key + ":</strong> " + value.toString() || "undefined";
+		wrapper.innerHTML = "<strong>" + key.replace(/-/g, " ")
+			+ ":</strong> " + value.toString() || "undefined";
 		return wrapper;
 	}
 
