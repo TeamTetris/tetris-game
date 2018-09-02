@@ -49,7 +49,10 @@ export default class Field {
 	}
 	
 	public set fieldState(fieldState: FieldState) {
-		this._fieldState = fieldState;
+		if (this._fieldState !== fieldState) {
+			this._fieldStateChanged = true;
+			this._fieldState = fieldState;
+		}
 	}
 
 	public get activeBrick(): Brick {
@@ -206,8 +209,7 @@ export default class Field {
 		this._activeBrick = this._brickFactory.newBrick(this);
 		this._nextActiveBrickDrop = time + this._activeBrickDropInterval;
 		if (this._activeBrick.checkIfStuck()) {
-			this._fieldState = FieldState.Loss;
-			this._fieldStateChanged = true;
+			this.fieldState = FieldState.Loss;
 		}
 	}
 
