@@ -21,6 +21,13 @@ export default class Profile {
 		return this._getProperty(FPP_FACE_ANALYSIS_KEY) as ProfileData<FppFaceAnalysis>;
 	}
 
+	public get image(): string {
+		if(!this.fppFaceAnalysis.value) {
+			return
+		}
+		return this.fppFaceAnalysis.value.image;
+	}
+
 	public get age(): number {
 		// TODO: add "mixing" logic in case of multiple data sources for this property
 		if(!this.fppFaceAnalysis.value) {

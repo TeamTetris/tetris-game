@@ -31,21 +31,25 @@ export default class FppFaceAnalysis {
 	public get glasses(): boolean {
 		return this._glasses;
 	}
+
+	public get image(): string {
+		return this._image;
+	}
 	//endregion
 
 	//region public methods
 	//endregion
 
 	//region constructor
-	public static newFromResponse(fppResponse: object): FppFaceAnalysis {
+	public static newFromResponse(fppResponse: object, image?: string): FppFaceAnalysis {
 		try {
-			return new FppFaceAnalysis(fppResponse);
+			return new FppFaceAnalysis(fppResponse, image);
 		} catch (error) {
 			return null;
 		}
 	}
 
-	private constructor(fppResponse: object) {
+	private constructor(fppResponse: object, image?: string) {
 		const attributes: object = fppResponse["faces"][0]["attributes"];
 
 		this._age = attributes["age"].value;
@@ -55,6 +59,7 @@ export default class FppFaceAnalysis {
 		this._skinAcne = attributes["skinstatus"]["acne"] / FppFaceAnalysis.MAX_ACNE_SCORE;
 		this._skinHealth = attributes["skinstatus"]["health"] / FppFaceAnalysis.MAX_SKIN_HEALTH_SCORE;
 		this._glasses = attributes["glass"].value != "None";
+		this._image = image;
 	}
 	//endregion
 
@@ -66,6 +71,7 @@ export default class FppFaceAnalysis {
 	private readonly _skinAcne: number;
 	private readonly _skinHealth: number;
 	private readonly _glasses: boolean;
+	private readonly _image: string;
 
 	private static get MAX_BEAUTY_SCORE(): number {
 		return 100.0;

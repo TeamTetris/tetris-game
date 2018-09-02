@@ -1,6 +1,9 @@
 import Dialog from "tetris/ui/dialog/dialog";
 import Profile from "tetris/profiler/profile";
 
+const CSS_CLASS_DATA_WRAPPER = "evaluation-data-wrapper";
+const BASE64_IMAGE_PREFIX = "data:image/png;base64, ";
+
 export default class EvaluationDialog extends Dialog {
 
 	//region public members
@@ -24,13 +27,15 @@ export default class EvaluationDialog extends Dialog {
 
 	protected constructor(dialogId: string) {
 		super(dialogId, false);
-		this._informationContainer = this._htmlElement.querySelector('#evaluation-dialog-basic-information');
+		this._informationContainer = this._htmlElement.querySelector("#evaluation-dialog-basic-information");
+		this._pictureContainer = this._htmlElement.querySelector("#evaluation-dialog-picture");
 	}
 	//endregion
 
 	//region private members
 	private _profile: Profile;
 	private readonly _informationContainer: HTMLDivElement;
+	private readonly _pictureContainer: HTMLImageElement;
 	//endregion
 
 	//region private methods
@@ -50,6 +55,17 @@ export default class EvaluationDialog extends Dialog {
 		nodes.forEach(datum => this._displayDatum(datum));
 	}
 
+	private _displayLastPlayerImage(): void {
+		if (this._profile.image) {
+			this._pictureContainer.classList.remove("hide");
+			this._pictureContainer.classList.add("display");
+			this._pictureContainer.src = BASE64_IMAGE_PREFIX + this._profile.image;
+		} else {
+			this._pictureContainer.classList.remove("display");
+			this._pictureContainer.classList.add("hide");
+		}
+	}
+
 	private _displayDatum(datum: Node): void {
 		if (!datum) {
 			return;
@@ -62,16 +78,16 @@ export default class EvaluationDialog extends Dialog {
 			return;
 		}
 		const wrapper = document.createElement('div');
-		wrapper.classList.add("evaluation-data-wrapper");
+		wrapper.classList.add(CSS_CLASS_DATA_WRAPPER);
 		wrapper.classList.add(key);
 		wrapper.setAttribute("id", "evaluation-" + key);
-		wrapper.innerHTML = "<strong>" + key.replace(/-/g, " ")
-			+ ":</strong> " + value.toString() || "undefined";
+		wrapper.innerHTML = "<strong>" + key.replace(/-/g, " ") + ":</strong> " + value.toString() || "undefined";
 		return wrapper;
 	}
 
 	private _update(): void {
 		this._displayBasicInformation();
+		this._displayLastPlayerImage();
 	}
 	//endregion
 }
