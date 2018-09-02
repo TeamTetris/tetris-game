@@ -28,7 +28,7 @@ export default class PlayScene extends Phaser.Scene {
 
 	//region public methods
 	public preload(): void {
-		this.load.image("noise", "./assets/images/noise.png");
+		this.load.image(config.graphics.noiseTextureKey, "./assets/images/noise.png");
 		this.load.glsl('interstellar', "./assets/shaders/interstellar.glsl");
 		this.load.atlas(config.atlasKeys.blockSpriteAtlasKey, "./assets/images/blockSprites.png", "./assets/images/blockSprites.json");
 	}
@@ -57,7 +57,10 @@ export default class PlayScene extends Phaser.Scene {
 			const nextElimination = new Date(this._match.nextElimination).valueOf() / 1000;
 			this._countdownWidget.update(Math.max(0, nextElimination - currentTime), Math.max(nextElimination - matchStart, matchStart - currentTime), preGame);
 		} else {
-			this._countdownWidget.update(Math.max(0, matchStart - currentTime), 30, preGame);	
+			if (!this._matchStartTimer) {
+				this._matchStartTimer = matchStart - currentTime;
+			}
+			this._countdownWidget.update(Math.max(0, matchStart - currentTime), this._matchStartTimer, preGame);	
 		}
 
 		this._pushMultiplayerUpdate();
@@ -104,6 +107,7 @@ export default class PlayScene extends Phaser.Scene {
 	private _localSocketId: String;
 	private _backgroundGraphicsPipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
 	private _backgroundSprite: Phaser.GameObjects.Sprite;
+	private _matchStartTimer: number;
 	//endregion
 	
 	//region private methods
@@ -119,7 +123,7 @@ export default class PlayScene extends Phaser.Scene {
 		this._backgroundGraphicsPipeline.setFloat1('uTime', 0.0);
 		this.adjustBackgroundParameters(0.10, [0.2, 0.2, 0.2]);
 
-		this._backgroundSprite = this.add.sprite(config.graphics.width / 2, config.graphics.height / 2, 'noise');
+		this._backgroundSprite = this.add.sprite(config.graphics.width / 2, config.graphics.height / 2, config.graphics.noiseTextureKey);
 		const scaleX = config.graphics.width / 256.0;
 		const scaleY = config.graphics.height / 256.0;
 		this._backgroundSprite.setScale(scaleX, scaleY);

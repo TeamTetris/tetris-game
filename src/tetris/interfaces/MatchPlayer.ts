@@ -16,6 +16,10 @@ export enum PlayStatus {
 	Won
 }
 
+export default interface BlockState {
+	spriteFrameName: string;
+}
+
 export default interface MatchPlayer {
 	placement: number;
 	displayName: string;
@@ -24,5 +28,5 @@ export default interface MatchPlayer {
 	connectionStatus: ConnectionStatus;
 	scoreboardStatus: ScoreboardStatus;
 	playStatus: PlayStatus;
-	field: Object;
+	field: Array<Array<BlockState>>;
 }
