@@ -16,6 +16,7 @@ import Match from "tetris/interfaces/Match";
 import MatchPlayer, { PlayStatus } from "tetris/interfaces/MatchPlayer";
 import NetworkingEvents from "tetris/networking/networkingEvents";
 import DebugWidget from "tetris/ui/debugWidget";
+import BiasEventType from "tetris/biasEngine/biasEventType";
 
 const PLAYER_FIELD_DRAW_OFFSET: Vector2 = new Vector2(
 	(config.graphics.width - config.field.width * config.field.blockSize) / 2, 
@@ -232,7 +233,7 @@ export default class PlayScene extends Phaser.Scene {
 		if (this._game.biasEngine.eventGenerator.latestBiasEvent) {
 			debugInformation.push(`Bias event active: ${this._game.biasEngine.eventGenerator.latestBiasEvent.isActive}`);
 			if (this._game.biasEngine.eventGenerator.latestBiasEvent.isActive) {
-				debugInformation.push(`Current Bias event type: ${this._game.biasEngine.eventGenerator.latestBiasEvent.eventType.toString()}`);
+				debugInformation.push(`Current Bias event type: ${BiasEventType[this._game.biasEngine.eventGenerator.latestBiasEvent.eventType]}`);
 			}
 		}
 		debugInformation.push(`Current detection level: ${this._game.biasEngine.eventGenerator.currentDetectionLevel}`);
