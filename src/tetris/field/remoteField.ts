@@ -3,13 +3,14 @@
 import Block from 'tetris/brick/block';
 import Vector2 = Phaser.Math.Vector2;
 import config from 'tetris/config';
+import BlockState from "tetris/interfaces/MatchPlayer";
 
 export default class RemoteField {
 	//region public members
 	//endregion
 
 	//region public methods
-	public updateSprites(serializedBlocks) {
+	public updateSprites(serializedBlocks: BlockState[][]):void {
 		for (let y = 0; y < this._height; y++) {
 			for (let x = 0; x < this._width; x++) {
 				if (serializedBlocks[y][x]) {
@@ -22,7 +23,7 @@ export default class RemoteField {
 		}
 	}
 
-	public destroy() {
+	public destroy(): void {
 		this._background.destroy();
 		this._background = null;
 		for (const blockRow of this._blockRows) {
@@ -54,10 +55,10 @@ export default class RemoteField {
 
 	//region private members
 	private _blockRows: Block[][];
-	private _width: number;
-	private _height: number;
-	private _drawScale: number;
-	private _drawOffset: Vector2;
+	private readonly _width: number;
+	private readonly _height: number;
+	private readonly _drawScale: number;
+	private readonly _drawOffset: Vector2;
 	private _scene: Phaser.Scene;
 	private _background: Phaser.GameObjects.Graphics;
 	//endregion
