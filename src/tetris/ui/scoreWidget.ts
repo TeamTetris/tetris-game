@@ -10,28 +10,28 @@ export default class ScoreWidget {
 	//endregion
 
 	//region public methods
-	get height(): number {
+	public get height(): number {
 		return this.score.height;
 	}
 
-	get width(): number {
+	public get width(): number {
 		return this.score.width;
 	}
 
-	get x(): number {
+	public get x(): number {
 		return this.score.x;
 	}
 
-	get y(): number {
+	public get y(): number {
 		return this.score.y;
 	}
 
-	set x(x: number) {
+	public set x(x: number) {
         this._x = x;
         this._adjustTextX();
 	}
 
-	set y(y: number) {
+	public set y(y: number) {
         this._y = y;
 		this._adjustTextY();
 	}

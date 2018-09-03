@@ -11,28 +11,28 @@ export default class CountdownWidget {
 	//endregion
 
 	//region public methods
-	get height(): number {
+	public get height(): number {
 		return this._radius * 2;
 	}
 
-	get width(): number {
+	public get width(): number {
 		return this._radius * 2;
 	}
 
-	get x(): number {
+	public get x(): number {
 		return this.circle.x;
 	}
 
-	get y(): number {
+	public get y(): number {
 		return this.circle.y;
 	}
 
-	set x(x: number) {
+	public set x(x: number) {
 		this.circle.x = x;
 		this._adjustTextX();
 	}
 
-	set y(y: number) {
+	public set y(y: number) {
 		this.circle.y = y;
 		this._adjustTextY();
 	}

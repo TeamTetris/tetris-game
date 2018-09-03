@@ -8,28 +8,28 @@ import BlockState from "tetris/interfaces/MatchPlayer";
 
 export default class RemoteField {
 	//region public members
-	get height(): number {
+	public get height(): number {
 		return this._height * config.field.blockSize * this._drawScale;
 	}
 
-	get width(): number {
+	public get width(): number {
 		return this._width * config.field.blockSize * this._drawScale;
 	}
 
-	get x(): number {
+	public get x(): number {
 		return this._drawOffset.x;
 	}
 
-	get y(): number {
+	public get y(): number {
 		return this._drawOffset.y;
 	}
 
-	set x(x: number) {
+	public set x(x: number) {
         this._drawOffset.x = x;
         this._adjustTextX();
 	}
 
-	set y(y: number) {
+	public set y(y: number) {
         this._drawOffset.y = y;
 		this._adjustTextY();
 	}
@@ -38,7 +38,7 @@ export default class RemoteField {
 	//region public methods
 	public update(player: MatchPlayer): void {
 		this._updateSprites(player.field);
-		this._updateText(player);
+		this._updatePlayerInformation(player);
 	}
 
 	public destroy(): void {
@@ -86,7 +86,7 @@ export default class RemoteField {
 	//region private methods
 	private _setup(): void {
 		this._setupField();
-		this._setupText();
+		this._setupPlayerInformation();
 	}
 	
 	private _setupField(): void {
@@ -102,7 +102,7 @@ export default class RemoteField {
 		}
 	}
 
-	private _setupText(): void {
+	private _setupPlayerInformation(): void {
 		this._name = this._scene.add.text(this._drawOffset.x, this._drawOffset.y, " ", config.ui.fonts.scoreboard.font);
 		this._score = this._scene.add.text(this._drawOffset.x, this._drawOffset.y, " ", config.ui.fonts.scoreboard.font);
 		this._adjustTextX();
@@ -122,7 +122,7 @@ export default class RemoteField {
 		}
 	}
 
-	private _updateText(player: MatchPlayer): void {
+	private _updatePlayerInformation(player: MatchPlayer): void {
 		this._name.setText(player.displayName);
 		this._score.setText(player.points.toString());
 		this._adjustTextX();
