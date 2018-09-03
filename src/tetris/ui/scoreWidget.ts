@@ -1,7 +1,7 @@
 /// <reference path="../../../definitions/phaser.d.ts"/>
 
 import config from "tetris/config";
-import { Font } from "tetris/ui/scoreboardWidget";
+import Font from "tetris/interfaces/Font";
 
 export default class ScoreWidget {
 

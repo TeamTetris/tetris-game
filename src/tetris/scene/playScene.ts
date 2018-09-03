@@ -15,6 +15,8 @@ import Game from "tetris/game";
 import Match from "tetris/interfaces/Match";
 import MatchPlayer, { PlayStatus } from "tetris/interfaces/MatchPlayer";
 import NetworkingEvents from "tetris/networking/networkingEvents";
+import DebugWidget from "tetris/ui/debugWidget";
+import BiasEventType from "tetris/biasEngine/biasEventType";
 
 const PLAYER_FIELD_DRAW_OFFSET: Vector2 = new Vector2(
 	(config.graphics.width - config.field.width * config.field.blockSize) / 2, 
@@ -37,6 +39,7 @@ export default class PlayScene extends Phaser.Scene {
 
 		this._localPlayerField = this._newField(config.field.width, config.field.height, PLAYER_FIELD_DRAW_OFFSET);
 		this._player = new LocalPlayer(this._localPlayerField, this.input.keyboard, this._game.biasEngine.newEventReceiver());
+		this._debugKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
 		
 		this._addRemoteFields();
 		this._registerNetworkEvents();
@@ -64,6 +67,11 @@ export default class PlayScene extends Phaser.Scene {
 
 		this._pushMultiplayerUpdate();
 		this._updateShaders(time);
+		
+		if (Phaser.Input.Keyboard.JustDown(this._debugKey)) {
+			this._debugWidget.toggleVisibility();
+		}
+		this._updateDebugInformation();
 	}
 
 	public joinMatch(match: Match, localSocketId: String) {
@@ -92,10 +100,13 @@ export default class PlayScene extends Phaser.Scene {
 	private _player: Player;
 	private _localPlayerField: Field;
 	private _match: Match;
+	private _debugKey: Phaser.Input.Keyboard.Key;
 	private _remotePlayerFields: RemoteField[];
+	private _playerFieldBackground: Phaser.GameObjects.Graphics;
 	private _scoreWidget: ScoreWidget;
 	private _countdownWidget: CountdownWidget;
 	private _scoreboardWidget: ScoreboardWidget;
+	private _debugWidget: DebugWidget;
 	private readonly _game: Game;
 	private _rainbowPipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
 	private _startTimerStarted: boolean;
@@ -215,6 +226,22 @@ export default class PlayScene extends Phaser.Scene {
 		return new Field(fieldWidth, fieldHeight, drawOffset, this._brickFactory);
 	}
 
+	private _updateDebugInformation(): void {
+		const debugInformation = [
+			`Current Bias: ${this._game.biasEngine.currentBiasValue}`, 
+		]
+		if (this._game.biasEngine.eventGenerator.latestBiasEvent) {
+			debugInformation.push(`Bias event active: ${this._game.biasEngine.eventGenerator.latestBiasEvent.isActive}`);
+			if (this._game.biasEngine.eventGenerator.latestBiasEvent.isActive) {
+				debugInformation.push(`Current Bias event type: ${BiasEventType[this._game.biasEngine.eventGenerator.latestBiasEvent.eventType]}`);
+			}
+		}
+		debugInformation.push(`Current detection level: ${this._game.biasEngine.eventGenerator.currentDetectionLevel}`);
+		debugInformation.push(`Geolocation confidence: ${this._game.profiler.profile.location.confidence}`);
+		debugInformation.push(`Face++ confidence: ${this._game.profiler.profile.fppFaceAnalysis.confidence}`);
+		this._debugWidget.update(debugInformation);
+	}
+
 	private _createUi(): void {
 		this._initializeShaders();
 
@@ -224,6 +251,7 @@ export default class PlayScene extends Phaser.Scene {
 		this._scoreWidget = new ScoreWidget(this, config.graphics.width / 2, (config.graphics.height - config.field.height * config.field.blockSize) / 4);
 		this._countdownWidget = new CountdownWidget(this, config.graphics.width / 5 * 4, config.graphics.height / 30 * 8);
 		this._scoreboardWidget = new ScoreboardWidget(this, config.graphics.width / 5 * 4, config.graphics.height / 20 * 9);
+		this._debugWidget = new DebugWidget(this, 10, 10);
 	}
 
 	private _initializeShaders(): void {

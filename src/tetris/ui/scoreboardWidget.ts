@@ -2,11 +2,7 @@
 
 import config from "tetris/config";
 import MatchPlayer, { ScoreboardStatus, PlayStatus } from "tetris/interfaces/MatchPlayer";
-
-export interface Font {
-    size: number,
-    font: {},
-}
+import Font from 'tetris/interfaces/Font';
 
 export interface Color {
     string: string,
