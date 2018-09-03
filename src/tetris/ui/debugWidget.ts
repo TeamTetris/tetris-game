@@ -69,7 +69,7 @@ export default class DebugWidget {
 	//endregion
 
 	//region constructor
-	public constructor(scene: Phaser.Scene, x: number, y: number, font: Font = config.ui.fonts.small) {
+	public constructor(scene: Phaser.Scene, x: number, y: number, font: Font = config.ui.fonts.scoreboard) {
 		this._scene = scene;
 		this._font = font;
 		this.debugInformation = [];

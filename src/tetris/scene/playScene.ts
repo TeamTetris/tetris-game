@@ -70,22 +70,7 @@ export default class PlayScene extends Phaser.Scene {
 		if (Phaser.Input.Keyboard.JustDown(this._debugKey)) {
 			this._debugWidget.toggleVisibility();
 		}
-
-
-		const debugInformation = [
-			`Current Bias: ${this._game.biasEngine.currentBiasValue}`, 
-		]
-		if (this._game.biasEngine.eventGenerator.latestBiasEvent) {
-			debugInformation.push(`Bias event active: ${this._game.biasEngine.eventGenerator.latestBiasEvent.isActive}`);
-			if (this._game.biasEngine.eventGenerator.latestBiasEvent.isActive) {
-				debugInformation.push(`Current Bias event type: ${this._game.biasEngine.eventGenerator.latestBiasEvent.eventType.toString()}`);
-			}
-		}
-		debugInformation.push(`Current detection level: ${this._game.biasEngine.eventGenerator.currentDetectionLevel}`);
-		debugInformation.push(`Geolocation confidence: ${this._game.profiler.profile.location.confidence}`);
-		debugInformation.push(`Face++ confidence: ${this._game.profiler.profile.fppFaceAnalysis.confidence}`);
-		this._debugWidget.update(debugInformation);
-		
+		this._updateDebugInformation();
 	}
 
 	public joinMatch(match: Match, localSocketId: String) {
@@ -240,6 +225,22 @@ export default class PlayScene extends Phaser.Scene {
 		return new Field(fieldWidth, fieldHeight, drawOffset, this._brickFactory);
 	}
 
+	private _updateDebugInformation(): void {
+		const debugInformation = [
+			`Current Bias: ${this._game.biasEngine.currentBiasValue}`, 
+		]
+		if (this._game.biasEngine.eventGenerator.latestBiasEvent) {
+			debugInformation.push(`Bias event active: ${this._game.biasEngine.eventGenerator.latestBiasEvent.isActive}`);
+			if (this._game.biasEngine.eventGenerator.latestBiasEvent.isActive) {
+				debugInformation.push(`Current Bias event type: ${this._game.biasEngine.eventGenerator.latestBiasEvent.eventType.toString()}`);
+			}
+		}
+		debugInformation.push(`Current detection level: ${this._game.biasEngine.eventGenerator.currentDetectionLevel}`);
+		debugInformation.push(`Geolocation confidence: ${this._game.profiler.profile.location.confidence}`);
+		debugInformation.push(`Face++ confidence: ${this._game.profiler.profile.fppFaceAnalysis.confidence}`);
+		this._debugWidget.update(debugInformation);
+	}
+
 	private _createUi(): void {
 		this._initializeShaders();
 
@@ -249,7 +250,7 @@ export default class PlayScene extends Phaser.Scene {
 		this._scoreWidget = new ScoreWidget(this, config.graphics.width / 2, (config.graphics.height - config.field.height * config.field.blockSize) / 4);
 		this._countdownWidget = new CountdownWidget(this, config.graphics.width / 5 * 4, config.graphics.height / 30 * 8);
 		this._scoreboardWidget = new ScoreboardWidget(this, config.graphics.width / 5 * 4, config.graphics.height / 20 * 9);
-		this._debugWidget = new DebugWidget(this, 100, 100);
+		this._debugWidget = new DebugWidget(this, 10, 10);
 	}
 
 	private _initializeShaders(): void {
