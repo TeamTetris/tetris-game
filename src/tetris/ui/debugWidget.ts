@@ -7,41 +7,41 @@ export default class DebugWidget {
 
 	//region public members
 	public debugInformation: Phaser.GameObjects.Text[];
-	//endregion
-
-	//region public methods
-	get height(): number {
+	
+	public get height(): number {
 		return this.debugInformation.length * config.ui.fonts.small.size;
 	}
 
-	get width(): number {
+	public get width(): number {
 		return Math.max.apply(Math, this.debugInformation.map((line) => {
 			return line.width;
 		}));
 	}
 
-	get x(): number {
+	public get x(): number {
 		return this._x;
 	}
 
-	get y(): number {
+	public get y(): number {
 		return this._y;
 	}
 
-	get displayed(): boolean {
+	public get displayed(): boolean {
 		return this._displayed;
 	}
  
-	set x(x: number) {
+	public set x(x: number) {
         this._x = x;
         this._adjustTextX();
 	}
 
-	set y(y: number) {
+	public set y(y: number) {
         this._y = y;
 		this._adjustTextY();
 	}
+	//endregion
 
+	//region public methods
 	public update(debugInformationText: string[]): void {
 		const missingLines = debugInformationText.length - this.debugInformation.length;
 		if (missingLines) {
