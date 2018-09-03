@@ -188,7 +188,7 @@ export default class PlayScene extends Phaser.Scene {
 
 	private _updateRemoteFields(players: MatchPlayer[]): void {
 		for (const [index, player] of players.slice(0, 2).entries()) {
-			this._remotePlayerFields[index].updateSprites(player.field);
+			this._remotePlayerFields[index].update(player);
 		}
 	}
 
