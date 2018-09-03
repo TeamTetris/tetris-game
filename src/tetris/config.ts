@@ -34,6 +34,10 @@ const config = {
         countdown: {
             lineWidth: 9,
         },
+        fontKeys: {
+            kenneyMini: "kenneyMini",
+            kenneyMiniSquare: "kenneyMiniSquare",
+        },
         fonts: {
             scoreboard: {
                 size: 18,

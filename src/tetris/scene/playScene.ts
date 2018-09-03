@@ -32,6 +32,7 @@ export default class PlayScene extends Phaser.Scene {
 		this.load.image(config.graphics.noiseTextureKey, "./assets/images/noise.png");
 		this.load.glsl('interstellar', "./assets/shaders/interstellar.glsl");
 		this.load.atlas(config.atlasKeys.blockSpriteAtlasKey, "./assets/images/blockSprites.png", "./assets/images/blockSprites.json");
+		this.load.bitmapFont(config.ui.fontKeys.kenneyMiniSquare, "./assets/font/KenneyMiniSquare.png", "./assets/font/KenneyMiniSquare.xml");
 	}
 
 	public create(): void {

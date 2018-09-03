@@ -78,8 +78,8 @@ export default class RemoteField {
 	private readonly _drawOffset: Vector2;
 	private _scene: Phaser.Scene;
 	private _background: Phaser.GameObjects.Graphics;
-	private _name: Phaser.GameObjects.Text;
-	private _score: Phaser.GameObjects.Text;
+	private _name: Phaser.GameObjects.BitmapText;
+	private _score: Phaser.GameObjects.BitmapText;
 	//endregion
 
 	//region private methods
@@ -102,8 +102,8 @@ export default class RemoteField {
 	}
 
 	private _setupPlayerInformation(): void {
-		this._name = this._scene.add.text(this._drawOffset.x, this._drawOffset.y, " ", config.ui.fonts.scoreboard.font);
-		this._score = this._scene.add.text(this._drawOffset.x, this._drawOffset.y, " ", config.ui.fonts.scoreboard.font);
+		this._name = this._scene.add.bitmapText(0, 0, config.ui.fontKeys.kenneyMiniSquare, "", config.ui.fonts.scoreboard.size);
+		this._score = this._scene.add.bitmapText(0, 0, config.ui.fontKeys.kenneyMiniSquare, "", config.ui.fonts.scoreboard.size);
 		this._adjustTextX();
 		this._adjustTextY();
 	}
