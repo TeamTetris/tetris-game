@@ -214,6 +214,11 @@ export default class PlayScene extends Phaser.Scene {
 		}
 	}
 
+	private _exitMatch(): void {
+		this._game.handleEndOfMatch(this._match);
+		this._game.changeScene(config.sceneKeys.menuScene);
+	}
+
 	private _createFieldBackground(offset: Vector2, drawScale: number = 1): Phaser.GameObjects.Graphics {
 		const fieldBackground = this.add.graphics();
 		fieldBackground.fillStyle(0x002d4f);
@@ -252,7 +257,7 @@ export default class PlayScene extends Phaser.Scene {
 		this._scoreWidget = new ScoreWidget(this, config.graphics.width / 2, (config.graphics.height - config.field.height * config.field.blockSize) / 4);
 		this._countdownWidget = new CountdownWidget(this, config.graphics.width / 5 * 4, config.graphics.height / 30 * 8);
 		this._scoreboardWidget = new ScoreboardWidget(this, config.graphics.width / 5 * 4, config.graphics.height / 20 * 9);
-		this._exitButton = new TextButton(this, config.graphics.width / 2, config.graphics.height - 50, "blue_button00.png", "blue_button01.png", "Leave Match", () => this._game.changeScene(config.sceneKeys.menuScene));
+		this._exitButton = new TextButton(this, config.graphics.width / 2, config.graphics.height - 50, "blue_button00.png", "blue_button01.png", "Leave Match", this._exitMatch.bind(this));
 		this._debugWidget = new DebugWidget(this, 10, 10);
 	}
 
