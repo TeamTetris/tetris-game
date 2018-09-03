@@ -4,7 +4,6 @@ import Block from 'tetris/brick/block';
 import Vector2 = Phaser.Math.Vector2;
 import MatchPlayer, { BlockState } from 'tetris/interfaces/MatchPlayer';
 import config from 'tetris/config';
-import BlockState from "tetris/interfaces/MatchPlayer";
 
 export default class RemoteField {
 	//region public members
