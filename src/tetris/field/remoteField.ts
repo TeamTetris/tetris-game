@@ -2,25 +2,43 @@
 
 import Block from 'tetris/brick/block';
 import Vector2 = Phaser.Math.Vector2;
+import MatchPlayer from 'tetris/interfaces/MatchPlayer';
 import config from 'tetris/config';
 import BlockState from "tetris/interfaces/MatchPlayer";
 
 export default class RemoteField {
 	//region public members
+	get height(): number {
+		return this._height * config.field.blockSize * this._drawScale;
+	}
+
+	get width(): number {
+		return this._width * config.field.blockSize * this._drawScale;
+	}
+
+	get x(): number {
+		return this._drawOffset.x;
+	}
+
+	get y(): number {
+		return this._drawOffset.y;
+	}
+
+	set x(x: number) {
+        this._drawOffset.x = x;
+        this._adjustTextX();
+	}
+
+	set y(y: number) {
+        this._drawOffset.y = y;
+		this._adjustTextY();
+	}
 	//endregion
 
 	//region public methods
-	public updateSprites(serializedBlocks: BlockState[][]):void {
-		for (let y = 0; y < this._height; y++) {
-			for (let x = 0; x < this._width; x++) {
-				if (serializedBlocks[y][x]) {
-					this._blockRows[y][x].sprite.setVisible(true);
-					this._blockRows[y][x].sprite.setFrame(serializedBlocks[y][x].spriteFrameName);
-				} else {
-					this._blockRows[y][x].sprite.setVisible(false);
-				}
-			}
-		}
+	public update(player: MatchPlayer) {
+		this._updateSprites(player.field);
+		this._updateText(player);
 	}
 
 	public destroy(): void {
