@@ -46,8 +46,9 @@ export default class DebugWidget {
 		const missingLines = debugInformationText.length - this.debugInformation.length;
 		if (missingLines) {
 			for (let i = 0; i < missingLines; i++) {
-				this.debugInformation.push(this._scene.add.text(this._x, this._y, "", this._font.font));
-				console.log('added text');
+				const line = this._scene.add.text(this._x, this._y, "", this._font.font);
+				line.setVisible(this._displayed);
+				this.debugInformation.push(line);
 			}
 			this._adjustTextY();
 		}
@@ -58,17 +59,11 @@ export default class DebugWidget {
         this._adjustTextX();
 	}
 
-	public display() {
-		this._displayed = true;
+	public toggleVisibility(): void {
+		this._displayed = !this.displayed;
+		console.log(this._displayed);
 		for (const line of this.debugInformation) {
-			line.setVisible(true);
-		}
-	}
-
-	public hide() {
-		this._displayed = false;
-		for (const line of this.debugInformation) {
-			line.setVisible(false);
+			line.setVisible(this._displayed);
 		}
 	}
 	//endregion

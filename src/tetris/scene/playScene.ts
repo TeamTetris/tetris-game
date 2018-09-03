@@ -38,6 +38,7 @@ export default class PlayScene extends Phaser.Scene {
 
 		this._localPlayerField = this._newField(config.field.width, config.field.height, PLAYER_FIELD_DRAW_OFFSET);
 		this._player = new LocalPlayer(this._localPlayerField, this.input.keyboard, this._game.biasEngine.newEventReceiver());
+		this._debugKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
 		
 		this._addRemoteFields();
 		this._registerNetworkEvents();
@@ -65,6 +66,10 @@ export default class PlayScene extends Phaser.Scene {
 
 		this._pushMultiplayerUpdate();
 		this._updateShaders(time);
+		
+		if (Phaser.Input.Keyboard.JustDown(this._debugKey)) {
+			this._debugWidget.toggleVisibility();
+		}
 
 
 		const debugInformation = [
@@ -109,7 +114,9 @@ export default class PlayScene extends Phaser.Scene {
 	private _player: Player;
 	private _localPlayerField: Field;
 	private _match: Match;
+	private _debugKey: Phaser.Input.Keyboard.Key;
 	private _remotePlayerFields: RemoteField[];
+	private _playerFieldBackground: Phaser.GameObjects.Graphics;
 	private _scoreWidget: ScoreWidget;
 	private _countdownWidget: CountdownWidget;
 	private _scoreboardWidget: ScoreboardWidget;
