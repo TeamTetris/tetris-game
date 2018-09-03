@@ -74,31 +74,43 @@
 <!-- Permission dialog Camera start -->
 <div id="profile-creation-dialog" class="dialog">
     <div class="dialog-content">
-        <div class="dialog-header">
-            <h3s class="dialog-title"></h3s>
-        </div>
         <div class="dialog-body">
-            <h4>Welcome to Tetris Battle Royal</h4>
-            <p>
-                In this flavour of Tetris you have to compete against several other players in real-time.
-                Every minute the players with the least amount of points will be removed from the game.
-                Only the player who lastly plays fast, accurate and clever enough will be the only one who survives and earn ever lasting honour.
-            </p>
-            <p>In order to play this game, you have to register first. Please select a unique player name and take a profile picture.</p>
-            <form>
-                <label for="playername">Player Name: </label><input type="text" id="playername" />
-            </form>
-            <div class="left-sidebar" id="camera-area">
-                <h3>Take a photo and get rewards</h3>
-                <p>Get a reward of <strong>2 Lootboxes</strong> for taking a picture!</p>
-                <button id="activate-camera-button">Take a photo</button>
+            <h1>Tetris - Battle Royale</h1>
+            
+            <h2>Player Tag</h2>
+            
+            <input type="text" id="playername" autofocus>
+            
+            <h2>Player Icon</h2>
+
+            <div class="icon-container">
+                <div class="preset-container">
+                    <h3>Choose a preset</h3>
+                    <ul>
+                        <li>
+                            <img src="/assets/images/blue_icon.png">
+                        </li>
+                        <li>
+                            <img src="/assets/images/green_icon.png">
+                        </li>
+        
+                        <li>
+                            <img src="/assets/images/red_icon.png">
+                        </li>
+                        <li>
+                            <img src="/assets/images/yellow_icon.png">
+                        </li>
+                    </ul>
+                </div>
+                <h3>or</h3>
+                <div class="photo-container">
+                    <h3>Take a photo</h3>
+                    <button id="activate-camera-button">Shoot !</button>
+                    <h3>+2 exclusive Lootboxes!</h3>
+                </div>
             </div>
-            <div class="right-sidebar" id="gallery-area">
-                <h4>Choose a photo</h4>
-                <i>To be implemented</i>
-            </div>
-            <div class="clear"></div>
-            <button style="margin-top: 30px" class="dialog-accept-element">Create Profile</button>
+            
+            <button class="dialog-accept-element" id="register-button">Play !</button>
         </div>
     </div>
 </div>

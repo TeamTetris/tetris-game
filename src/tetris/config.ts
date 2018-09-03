@@ -14,6 +14,10 @@ const config = {
                 hex: 0xFFFFFF,
                 string: '#FFFFFF',
             },
+            grey: {
+                hex: 0xA4A4A4,
+                string: '#A4A4A4',
+            },
             yellow: {
                 hex: 0xFFFF00,
                 string: '#FFFF00',
@@ -33,15 +37,19 @@ const config = {
         fonts: {
             scoreboard: {
                 size: 18,
-                font: {font: "16px Kenney Mini Square", fill: "#fff"},
+                font: {font: "16px Kenney Mini Square", fill: "#fff", align: 'center'},
+            },
+            countdown: {
+                size: 32,
+                font: {font: "30px Kenney Mini Square", fill: "#fff", align: 'center'},
             },
             small: {
                 size: 22,
-                font: {font: "20px Kenney Mini Square", fill: "#fff"},
+                font: {font: "20px Kenney Mini Square", fill: "#fff", align: 'center'},
             },
             large: {
                 size: 42,
-                font: {font: "40px Kenney Mini Square", fill: "#fff"},
+                font: {font: "40px Kenney Mini Square", fill: "#fff", align: 'center'},
             },
         },
     },
@@ -52,7 +60,8 @@ const config = {
     },
     graphics: {
         width: window.innerWidth,
-        height: window.innerHeight
+        height: window.innerHeight,
+        noiseTextureKey: 'noise'
     },
     serverAddress: "https://tetrisboi.herokuapp.com",
 };

@@ -1,6 +1,6 @@
 enum HardwarePermission {
-	granted,
-	denied,
-	requested
+	Granted,
+	Denied,
+	Requested
 }
 export default HardwarePermission;

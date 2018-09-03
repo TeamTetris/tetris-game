@@ -43,16 +43,20 @@ export default class Brick {
 		this._tryToMove(new Vector2(0, 1), true);
 	}
 	
-	public dropToFloor(): void {
-		while (this._tryToMove(new Vector2(0, 1), true)) { }
+	public dropToFloor(): number {
+		let rowsDropped = 0;
+		while (this._tryToMove(new Vector2(0, 1), true)) {
+			rowsDropped++;
+		}
+		return rowsDropped;
 	}
 
 	public rotate(): void {
 		this._tryToRotate(true);
 	}
 
-	public moveDown(): void {
-		this._tryToMove(new Vector2(0, 1), true);
+	public moveDown(): boolean {
+		return this._tryToMove(new Vector2(0, 1), true);
 	}
 
 	public addBlock(sprite: Phaser.GameObjects.Sprite, positions: Vector2[]): void {

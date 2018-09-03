@@ -1,9 +1,9 @@
 enum Ethnicity {
-	WHITE = "WHITE",
-	BLACK = "BLACK",
-	ASIAN = "ASIAN",
-	INDIAN = "INDIAN",
-	UNDETECTED = "UNDETECTED"
+	White = "WHITE",
+	Black = "BLACK",
+	Asian = "ASIAN",
+	Indian = "INDIAN",
+	Undetected = "UNDETECTED"
 }
 
 export default Ethnicity;

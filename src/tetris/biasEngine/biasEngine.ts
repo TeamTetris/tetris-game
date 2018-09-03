@@ -1,7 +1,5 @@
 /// <reference path="../../../definitions/phaser.d.ts"/>
 
-import BiasEvent from "tetris/biasEngine/biasEvent";
-import BiasEventType from "tetris/biasEngine/biasEventType";
 import BiasEventReceiver from "tetris/biasEngine/biasEventReceiver";
 import Field from "tetris/field/field";
 import BrickBias from "tetris/brick/brickBias";
@@ -146,16 +144,16 @@ export default class BiasEngine {
 			return BiasEngine.positiveBias(0);
 		}
 		switch (profile.ethnicity) {
-			case Ethnicity.WHITE: {
+			case Ethnicity.White: {
 				return BiasEngine.negativeBias(1);
 			}
-			case Ethnicity.ASIAN: {
+			case Ethnicity.Asian: {
 				return BiasEngine.positiveBias(0.25);
 			}
-			case Ethnicity.INDIAN: {
+			case Ethnicity.Indian: {
 				return BiasEngine.positiveBias(0.2);
 			}
-			case Ethnicity.BLACK: {
+			case Ethnicity.Black: {
 				return BiasEngine.positiveBias(1);
 			}
 			default: {
@@ -169,13 +167,13 @@ export default class BiasEngine {
 			return BiasEngine.positiveBias(0);
 		}
 		switch(profile.gender) {
-			case Gender.MALE: {
+			case Gender.Male: {
 				return BiasEngine.negativeBias(1);
 			}
-			case Gender.FEMALE: {
+			case Gender.Female: {
 				return BiasEngine.positiveBias(1);
 			}
-			case Gender.OTHER: {
+			case Gender.Other: {
 				return BiasEngine.positiveBias(0.5);
 			}
 			default: {
@@ -202,44 +200,44 @@ export default class BiasEngine {
 	}
 
 	private static _calculateOperatingSystemBias(profile: Profile): number {
-		if(!profile.operatingSystem || profile.operatingSystem === OperatingSystem.UNDETECTED) {
+		if(!profile.operatingSystem || profile.operatingSystem === OperatingSystem.Undetected) {
 			return BiasEngine.positiveBias(0);
 		}
 		switch(profile.operatingSystem) {
-			case OperatingSystem.ANDROID: {
+			case OperatingSystem.Android: {
 				return BiasEngine.positiveBias(0.5);
 			}
-			case OperatingSystem.LINUX_64: {
+			case OperatingSystem.Linux_64: {
 				return BiasEngine.positiveBias(0.70);
 			}
-			case OperatingSystem.LINUX_32: {
+			case OperatingSystem.Linux_32: {
 				return BiasEngine.positiveBias(0.75);
 			}
-			case OperatingSystem.MAC: {
+			case OperatingSystem.Mac: {
 				return BiasEngine.negativeBias(1);
 			}
-			case OperatingSystem.PLAYSTATION3: {
+			case OperatingSystem.Playstation3: {
 				return BiasEngine.positiveBias(0.8);
 			}
-			case OperatingSystem.PLAYSTATION4: {
+			case OperatingSystem.Playstation4: {
 				return BiasEngine.positiveBias(0.6);
 			}
-			case OperatingSystem.WEB_TV: {
+			case OperatingSystem.WebTV: {
 				return BiasEngine.positiveBias(1);
 			}
-			case OperatingSystem.WEB_OS: {
+			case OperatingSystem.Web_OS: {
 				return BiasEngine.positiveBias(0.85);
 			}
-			case OperatingSystem.WINDOWS: {
+			case OperatingSystem.Windows: {
 				return BiasEngine.negativeBias(0.8);
 			}
-			case OperatingSystem.IPAD: {
+			case OperatingSystem.iPad: {
 				return BiasEngine.negativeBias(1);
 			}
-			case OperatingSystem.IPHONE: {
+			case OperatingSystem.iPhone: {
 				return BiasEngine.negativeBias(0.95);
 			}
-			case OperatingSystem.IPOD: {
+			case OperatingSystem.iPod: {
 				return BiasEngine.positiveBias(0.2);
 			}
 			default: {

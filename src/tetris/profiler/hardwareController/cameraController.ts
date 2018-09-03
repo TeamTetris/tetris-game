@@ -15,10 +15,10 @@ export default class CameraController {
 	//region public methods
 
 	public async requestWebcamPermissions(): Promise<boolean> {
-		if (this.permissionState === HardwarePermission.granted) {
+		if (this.permissionState === HardwarePermission.Granted) {
 			return true;
 		}
-		if (this.permissionState === HardwarePermission.denied) {
+		if (this.permissionState === HardwarePermission.Denied) {
 			return false;
 		}
 		try {
@@ -31,19 +31,19 @@ export default class CameraController {
 	}
 
 	public async startVideoStream(): Promise<MediaStream> {
-		if (this.permissionState === HardwarePermission.denied) {
-			return Promise.reject(new Error('No Permissions granted'));
+		if (this.permissionState === HardwarePermission.Denied) {
+			return Promise.reject(new Error('No Permissions Granted'));
 		}
 		try {
 			const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-			this._permissionState = HardwarePermission.granted;
+			this._permissionState = HardwarePermission.Granted;
 			this._videoElement.classList.add('visible');
 			this._videoElement.srcObject = stream;
 			this._videoStream = stream;
 			await this._videoElement.play();
 			return stream;
 		} catch(reason) {
-			this._permissionState = HardwarePermission.denied;
+			this._permissionState = HardwarePermission.Denied;
 			console.log('Can not start video stream. Message: ' + reason);
 			throw reason;
 		}
@@ -88,7 +88,7 @@ export default class CameraController {
 		this._takePhotoButton = document.getElementById('take-photo') as HTMLLinkElement;
 		this._deletePhotoButton = document.getElementById('delete-photo') as HTMLLinkElement;
 		this._photoPreview = document.getElementById('snap') as HTMLImageElement;
-		this._permissionState = HardwarePermission.requested;
+		this._permissionState = HardwarePermission.Requested;
 		this._takePhotoButton.addEventListener('click', this._takePhotoButtonClicked.bind(this));
 		this._deletePhotoButton.addEventListener('click', this._deletePhotoButtonClicked.bind(this));
 	}
@@ -117,10 +117,9 @@ export default class CameraController {
 			this._videoElement.videoHeight
 		);
 
-		const base64Image = this._canvas
+		return this._canvas
 			.toDataURL('image/png')
 			.replace(/^data:image\/(png|jpg);base64,/, "");
-		return base64Image;
 	}
 
 	private async _takePhotoButtonClicked(event: Event): Promise<void> {

@@ -52,7 +52,7 @@ export default class Dialog {
 	//region constructor
 	public static async displayCameraDialog(): Promise<string> {
 		await CameraController.instance.requestWebcamPermissions();
-		if (CameraController.instance.permissionState !== HardwarePermission.granted) {
+		if (CameraController.instance.permissionState !== HardwarePermission.Granted) {
 			return '';
 		}
 		await CameraController.instance.startVideoStream();

@@ -44,7 +44,9 @@ export default abstract class Player {
 			return;
 		}
 
-		this._field.activeBrick.moveDown();
+		if (this._field.activeBrick.moveDown()) {
+			this._field.addMoveBonusPoints();
+		}
 	}
 
 	protected dropToFloor(): void {
@@ -52,7 +54,8 @@ export default abstract class Player {
 			return;
 		}
 
-		this._field.activeBrick.dropToFloor();
+		const droppedRows = this._field.activeBrick.dropToFloor();
+		this._field.addMoveBonusPoints(droppedRows);
 	}
 
 	protected rotate(): void {

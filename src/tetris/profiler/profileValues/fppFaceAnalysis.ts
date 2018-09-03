@@ -83,12 +83,12 @@ export default class FppFaceAnalysis {
 	//region private methods
 	private _parseEthnicity(value: string): Ethnicity {
 		const key = Object.keys(Ethnicity).find(key => key.toUpperCase() === value.toUpperCase());
-		return key? Ethnicity[key] : Ethnicity.UNDETECTED;
+		return key? Ethnicity[key] : Ethnicity.Undetected;
 	}
 
 	private _parseGender(value: string): Gender {
 		const key = Object.keys(Gender).find(key => key.toUpperCase() === value.toUpperCase());
-		return key? Gender[key] : Gender.UNDETECTED;
+		return key? Gender[key] : Gender.Undetected;
 	}
 	//endregion
 }

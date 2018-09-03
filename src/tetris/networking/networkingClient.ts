@@ -5,19 +5,22 @@ import * as socketIO from 'socket.io-client';
 import config from 'tetris/config';
 
 export default class NetworkingClient {
-	//region public members
+  //region public members
+  public get socketId(): string {
+    return this._socket.id;
+  }
 	//endregion
 
   //region public methods
-  public emit(event: string, args) {
-    this._socket.emit(event, args);
+  public emit(event: string, args: any, acknowledgement: Function = null): void {
+    this._socket.emit(event, args, acknowledgement);
   }
 
-  public receive(event: string, callback: Function) {
+  public receive(event: string, callback: Function): void {
     this._socket.on(event, callback);
   }
 
-  public connect() {
+  public connect(): void {
     this._socket.connect();
   }
 	//endregion

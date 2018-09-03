@@ -36,12 +36,31 @@ export default class Field {
 		this._blockStateChanged = changed;
 	}
 
+	public get fieldStateChanged(): boolean {
+		return this._fieldStateChanged;
+	}
+
+	public set fieldStateChanged(fieldState: boolean) {
+		this._fieldStateChanged = fieldState;
+	}
+
 	public get fieldState(): FieldState {
 		return this._fieldState;
+	}
+	
+	public set fieldState(fieldState: FieldState) {
+		if (this._fieldState !== fieldState) {
+			this._fieldStateChanged = true;
+			this._fieldState = fieldState;
+		}
 	}
 
 	public get activeBrick(): Brick {
 		return this._activeBrick;
+	}
+	
+	public set activeBrick(brick: Brick) {
+		this._activeBrick = brick;
 	}
 
 	public get blocks(): Block[][] {
@@ -66,6 +85,10 @@ export default class Field {
 	//endregion
 
 	//region public methods
+	public addMoveBonusPoints(rows: number = 1): void {
+		this._score += this._movePointsMultiplicator * rows;
+	}
+
 	public update(time: number, delta: number): void {
 		if (this._fieldState != FieldState.Playing) {
 			return;
@@ -126,6 +149,22 @@ export default class Field {
 			|| position.x >= this.width
 			|| position.y >= this.height);
 	}
+
+	public reset(): void {
+		for (const blockRow of this._blockRows)  {
+			for (const block of blockRow) {
+				if (block) {
+					block.destroy();
+				}
+			}
+		}
+		this._score = 0;
+		this._setupField();
+		if (this.activeBrick) {
+			this.activeBrick.destroy();
+		}
+		this.activeBrick = null;
+	}
 	//endregion
 
 	//region constructor
@@ -149,12 +188,15 @@ export default class Field {
 	private readonly _height: integer;
 	private readonly _drawOffset: Vector2;
 	private readonly _brickFactory: BrickFactory;
+	private readonly _rowPointsMultiplicator: number = 1000;
+	private readonly _movePointsMultiplicator: number = 3;
 
 	private _nextActiveBrickDrop: number;
 	private _activeBrickDropInterval: number = 400;
 	private _score: number = 0;
 
 	private _fieldState: FieldState = FieldState.Playing;
+	private _fieldStateChanged: boolean = false;
 
 	// contains only stuck bricks
 	private readonly _bricks: Brick[];
@@ -167,7 +209,7 @@ export default class Field {
 		this._activeBrick = this._brickFactory.newBrick(this);
 		this._nextActiveBrickDrop = time + this._activeBrickDropInterval;
 		if (this._activeBrick.checkIfStuck()) {
-			this._fieldState = FieldState.Loss;
+			this.fieldState = FieldState.Loss;
 		}
 	}
 
@@ -223,7 +265,7 @@ export default class Field {
 	}
 
 	private _increaseScore(deletedRows: number): void {
-		this._score += deletedRows * 100;
+		this._score += deletedRows * this._rowPointsMultiplicator;
 	}
 	//endregion
 }
