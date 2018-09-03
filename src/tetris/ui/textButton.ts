@@ -53,7 +53,7 @@ export default class TextButton {
 	//endregion
 
 	//region private members
-	private _onClick: () => any;
+	private readonly _onClick: () => any;
 	private readonly _buttonSpriteUp: string;
 	private readonly _buttonSpriteDown: string;
 	private _buttonPressed: boolean = false;

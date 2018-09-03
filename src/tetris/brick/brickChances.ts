@@ -46,20 +46,14 @@ export default class BrickChances {
 
 	//region constructor
 	public static newEqualChances(): BrickChances {
-		const chances = new BrickChances();
-		chances._chances = [1, 1, 1, 1, 1, 1, 1];
-
-		return chances;
+		return new BrickChances([1, 1, 1, 1, 1, 1, 1]);
 	}
 
 	public static newNoChances(): BrickChances {
-		const chances = new BrickChances();
-		chances._chances = [0, 0, 0, 0, 0, 0, 0];
-
-		return chances;
+		return new BrickChances([0, 0, 0, 0, 0, 0, 0]);
 	}
 
-	private constructor() {
+	private constructor(initialChances?: number[]) {
 		this._brickIndices = new Map<string, number>()
 			.set("I", 0)
 			.set("O", 1)
@@ -69,13 +63,15 @@ export default class BrickChances {
 			.set("S", 5)
 			.set("Z", 6);
 
-		this._chances = [];
+		if (initialChances) {
+			this._chances = initialChances;
+		}
 	}
 	//endregion
 
 	//region private members
 	private readonly _brickIndices: Map<string, number>;
-	private _chances: number[];
+	private readonly _chances: number[] = [];
 	//endregion
 
 	//region private methods

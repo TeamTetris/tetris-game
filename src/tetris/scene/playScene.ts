@@ -4,7 +4,6 @@ import Field from "tetris/field/field";
 import Player from "tetris/player/player";
 import BrickFactory from "tetris/brick/brickFactory";
 import LocalPlayer from "tetris/player/localPlayer";
-import TextButton from "tetris/ui/textButton";
 import config from "tetris/config";
 import Vector2 = Phaser.Math.Vector2;
 import FieldState from "tetris/field/fieldState";
@@ -92,12 +91,8 @@ export default class PlayScene extends Phaser.Scene {
 	private readonly _brickFactory: BrickFactory;
 	private _player: Player;
 	private _localPlayerField: Field;
-	private _paused: boolean = false;
 	private _match: Match;
-	private _pauseKey: Phaser.Input.Keyboard.Key;
 	private _remotePlayerFields: RemoteField[];
-	private _playerFieldBackground: Phaser.GameObjects.Graphics;
-	private _pauseButton: TextButton;
 	private _scoreWidget: ScoreWidget;
 	private _countdownWidget: CountdownWidget;
 	private _scoreboardWidget: ScoreboardWidget;
@@ -153,7 +148,6 @@ export default class PlayScene extends Phaser.Scene {
 		}
 		this._scoreboardWidget.update(this._localSocketId, match.players);
 		this._updateRemoteFields(match.players);
-		// TODO: Update remote player names, scores and ranks
 		this._determinePlayStatus(match.players);
 	}
 
@@ -260,7 +254,7 @@ export default class PlayScene extends Phaser.Scene {
 				matchId: this._match.id,
 				points: this._localPlayerField.score,
 				field: this._localPlayerField.serializedBlockState,
-			}
+			};
 			this._game.networkingClient.emit(NetworkingEvents.MatchUpdate, matchUpdate);
 		}
 	}

@@ -93,8 +93,8 @@ export default class Block {
 
 	//region private members
 	private _currentPositionIndex: number = 0;
-	private _positions: Vector2[];
-	private _brick: Brick;
+	private readonly _positions: Vector2[];
+	private readonly _brick: Brick;
 	private _sprite: Phaser.GameObjects.Sprite;
 	//endregion
 
