@@ -63,7 +63,7 @@ export default class Profile {
 
 	public get operatingSystem(): OperatingSystem {
 		const key = Object.keys(OperatingSystem).find(key => key.toUpperCase() === window.navigator.platform.toUpperCase());
-		return key ? OperatingSystem[key] : OperatingSystem.UNDETECTED;
+		return key ? OperatingSystem[key] : OperatingSystem.Undetected;
 	}
 
 	public get skinAcne(): number {
