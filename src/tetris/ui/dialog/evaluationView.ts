@@ -1,69 +1,78 @@
-import Dialog from "tetris/ui/dialog/dialog";
 import Profile from "tetris/profiler/profile";
 import {Timeline, DataSet} from "vis";
+import Game from "tetris/game";
+import BiasEvaluation from "tetris/biasEngine/biasEvaluation";
 
 const CSS_CLASS_DATA_WRAPPER = "evaluation-data-wrapper";
 const BASE64_IMAGE_PREFIX = "data:image/png;base64, ";
+const DIALOG_TITLE_WRAPPER_CLASS = "dialog-title";
 
-export default class EvaluationDialog extends Dialog {
+const TIMELINE_GROUP_BIAS_EVENTS = "Bias Events";
+const TIMELINE_GROUP_MEASUREMENT = "Profile Measurement";
+
+export default class EvaluationView {
 
 	//region public members
-	public set profile(profile: Profile) {
-		this._profile = profile;
-		this._update();
-	}
 	//endregion
 
 	//region publsic methods
+	public show(): EvaluationView {
+		this._htmlElement.classList.add('visible');
+		this._update();
+		return this;
+	}
 	//endregion
 
 	//region constructor
-	public static display(): EvaluationDialog {
-		const dialog = new EvaluationDialog('evaluation-dialog');
-		dialog.title = "Evaluate your player profile";
-		dialog._addAcceptElements();
-		dialog._addRejectElements();
-		return dialog.show() as EvaluationDialog;
-	}
-
 	public constructor(game: Game) {
-		super('evaluation-dialog', false);
+		this._htmlElement = document.getElementById("evaluation-dialog");
 		this._informationContainer = this._htmlElement.querySelector("#evaluation-dialog-basic-information");
 		this._pictureContainer = this._htmlElement.querySelector("#evaluation-dialog-picture");
 		this._timelineContainer = this._htmlElement.querySelector("#evaluation-dialog-timeline");
+		this._game = game;
+		this._displayTitle("Evaluate your player profile");
 	}
 	//endregion
 
 	//region private members
-	private _profile: Profile;
+	private _game: Game;
+	protected readonly _htmlElement: HTMLElement;
 	private readonly _informationContainer: HTMLDivElement;
 	private readonly _pictureContainer: HTMLImageElement;
 	private readonly _timelineContainer: HTMLDivElement;
 	private _timeline: Timeline;
+
+	private get profile(): Profile {
+		return this._game.profiler.profile;
+	}
+
+	private get biasEvaluation(): BiasEvaluation {
+		return this._game.biasEngine.biasEvaluation;
+	}
 	//endregion
 
 	//region private methods
 	private _displayBasicInformation(): void {
 		const nodes = [];
-		nodes.push(EvaluationDialog._createDataWrapper('age', this._profile.age));
-		nodes.push(EvaluationDialog._createDataWrapper('beauty', this._profile.beauty));
-		nodes.push(EvaluationDialog._createDataWrapper('ethnicity', this._profile.ethnicity));
-		nodes.push(EvaluationDialog._createDataWrapper('gender', this._profile.gender));
-		nodes.push(EvaluationDialog._createDataWrapper('glasses', this._profile.glasses));
-		nodes.push(EvaluationDialog._createDataWrapper('operating-system', this._profile.operatingSystem));
-		nodes.push(EvaluationDialog._createDataWrapper('skin-acne', this._profile.skinAcne));
-		nodes.push(EvaluationDialog._createDataWrapper('skin-health', this._profile.skinHealth));
-		nodes.push(EvaluationDialog._createDataWrapper('number-of-matches', this._profile.numberOfMatches));
-		nodes.push(EvaluationDialog._createDataWrapper('time-played', this._profile.timePlayed / 1000));
+		nodes.push(EvaluationView._createDataWrapper('age', this.profile.age));
+		nodes.push(EvaluationView._createDataWrapper('beauty', this.profile.beauty));
+		nodes.push(EvaluationView._createDataWrapper('ethnicity', this.profile.ethnicity));
+		nodes.push(EvaluationView._createDataWrapper('gender', this.profile.gender));
+		nodes.push(EvaluationView._createDataWrapper('glasses', this.profile.glasses));
+		nodes.push(EvaluationView._createDataWrapper('operating-system', this.profile.operatingSystem));
+		nodes.push(EvaluationView._createDataWrapper('skin-acne', this.profile.skinAcne));
+		nodes.push(EvaluationView._createDataWrapper('skin-health', this.profile.skinHealth));
+		nodes.push(EvaluationView._createDataWrapper('number-of-matches', this.profile.numberOfMatches));
+		nodes.push(EvaluationView._createDataWrapper('time-played', this.profile.timePlayed / 1000));
 
 		nodes.forEach(datum => this._displayDatum(datum));
 	}
 
 	private _displayLastPlayerImage(): void {
-		if (this._profile.image) {
+		if (this.profile.image) {
 			this._pictureContainer.classList.remove("hide");
 			this._pictureContainer.classList.add("display");
-			this._pictureContainer.src = BASE64_IMAGE_PREFIX + this._profile.image;
+			this._pictureContainer.src = BASE64_IMAGE_PREFIX + this.profile.image;
 		} else {
 			this._pictureContainer.classList.remove("display");
 			this._pictureContainer.classList.add("hide");
@@ -71,17 +80,32 @@ export default class EvaluationDialog extends Dialog {
 	}
 
 	private _displayTimeline(): void {
-		this._
-		const timelineItems = new DataSet([
-			{id: 1, content: 'item 1', start: '2013-04-20'},
-			{id: 2, content: 'item 2', start: '2013-04-14'},
-			{id: 3, content: 'item 3', start: '2013-04-18'},
-			{id: 4, content: 'item 4', start: '2013-04-16', end: '2013-04-19'},
-			{id: 5, content: 'item 5', start: '2013-04-25'},
-			{id: 6, content: 'item 6', start: '2013-04-27'}
-		]);
-		const timelineOptions = {};
-		this._timeline = new Timeline(this._timelineContainer, timelineItems, timelineOptions);
+		const timelineItems = new DataSet();
+
+		this.biasEvaluation.biasEvents.forEach(biasEvent => {
+			timelineItems.add({
+				title: biasEvent.eventType.toString(),
+				type: 'range',
+				start: biasEvent.startTime,
+				end: biasEvent.endTime,
+				group: TIMELINE_GROUP_BIAS_EVENTS,
+				subgroup: TIMELINE_GROUP_BIAS_EVENTS + " " + biasEvent.eventType.toString(),
+			});
+		});
+
+		this.profile.forEachProperty(profileDate => {
+			profileDate.forEachMeasurement(measurement => {
+				timelineItems.add({
+					title: measurement.dataSourceName,
+					type: 'point',
+					start: measurement.timeStamp,
+					group: TIMELINE_GROUP_MEASUREMENT,
+					subgroup: TIMELINE_GROUP_MEASUREMENT ,
+				});
+			});
+		});
+
+		this._timeline = new Timeline(this._timelineContainer, timelineItems, {});
 	}
 
 	private _displayDatum(datum: Node): void {
@@ -107,6 +131,14 @@ export default class EvaluationDialog extends Dialog {
 		this._displayBasicInformation();
 		this._displayLastPlayerImage();
 		this._displayTimeline();
+	}
+
+	private _displayTitle(title: string): void {
+		const titleWrapper = this._htmlElement.querySelector('.' + DIALOG_TITLE_WRAPPER_CLASS);
+		if (!titleWrapper) {
+			return;
+		}
+		titleWrapper.innerHTML = title;
 	}
 	//endregion
 }

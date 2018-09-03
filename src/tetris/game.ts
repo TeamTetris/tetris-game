@@ -10,7 +10,7 @@ import "tetris/styles/scss/styles.scss";
 import NetworkingClient from "tetris/networking/networkingClient";
 import Match from "tetris/match/match";
 import CreateProfileDialog from "tetris/ui/dialog/createProfileDialog";
-import EvaluationDialog from "tetris/ui/dialog/evaluationDialog";
+import EvaluationView from "tetris/ui/dialog/evaluationView";
 
 // main game configuration
 const gameConfig: GameConfig = {
@@ -39,8 +39,8 @@ export default class Game extends Phaser.Game {
 	}
 
 	public exit(): void {
-		const evaluationDialog = EvaluationDialog.display();
-		evaluationDialog.profile = this._profiler.profile;
+		const evaluationDialog = new EvaluationView(this);
+		evaluationDialog.show();
 	}
 	//endregion
 
