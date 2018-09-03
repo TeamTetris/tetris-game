@@ -2,7 +2,7 @@
 
 import Block from 'tetris/brick/block';
 import Vector2 = Phaser.Math.Vector2;
-import MatchPlayer from 'tetris/interfaces/MatchPlayer';
+import MatchPlayer, { BlockState } from 'tetris/interfaces/MatchPlayer';
 import config from 'tetris/config';
 import BlockState from "tetris/interfaces/MatchPlayer";
 
@@ -36,7 +36,7 @@ export default class RemoteField {
 	//endregion
 
 	//region public methods
-	public update(player: MatchPlayer) {
+	public update(player: MatchPlayer): void {
 		this._updateSprites(player.field);
 		this._updateText(player);
 	}
@@ -84,12 +84,12 @@ export default class RemoteField {
 	//endregion
 
 	//region private methods
-	private _setup() {
+	private _setup(): void {
 		this._setupField();
 		this._setupText();
 	}
 	
-	private _setupField() {
+	private _setupField(): void {
 		this._blockRows = [];
 		for (let y = 0; y < this._height; y++) {
 			this._blockRows.push(new Array(this._width).fill(null));
@@ -102,19 +102,19 @@ export default class RemoteField {
 		}
 	}
 
-	private _setupText() {
+	private _setupText(): void {
 		this._name = this._scene.add.text(this._drawOffset.x, this._drawOffset.y, " ", config.ui.fonts.scoreboard.font);
 		this._score = this._scene.add.text(this._drawOffset.x, this._drawOffset.y, " ", config.ui.fonts.scoreboard.font);
 		this._adjustTextX();
 		this._adjustTextY();
 	}
 
-	private _updateSprites(serializedBlockState) {
+	private _updateSprites(serializedFieldState: Array<Array<BlockState>>): void {
 		for (let y = 0; y < this._height; y++) {
 			for (let x = 0; x < this._width; x++) {
-				if (serializedBlockState[y][x]) {
+				if (serializedFieldState[y][x]) {
 					this._blockRows[y][x].sprite.setVisible(true);
-					this._blockRows[y][x].sprite.setFrame(serializedBlockState[y][x].spriteFrameName);
+					this._blockRows[y][x].sprite.setFrame(serializedFieldState[y][x].spriteFrameName);
 				} else {
 					this._blockRows[y][x].sprite.setVisible(false);
 				}
@@ -122,7 +122,7 @@ export default class RemoteField {
 		}
 	}
 
-	private _updateText(player: MatchPlayer) {
+	private _updateText(player: MatchPlayer): void {
 		this._name.setText(player.displayName);
 		this._score.setText(player.points.toString());
 		this._adjustTextX();
