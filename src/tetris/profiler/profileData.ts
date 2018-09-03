@@ -22,10 +22,6 @@ export default class ProfileData<ValueType> extends BaseProfileData {
 	//endregion
 
 	//region public methods
-	public forEachMeasurement(callback: (Measurement) => void): void {
-		this._valueHistory.forEach(callback);
-	}
-
 	public updateValue(serviceName: string, value: ValueType): void {
 		this._dataSources.add(serviceName);
 		this._value = this._updateStrategy.accumulate(this, value);

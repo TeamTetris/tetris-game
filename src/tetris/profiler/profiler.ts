@@ -32,6 +32,10 @@ export default class Profiler {
 	public get profile(): Profile {
 		return this._profile;
 	}
+
+	public forEachMeasurement(callback: (Measurement) => void): void {
+		this._measurementHistory.forEach(callback);
+	}
 	//endregion
 
 	//region public methods

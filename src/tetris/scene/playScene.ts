@@ -17,6 +17,7 @@ import NetworkingEvents from "tetris/networking/networkingEvents";
 import Match from "tetris/match/match";
 import DebugWidget from "tetris/ui/debugWidget";
 import BiasEventType from "tetris/biasEngine/biasEventType";
+import TextButton from "tetris/ui/textButton";
 
 const PLAYER_FIELD_DRAW_OFFSET: Vector2 = new Vector2(
 	(config.graphics.width - config.field.width * config.field.blockSize) / 2, 
@@ -158,9 +159,9 @@ export default class PlayScene extends Phaser.Scene {
 			this._startTimerStarted = true;
 			setTimeout(this._startMatch.bind(this), this._match.startTime - Date.now(), {});
 		}
-		this._scoreboardWidget.update(this._localSocketId, match.players);
-		this._updateRemoteFields(match.players);
-		this._determinePlayStatus(match.players);
+		this._scoreboardWidget.update(this._localSocketId, this._match.players);
+		this._updateRemoteFields(this._match.players);
+		this._determinePlayStatus(this._match.players);
 	}
 
 	private _determinePlayStatus(players: MatchPlayer[]) : void {

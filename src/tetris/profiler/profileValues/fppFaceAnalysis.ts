@@ -1,7 +1,8 @@
 import Ethnicity from "tetris/profiler/profileValues/ethnicity";
 import Gender from "tetris/profiler/profileValues/gender";
+import Printable from "tetris/profiler/profileValues/printable";
 
-export default class FppFaceAnalysis {
+export default class FppFaceAnalysis implements Printable {
 
 	//region public members
 	public get age(): number {
@@ -38,6 +39,16 @@ export default class FppFaceAnalysis {
 	//endregion
 
 	//region public methods
+	public printHTML(): string {
+		return 	"<strong>Age: </strong> " + this.age + " </br>" +
+				"<strong>Beauty: </strong> " + (this.beauty * 100).toFixed(2) + "%</br>" +
+				"<strong>Ethnicity: </strong> " + this.ethnicity + " </br>" +
+				"<strong>Gender: </strong> " + this.gender + " </br>" +
+				"<strong>Glasses: </strong> " + this.glasses + " </br>" +
+				"<strong>Acne: </strong> " + (this.skinAcne * 100).toFixed(2) + "%</br>" +
+				"<strong>Skin health: </strong> " + (this.skinHealth * 100).toFixed(2) + "%</br>" +
+				"<img height='200' src='data:image/png;base64, " + this.image + "' />";
+	}
 	//endregion
 
 	//region constructor

@@ -2,13 +2,16 @@ import Profile from "tetris/profiler/profile";
 import {Timeline, DataSet} from "vis";
 import Game from "tetris/game";
 import BiasEvaluation from "tetris/biasEngine/biasEvaluation";
+import Profiler from "tetris/profiler/profiler";
+import BiasEventType from "tetris/biasEngine/biasEventType";
+import BiasEngine from "tetris/biasEngine/biasEngine";
 
 const CSS_CLASS_DATA_WRAPPER = "evaluation-data-wrapper";
 const BASE64_IMAGE_PREFIX = "data:image/png;base64, ";
-const DIALOG_TITLE_WRAPPER_CLASS = "dialog-title";
+const VIEW_TITLE_WRAPPER_CLASS = "view-title";
 
 const TIMELINE_GROUP_BIAS_EVENTS = "Bias Events";
-const TIMELINE_GROUP_MEASUREMENT = "Profile Measurement";
+const TIMELINE_GROUP_BIAS_VALUE = "Bias Value";
 
 export default class EvaluationView {
 
@@ -25,10 +28,10 @@ export default class EvaluationView {
 
 	//region constructor
 	public constructor(game: Game) {
-		this._htmlElement = document.getElementById("evaluation-dialog");
-		this._informationContainer = this._htmlElement.querySelector("#evaluation-dialog-basic-information");
-		this._pictureContainer = this._htmlElement.querySelector("#evaluation-dialog-picture");
-		this._timelineContainer = this._htmlElement.querySelector("#evaluation-dialog-timeline");
+		this._htmlElement = document.getElementById("evaluation-view");
+		this._informationContainer = this._htmlElement.querySelector("#evaluation-view-basic-information");
+		this._pictureContainer = this._htmlElement.querySelector("#evaluation-view-picture");
+		this._timelineContainer = this._htmlElement.querySelector("#evaluation-view-timeline");
 		this._game = game;
 		this._displayTitle("Evaluate your player profile");
 	}
@@ -42,12 +45,20 @@ export default class EvaluationView {
 	private readonly _timelineContainer: HTMLDivElement;
 	private _timeline: Timeline;
 
+	private get profiler(): Profiler {
+		return this._game.profiler;
+	}
+
 	private get profile(): Profile {
-		return this._game.profiler.profile;
+		return this.profiler.profile;
 	}
 
 	private get biasEvaluation(): BiasEvaluation {
 		return this._game.biasEngine.biasEvaluation;
+	}
+
+	private get biasEngine(): BiasEngine {
+		return this._game.biasEngine;
 	}
 	//endregion
 
@@ -55,13 +66,13 @@ export default class EvaluationView {
 	private _displayBasicInformation(): void {
 		const nodes = [];
 		nodes.push(EvaluationView._createDataWrapper('age', this.profile.age));
-		nodes.push(EvaluationView._createDataWrapper('beauty', this.profile.beauty));
+		nodes.push(EvaluationView._createDataWrapper('beauty', (this.profile.beauty * 100).toFixed(2) + "%"));
 		nodes.push(EvaluationView._createDataWrapper('ethnicity', this.profile.ethnicity));
 		nodes.push(EvaluationView._createDataWrapper('gender', this.profile.gender));
 		nodes.push(EvaluationView._createDataWrapper('glasses', this.profile.glasses));
 		nodes.push(EvaluationView._createDataWrapper('operating-system', this.profile.operatingSystem));
-		nodes.push(EvaluationView._createDataWrapper('skin-acne', this.profile.skinAcne));
-		nodes.push(EvaluationView._createDataWrapper('skin-health', this.profile.skinHealth));
+		nodes.push(EvaluationView._createDataWrapper('skin-acne', (this.profile.skinAcne * 100).toFixed(2) + "%"));
+		nodes.push(EvaluationView._createDataWrapper('skin-health', (this.profile.skinHealth * 100).toFixed(2) + "%"));
 		nodes.push(EvaluationView._createDataWrapper('number-of-matches', this.profile.numberOfMatches));
 		nodes.push(EvaluationView._createDataWrapper('time-played', this.profile.timePlayed / 1000));
 
@@ -81,31 +92,63 @@ export default class EvaluationView {
 
 	private _displayTimeline(): void {
 		const timelineItems = new DataSet();
+		const timelineGroups = new Map();
+		timelineGroups.set(TIMELINE_GROUP_BIAS_VALUE, {
+			id: TIMELINE_GROUP_BIAS_VALUE,
+			content: TIMELINE_GROUP_BIAS_VALUE,
+			className: TIMELINE_GROUP_BIAS_VALUE.replace(" ", "-")
+		});
+
+		this.biasEngine.biasValueHistory.forEach((biasValue, timestamp) => {
+			timelineItems.add({
+				type: 'point',
+				start: timestamp,
+				group: TIMELINE_GROUP_BIAS_VALUE,
+				content: biasValue.toFixed(4),
+				className: biasValue < BiasEngine.NEUTRAL_BIAS_VALUE ? "negative-bias-value" : "positive-bias-value"
+			});
+		});
+
+		Object.keys(BiasEventType).forEach(key => {
+			console.log(BiasEventType);
+			if (!isNaN(Number(key))) {
+				return;
+			}
+			timelineGroups.set(key, {
+				id: key,
+				content: key,
+				className: key
+			});
+		});
 
 		this.biasEvaluation.biasEvents.forEach(biasEvent => {
 			timelineItems.add({
-				title: biasEvent.eventType.toString(),
 				type: 'range',
 				start: biasEvent.startTime,
 				end: biasEvent.endTime,
-				group: TIMELINE_GROUP_BIAS_EVENTS,
-				subgroup: TIMELINE_GROUP_BIAS_EVENTS + " " + biasEvent.eventType.toString(),
+				group: timelineGroups.get(BiasEventType[biasEvent.eventType]).id,
+				subgroup: TIMELINE_GROUP_BIAS_EVENTS + " " + BiasEventType[biasEvent.eventType],
 			});
 		});
 
-		this.profile.forEachProperty(profileDate => {
-			profileDate.forEachMeasurement(measurement => {
-				timelineItems.add({
-					title: measurement.dataSourceName,
-					type: 'point',
-					start: measurement.timeStamp,
-					group: TIMELINE_GROUP_MEASUREMENT,
-					subgroup: TIMELINE_GROUP_MEASUREMENT ,
+		this.profiler.forEachMeasurement(measurement => {
+			if (!timelineGroups.has(measurement.dataSourceName)) {
+				timelineGroups.set(measurement.dataSourceName, {
+					id: measurement.dataSourceName,
+					content: measurement.dataSourceName,
+					className: measurement.dataSourceName,
 				});
+			}
+
+			timelineItems.add({
+				type: 'point',
+				start: measurement.timestamp,
+				group: timelineGroups.get(measurement.dataSourceName).id,
+				title: measurement.value.printHTML()
 			});
 		});
 
-		this._timeline = new Timeline(this._timelineContainer, timelineItems, {});
+		this._timeline = new Timeline(this._timelineContainer, timelineItems, Array.from(timelineGroups.values()), {});
 	}
 
 	private _displayDatum(datum: Node): void {
@@ -134,7 +177,7 @@ export default class EvaluationView {
 	}
 
 	private _displayTitle(title: string): void {
-		const titleWrapper = this._htmlElement.querySelector('.' + DIALOG_TITLE_WRAPPER_CLASS);
+		const titleWrapper = this._htmlElement.querySelector('.' + VIEW_TITLE_WRAPPER_CLASS);
 		if (!titleWrapper) {
 			return;
 		}

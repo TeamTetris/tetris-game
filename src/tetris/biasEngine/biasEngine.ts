@@ -54,6 +54,10 @@ export default class BiasEngine {
 		return this._biasEvaluation;
 	}
 
+	public get biasValueHistory(): Map<number, number> {
+		return this._biasHistory;
+	}
+
     // @ts-ignore
     public get currentBiasValue(): number {
         return this._currentBiasValue;
@@ -84,6 +88,7 @@ export default class BiasEngine {
 		this._profiler = profiler;
 		this._profiler.registerProfileChangedEventHandler(this._onProfileUpdate.bind(this));
 		this._biasEvaluation = new BiasEvaluation();
+		this._biasHistory = new Map<number, number>();
 	}
 	//endregion
 
@@ -92,12 +97,14 @@ export default class BiasEngine {
 	private _currentBiasValue: number = BiasEngine.NEUTRAL_BIAS_VALUE;
 	private readonly _biasEvaluation: BiasEvaluation;
 	private _profiler: Profiler;
+	private readonly _biasHistory: Map<number, number>; // timestamp -> biasValue
 	//endregion
 
 	//region private methods
 	// @ts-ignore
 	private set currentBiasValue(value: number) {
 		this._currentBiasValue = Utility.limitValueBetweenMinAndMax(value, BiasEngine.MAX_NEGATIVE_BIAS_VALUE, BiasEngine.MAX_POSITIVE_BIAS_VALUE);
+		this._biasHistory.set(Date.now(), this.currentBiasValue);
 	}
 
 	private _onProfileUpdate(profile: Profile): void {

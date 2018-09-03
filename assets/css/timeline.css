@@ -1,0 +1,24 @@
+.vis-item-content {
+    font-size: 10px;
+}
+
+.vis-timeline {
+    overflow: visible !important
+}
+
+.vis-dot {
+    border-radius: 6px;
+    border-width: 6px;
+}
+
+.FppAnalysisService .vis-dot {
+    border-color: #248855 !important;
+}
+
+.negative-bias-value {
+    border-color: red;
+}
+
+.positive-bias-value {
+    border-color: #408440;
+}
