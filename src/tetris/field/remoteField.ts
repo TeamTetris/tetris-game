@@ -49,7 +49,7 @@ export default class RemoteField {
 		this._background = background;
 		this._blockRows = new Array(this._height);
 		this._drawOffset = drawOffset;
-		this._setupField();
+		this._setup();
 	}
 	//endregion
 
@@ -61,9 +61,16 @@ export default class RemoteField {
 	private readonly _drawOffset: Vector2;
 	private _scene: Phaser.Scene;
 	private _background: Phaser.GameObjects.Graphics;
+	private _name: Phaser.GameObjects.Text;
+	private _score: Phaser.GameObjects.Text;
 	//endregion
 
 	//region private methods
+	private _setup() {
+		this._setupField();
+		this._setupText();
+	}
+	
 	private _setupField() {
 		this._blockRows = [];
 		for (let y = 0; y < this._height; y++) {
@@ -76,5 +83,41 @@ export default class RemoteField {
 			}
 		}
 	}
+
+	private _setupText() {
+		this._name = this._scene.add.text(this._drawOffset.x, this._drawOffset.y, " ", config.ui.fonts.scoreboard.font);
+		this._score = this._scene.add.text(this._drawOffset.x, this._drawOffset.y, " ", config.ui.fonts.scoreboard.font);
+		this._adjustTextX();
+		this._adjustTextY();
+	}
+
+	private _updateSprites(serializedBlockState) {
+		for (let y = 0; y < this._height; y++) {
+			for (let x = 0; x < this._width; x++) {
+				if (serializedBlockState[y][x]) {
+					this._blockRows[y][x].sprite.setVisible(true);
+					this._blockRows[y][x].sprite.setFrame(serializedBlockState[y][x].spriteFrameName);
+				} else {
+					this._blockRows[y][x].sprite.setVisible(false);
+				}
+			}
+		}
+	}
+
+	private _updateText(player: MatchPlayer) {
+		this._name.setText(player.displayName);
+		this._score.setText(player.points.toString());
+		this._adjustTextX();
+	}
+
+	private _adjustTextX(): void {
+		this._name.x = this.x + ( this.width - this._name.width ) / 2;
+		this._score.x = this.x + ( this.width - this._score.width ) / 2;
+    }
+
+    private _adjustTextY(): void {
+		this._name.y = this.y + this.height + this._name.height;
+		this._score.y = this.y + this.height + this._score.height * 2.5;
+    }
 	//endregion
 }
