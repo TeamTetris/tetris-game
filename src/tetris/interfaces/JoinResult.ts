@@ -1,4 +1,4 @@
-import Match from "tetris/interfaces/Match";
+import Match from "tetris/match/match";
 
 export default interface JoinResult {
 	success: boolean;

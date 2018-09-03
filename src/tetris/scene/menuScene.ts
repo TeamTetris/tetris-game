@@ -5,9 +5,9 @@ import config from "tetris/config";
 import Game from "tetris/game";
 import PlayScene from "tetris/scene/playScene";
 import MatchmakingInfo from "tetris/interfaces/MatchmakingInfo";
-import Match from "tetris/interfaces/Match";
 import JoinResult from "tetris/interfaces/JoinResult";
 import NetworkingEvents from "tetris/networking/networkingEvents";
+import Match from "tetris/match/match";
 
 export default class MenuScene extends Phaser.Scene {
 
@@ -88,7 +88,7 @@ export default class MenuScene extends Phaser.Scene {
 
 		this._playButton = new TextButton(this, buttonsXPosition, 0, "blue_button00.png", "blue_button01.png", "Join Matchmaking", this._joinMatchmaking.bind(this));
 		this._optionsButton = new TextButton(this, buttonsXPosition, 0, "blue_button00.png", "blue_button01.png", "Leave Matchmaking", this._leaveMatchmaking.bind(this));
-		
+
 		this._playButton.y = menuStartY;
 		this._optionsButton.y = menuStartY + this._playButton.height + spacing;
 
@@ -117,12 +117,14 @@ export default class MenuScene extends Phaser.Scene {
 		console.log("matchmakingUpdate: " + JSON.stringify(matchmakingUpdate));
 	}
 
-	private _joinMatch(match: Match): void {
+	private _joinMatch(serverMatch: object): void {
+		const match = new Match(serverMatch);
 		this._game.networkingClient.emit(NetworkingEvents.JoinMatch, { matchId: match.id, displayName: this._localPlayerName }, (result: JoinResult) => {
 			console.log('joinresult: ', JSON.stringify(result));
 			if (result.success) {
 				this._game.changeScene(config.sceneKeys.playScene);
-				(this.scene.get(config.sceneKeys.playScene) as PlayScene).joinMatch(result.match, this._game.networkingClient.socketId);
+				this._game.handleStartOfMatch(match);
+				(this.scene.get(config.sceneKeys.playScene) as PlayScene).joinMatch(match, this._game.networkingClient.socketId);
 			} else {
 				// TODO: Display Matchmaking Error
 				console.error(`Could not join match ${match.id}. ${result.message}`);

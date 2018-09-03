@@ -26,8 +26,8 @@ export default class EvaluationDialog extends Dialog {
 		return dialog.show() as EvaluationDialog;
 	}
 
-	protected constructor(dialogId: string) {
-		super(dialogId, false);
+	public constructor(game: Game) {
+		super('evaluation-dialog', false);
 		this._informationContainer = this._htmlElement.querySelector("#evaluation-dialog-basic-information");
 		this._pictureContainer = this._htmlElement.querySelector("#evaluation-dialog-picture");
 		this._timelineContainer = this._htmlElement.querySelector("#evaluation-dialog-timeline");
@@ -71,6 +71,7 @@ export default class EvaluationDialog extends Dialog {
 	}
 
 	private _displayTimeline(): void {
+		this._
 		const timelineItems = new DataSet([
 			{id: 1, content: 'item 1', start: '2013-04-20'},
 			{id: 2, content: 'item 2', start: '2013-04-14'},

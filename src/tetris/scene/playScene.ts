@@ -12,9 +12,9 @@ import CountdownWidget from "tetris/ui/countdownWidget";
 import ScoreboardWidget from "tetris/ui/scoreboardWidget";
 import ScoreWidget from "tetris/ui/scoreWidget";
 import Game from "tetris/game";
-import Match from "tetris/interfaces/Match";
 import MatchPlayer, { PlayStatus } from "tetris/interfaces/MatchPlayer";
 import NetworkingEvents from "tetris/networking/networkingEvents";
+import Match from "tetris/match/match";
 import DebugWidget from "tetris/ui/debugWidget";
 import BiasEventType from "tetris/biasEngine/biasEventType";
 
@@ -53,11 +53,11 @@ export default class PlayScene extends Phaser.Scene {
 		// Update UI widgets
 		this._scoreWidget.update(this._localPlayerField.score.toString());
 
-		const matchStart = new Date(this._match.startTime).valueOf() / 1000;
+		const matchStart = this._match.startTime / 1000;
 		const currentTime = Date.now() / 1000;
 		const preGame = currentTime < matchStart;		
 		if (!preGame && this._match.nextElimination) {
-			const nextElimination = new Date(this._match.nextElimination).valueOf() / 1000;
+			const nextElimination = this._match.nextElimination / 1000;
 			this._countdownWidget.update(Math.max(0, nextElimination - currentTime), Math.max(nextElimination - matchStart, matchStart - currentTime), preGame);
 		} else {
 			if (!this._matchStartTimer) {
@@ -151,12 +151,12 @@ export default class PlayScene extends Phaser.Scene {
 		this._localPlayerField.reset();
 	}
 
-	private _updateMatch(match: Match): void {
-		this._match = match;
-		const matchHasStarted = Date.now() > Date.parse(match.startTime);
+	private _updateMatch(serverMatch: object): void {
+		this._match = new Match(serverMatch);
+		const matchHasStarted = Date.now() > this._match.startTime;
 		if (!this._startTimerStarted && !matchHasStarted) {
 			this._startTimerStarted = true;
-			setTimeout(this._startMatch.bind(this), Date.parse(match.startTime) - Date.now(), {});
+			setTimeout(this._startMatch.bind(this), this._match.startTime - Date.now(), {});
 		}
 		this._scoreboardWidget.update(this._localSocketId, match.players);
 		this._updateRemoteFields(match.players);
