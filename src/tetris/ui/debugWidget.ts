@@ -3,7 +3,7 @@
 import config from "tetris/config";
 import Font from 'tetris/interfaces/Font';
 
-export default class ScoreWidget {
+export default class DebugWidget {
 
 	//region public members
 	public debugInformation: Phaser.GameObjects.Text[];
@@ -39,10 +39,14 @@ export default class ScoreWidget {
 	}
 
 	public update(debugInformationText: string[]): void {
-		for (let i = 0; i < debugInformationText.length - this.debugInformation.length; i++) {
-			this.debugInformation.push(this._scene.add.text(this._x, this._y, "", this._font.font));	
+		const missingLines = debugInformationText.length - this.debugInformation.length;
+		if (missingLines) {
+			for (let i = 0; i < missingLines; i++) {
+				this.debugInformation.push(this._scene.add.text(this._x, this._y, "", this._font.font));
+				console.log('added text');
+			}
+			this._adjustTextY();
 		}
-		this._adjustTextY();
 
 		for (const [index, text] of debugInformationText.entries()) {
 			this.debugInformation[index].setText(text);
@@ -52,9 +56,10 @@ export default class ScoreWidget {
 	//endregion
 
 	//region constructor
-	public constructor(scene: Phaser.Scene, x: number, y: number, font: Font = config.ui.fonts.large) {
+	public constructor(scene: Phaser.Scene, x: number, y: number, font: Font = config.ui.fonts.small) {
 		this._scene = scene;
 		this._font = font;
+		this.debugInformation = [];
 		this.x = x;
 		this.y = y;
 	}

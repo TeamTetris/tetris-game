@@ -15,6 +15,7 @@ import Game from "tetris/game";
 import Match from "tetris/interfaces/Match";
 import MatchPlayer, { PlayStatus } from "tetris/interfaces/MatchPlayer";
 import NetworkingEvents from "tetris/networking/networkingEvents";
+import DebugWidget from "tetris/ui/debugWidget";
 
 const PLAYER_FIELD_DRAW_OFFSET: Vector2 = new Vector2(
 	(config.graphics.width - config.field.width * config.field.blockSize) / 2, 
@@ -64,6 +65,8 @@ export default class PlayScene extends Phaser.Scene {
 
 		this._pushMultiplayerUpdate();
 		this._updateShaders(time);
+
+		this._debugWidget.update(['ABCD', 'Some Player', 'Bias Event X active']);
 	}
 
 	public joinMatch(match: Match, localSocketId: String) {
@@ -96,6 +99,7 @@ export default class PlayScene extends Phaser.Scene {
 	private _scoreWidget: ScoreWidget;
 	private _countdownWidget: CountdownWidget;
 	private _scoreboardWidget: ScoreboardWidget;
+	private _debugWidget: DebugWidget;
 	private readonly _game: Game;
 	private _rainbowPipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
 	private _startTimerStarted: boolean;
@@ -224,6 +228,7 @@ export default class PlayScene extends Phaser.Scene {
 		this._scoreWidget = new ScoreWidget(this, config.graphics.width / 2, (config.graphics.height - config.field.height * config.field.blockSize) / 4);
 		this._countdownWidget = new CountdownWidget(this, config.graphics.width / 5 * 4, config.graphics.height / 30 * 8);
 		this._scoreboardWidget = new ScoreboardWidget(this, config.graphics.width / 5 * 4, config.graphics.height / 20 * 9);
+		this._debugWidget = new DebugWidget(this, 100, 100);
 	}
 
 	private _initializeShaders(): void {
