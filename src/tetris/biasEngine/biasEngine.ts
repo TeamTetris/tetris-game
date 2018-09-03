@@ -11,6 +11,7 @@ import PassportValue from "tetris/biasEngine/datasources/PassportValue";
 import OperatingSystem from "tetris/profiler/profileValues/OperatingSystem";
 import BiasEventGenerator from "tetris/biasEngine/biasEventGenerator";
 import Utility from "tetris/utility";
+import BiasEvaluation from "tetris/biasEngine/biasEvaluation";
 
 interface CalculateBiasForProfileData {
 	(profile: Profile): number
@@ -49,6 +50,10 @@ export default class BiasEngine {
 		return biasProfileWeights;
 	}
 
+	public get biasEvaluation(): BiasEvaluation {
+		return this._biasEvaluation;
+	}
+
     // @ts-ignore
     public get currentBiasValue(): number {
         return this._currentBiasValue;
@@ -78,12 +83,14 @@ export default class BiasEngine {
 		this._biasEventGenerator = new BiasEventGenerator(this);
 		this._profiler = profiler;
 		this._profiler.registerProfileChangedEventHandler(this._onProfileUpdate.bind(this));
+		this._biasEvaluation = new BiasEvaluation();
 	}
 	//endregion
 
 	//region private members
 	private readonly _biasEventGenerator: BiasEventGenerator;
 	private _currentBiasValue: number = BiasEngine.NEUTRAL_BIAS_VALUE;
+	private readonly _biasEvaluation: BiasEvaluation;
 	private _profiler: Profiler;
 	//endregion
 
