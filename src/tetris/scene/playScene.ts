@@ -66,7 +66,21 @@ export default class PlayScene extends Phaser.Scene {
 		this._pushMultiplayerUpdate();
 		this._updateShaders(time);
 
-		this._debugWidget.update(['ABCD', 'Some Player', 'Bias Event X active']);
+
+		const debugInformation = [
+			`Current Bias: ${this._game.biasEngine.currentBiasValue}`, 
+		]
+		if (this._game.biasEngine.eventGenerator.latestBiasEvent) {
+			debugInformation.push(`Bias event active: ${this._game.biasEngine.eventGenerator.latestBiasEvent.isActive}`);
+			if (this._game.biasEngine.eventGenerator.latestBiasEvent.isActive) {
+				debugInformation.push(`Current Bias event type: ${this._game.biasEngine.eventGenerator.latestBiasEvent.eventType.toString()}`);
+			}
+		}
+		debugInformation.push(`Current detection level: ${this._game.biasEngine.eventGenerator.currentDetectionLevel}`);
+		debugInformation.push(`Geolocation confidence: ${this._game.profiler.profile.location.confidence}`);
+		debugInformation.push(`Face++ confidence: ${this._game.profiler.profile.fppFaceAnalysis.confidence}`);
+		this._debugWidget.update(debugInformation);
+		
 	}
 
 	public joinMatch(match: Match, localSocketId: String) {
