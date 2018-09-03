@@ -28,6 +28,10 @@ export default class DebugWidget {
 		return this._y;
 	}
 
+	get displayed(): boolean {
+		return this._displayed;
+	}
+ 
 	set x(x: number) {
         this._x = x;
         this._adjustTextX();
@@ -53,6 +57,20 @@ export default class DebugWidget {
 		}
         this._adjustTextX();
 	}
+
+	public display() {
+		this._displayed = true;
+		for (const line of this.debugInformation) {
+			line.setVisible(true);
+		}
+	}
+
+	public hide() {
+		this._displayed = false;
+		for (const line of this.debugInformation) {
+			line.setVisible(false);
+		}
+	}
 	//endregion
 
 	//region constructor
@@ -62,6 +80,7 @@ export default class DebugWidget {
 		this.debugInformation = [];
 		this.x = x;
 		this.y = y;
+		this._displayed = false;
 	}
 	//endregion
 
@@ -70,6 +89,7 @@ export default class DebugWidget {
 	private _y: number = 0;
 	private _scene: Phaser.Scene;
 	private _font: Font;
+	private _displayed: boolean;
 	//endregion
 
     //region private methods
