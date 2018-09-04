@@ -16,8 +16,12 @@ export default class MenuScene extends Phaser.Scene {
 
 	//region public methods
 	public preload(): void {
+		this.load.atlas(config.atlasKeys.blockSpriteAtlasKey, "./assets/images/blockSprites.png", "./assets/images/blockSprites.json");
 		this.load.atlas(config.atlasKeys.uiSpriteAtlasKey, "./assets/images/uiSprites.png", "./assets/images/uiSprites.json");
-		this.load.glsl('rainbow', "./assets/shaders/rainbow.glsl")
+		this.load.image(config.graphics.noiseTextureKey, "./assets/images/noise.png");
+		this.load.bitmapFont(config.ui.fontKeys.kenneyMiniSquare, "./assets/font/KenneyMiniSquare.png", "./assets/font/KenneyMiniSquare.fnt", );
+		this.load.glsl('rainbow', "./assets/shaders/rainbow.glsl");
+		this.load.glsl('interstellar', "./assets/shaders/interstellar.glsl");
 	}
 
 	public create(): void {

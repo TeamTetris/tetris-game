@@ -10,6 +10,7 @@ import BrickType from "tetris/brick/brickType";
 import BrickFactory from "tetris/brick/brickFactory";
 import SkinStorage from "tetris/brick/skinStorage";
 import Skin from "tetris/brick/skin";
+import { skinRarityColor } from "tetris/brick/skinRarity";
 
 export default class CollectionScene extends Phaser.Scene {
 
@@ -17,11 +18,6 @@ export default class CollectionScene extends Phaser.Scene {
 	//endregion
 
 	//region public methods
-	public preload(): void {
-		this.load.atlas(config.atlasKeys.blockSpriteAtlasKey, "./assets/images/blockSprites.png", "./assets/images/blockSprites.json");
-		this.load.glsl('rainbow', "./assets/shaders/rainbow.glsl");
-	}
-
 	public create(): void {
 		this._createBackground();
 		this._createButtons();
@@ -83,7 +79,7 @@ export default class CollectionScene extends Phaser.Scene {
 		const spacingX: number = 100;
 		const spacingY: number = config.graphics.height / 6;
 
-		new TextButton(this, config.graphics.width / 2, config.graphics.height * 6 / 7, "green_button00.png", "green_button01.png", "OK", function(){ this._game.changeScene(config.sceneKeys.menuScene); }.bind(this));
+		new TextButton(this, config.graphics.width / 2, config.graphics.height * 7 / 8, "green_button00.png", "green_button01.png", "OK", function(){ this._game.changeScene(config.sceneKeys.menuScene); }.bind(this));
 		
 		const customBrickOffsets = [new Vector2(-0.5, 0), new Vector2(-1, -1), new Vector2(-1, -0.5), new Vector2(0, -0.5), new Vector2(-1.5, -1), new Vector2(-1.5, -1), new Vector2(-1.5, -1) ];
 
@@ -91,16 +87,22 @@ export default class CollectionScene extends Phaser.Scene {
 			const x = i < 4 ? menuX1 : menuX2;
 			const y = menuY + (i % 4) * spacingY + (i / 4) * spacingY * 0.5;
 			const brick = new BrickFactory(this, null, null).newCustomBrick(i as BrickType, customBrickOffsets[i]);
-			new TextButton(this, x - spacingX, y, "blue_sliderLeft.png", "blue_sliderLeft.png", "", this._changeSkin.bind(this, brick, i, -1));
+			const text = this.add.bitmapText(0, y + 50, config.ui.fontKeys.kenneyMiniSquare, this._selectedSkins.get(i).name);
+			text.x = x - text.width / 2;
+			new TextButton(this, x - spacingX, y, "blue_sliderLeft.png", "blue_sliderLeft.png", "", this._changeSkin.bind(this, brick, i, -1, text, x));
 			brick.preDraw(new Vector2(x, y));
-			new TextButton(this, x + spacingX, y, "blue_sliderRight.png", "blue_sliderRight.png", "", this._changeSkin.bind(this, brick, i, 1));
+			new TextButton(this, x + spacingX, y, "blue_sliderRight.png", "blue_sliderRight.png", "", this._changeSkin.bind(this, brick, i, 1, text, x));
 		}
 	}
 
-	private _changeSkin(brick: Brick, brickType: BrickType, indexMovement: number) {
-		this._selectedSkins.set(brickType, this._skinStorage.getSkin(brickType, (this._selectedSkins.get(brickType).id + indexMovement + this._skinStorage.skinAmount) % this._skinStorage.skinAmount));
-		brick.blocks.forEach(b => b.spriteFrameName = this._selectedSkins.get(brickType).frameName);
-		this._skinStorage.equipSkin(brickType, this._selectedSkins.get(brickType));
-	}
+	private _changeSkin(brick: Brick, brickType: BrickType, indexMovement: number, text: Phaser.GameObjects.BitmapText, textBaseX: number) {
+		const newSkin = this._skinStorage.getSkin(brickType, (this._selectedSkins.get(brickType).id + indexMovement + this._skinStorage.skinAmount) % this._skinStorage.skinAmount);
+		this._selectedSkins.set(brickType, newSkin);
+		brick.blocks.forEach(b => b.spriteFrameName = newSkin.frameName);
+		text.setText(newSkin.name);
+		text.x = textBaseX - text.width / 2;
+		text.tint = skinRarityColor[newSkin.rarity];
+		this._skinStorage.equipSkin(brickType, newSkin);
+	}	
  	//endregion
 }

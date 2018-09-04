@@ -16,8 +16,8 @@ export default class SkinStorage {
             const brickSkins = [];
             for (let s = 0; s < skinNameBases.length; s++) {
                 for (let i = 1; i < 7; i++) {
-                    const rarity = s % 3;
-                    const name = [skinNameBases[s], BrickType[brickType], i].join(' ');
+                    const rarity = Math.floor(s / 3);
+                    const name = [skinNameBases[s], i].join(' ');
                     brickSkins.push(new Skin(skinNameBases[s] + '_0' + i, rarity, brickType, name, brickSkins.length));
                 }
             }

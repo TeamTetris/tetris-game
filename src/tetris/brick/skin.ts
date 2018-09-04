@@ -33,4 +33,12 @@ export default class Skin {
     public get id(): number {
         return this._id;
     }
+
+    public get name(): string {
+        return this._name;
+    }
+
+    public get rarity(): SkinRarity {
+        return this._rarity;
+    }
 }

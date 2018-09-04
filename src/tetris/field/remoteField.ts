@@ -129,8 +129,8 @@ export default class RemoteField {
 	}
 
 	private _adjustTextX(): void {
-		this._name.x = this.x + ( this.width - this._name.width ) / 2;
-		this._score.x = this.x + ( this.width - this._score.width ) / 2;
+		this._name.x = this.x + (this.width - this._name.width) / 2;
+		this._score.x = this.x + (this.width - this._score.width) / 2;
     }
 
     private _adjustTextY(): void {
