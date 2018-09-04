@@ -1,5 +1,5 @@
 import Profile from "tetris/profiler/profile";
-import {Timeline, DataSet} from "vis";
+import {Timeline, DataSet, TimelineItem, TimelineGroup} from "vis";
 import Game from "tetris/game";
 import BiasEvaluation from "tetris/biasEngine/biasEvaluation";
 import Profiler from "tetris/profiler/profiler";
@@ -46,7 +46,9 @@ export default class EvaluationView {
 	private readonly _informationContainer: HTMLDivElement;
 	private readonly _pictureContainer: HTMLImageElement;
 	private readonly _timelineContainer: HTMLDivElement;
+	private _timelineGroups: Map<string, TimelineGroup>;
 	private _timeline: Timeline;
+	private _timelineItems: DataSet<TimelineItem>;
 
 	private get profiler(): Profiler {
 		return this._game.profiler;
@@ -96,64 +98,84 @@ export default class EvaluationView {
 		return (factor * 100).toFixed(4) + "%";
 	}
 
-	private _displayTimeline(): void {
-		const timelineItems = new DataSet();
-		const timelineGroups = new Map();
-		timelineGroups.set(TIMELINE_GROUP_BIAS_VALUE, {
+	private _createTimeLineGroups(): void {
+		this._timelineGroups = new Map();
+		this._timelineGroups.set(TIMELINE_GROUP_BIAS_VALUE, {
 			id: TIMELINE_GROUP_BIAS_VALUE,
 			content: TIMELINE_GROUP_BIAS_VALUE,
 			className: TIMELINE_GROUP_BIAS_VALUE.replace(" ", "-")
-		});
-
-		this.biasEngine.biasValueHistory.forEach((biasValue, timestamp) => {
-			timelineItems.add({
-				type: 'point',
-				start: timestamp,
-				group: TIMELINE_GROUP_BIAS_VALUE,
-				content: EvaluationView._getDisplayBiasValue(biasValue),
-				className: biasValue < BiasEngine.NEUTRAL_BIAS_VALUE ? "negative-bias-value" : "positive-bias-value"
-			});
-		});
+		} as TimelineGroup);
 
 		Object.keys(BiasEventType).forEach(key => {
 			if (!isNaN(Number(key))) {
 				return;
 			}
-			timelineGroups.set(key, {
+			this._timelineGroups.set(key, {
 				id: key,
 				content: key,
 				className: key
-			});
+			} as TimelineGroup);
 		});
+	}
 
+	private _getOrCreateTimeLineGroup(key: string): TimelineGroup {
+		if (!this._timelineGroups.has(key)) {
+			this._timelineGroups.set(key, {
+				id: key,
+				content: key,
+				className: key,
+			} as TimelineGroup);
+		}
+		return this._timelineGroups.get(key);
+	}
+
+	private _addBiasValueTimelineItems(): void {
+		this.biasEngine.biasValueHistory.forEach((biasValue, timestamp) => {
+			this._timelineItems.add({
+				type: 'point',
+				start: timestamp,
+				group: TIMELINE_GROUP_BIAS_VALUE,
+				content: EvaluationView._getDisplayBiasValue(biasValue),
+				className: biasValue < BiasEngine.NEUTRAL_BIAS_VALUE ? "negative-bias-value" : "positive-bias-value"
+			} as TimelineItem);
+		});
+	}
+
+	private _addBiasEventTimelineItems(): void {
 		this.biasEvaluation.biasEvents.forEach(biasEvent => {
-			timelineItems.add({
+			this._timelineItems.add({
 				type: 'range',
 				start: biasEvent.startTime,
 				end: biasEvent.endTime,
-				group: timelineGroups.get(BiasEventType[biasEvent.eventType]).id,
+				group: this._timelineGroups.get(BiasEventType[biasEvent.eventType]).id,
 				subgroup: TIMELINE_GROUP_BIAS_EVENTS + " " + BiasEventType[biasEvent.eventType],
-			});
+			} as TimelineItem);
 		});
+	}
 
+	private _addMeasurementTimelineItems(): void {
 		this.profiler.forEachMeasurement(measurement => {
-			if (!timelineGroups.has(measurement.dataSourceName)) {
-				timelineGroups.set(measurement.dataSourceName, {
-					id: measurement.dataSourceName,
-					content: measurement.dataSourceName,
-					className: measurement.dataSourceName,
-				});
-			}
-
-			timelineItems.add({
+			this._timelineItems.add({
 				type: 'point',
 				start: measurement.timestamp,
-				group: timelineGroups.get(measurement.dataSourceName).id,
+				group: this._getOrCreateTimeLineGroup(measurement.dataSourceName).id,
 				title: measurement.value.printHTML()
-			});
+			} as TimelineItem);
 		});
+	}
 
-		this._timeline = new Timeline(this._timelineContainer, timelineItems, Array.from(timelineGroups.values()), {});
+	private _displayTimeline(): void {
+		this._timelineItems = new DataSet();
+		this._addBiasEventTimelineItems();
+		this._addBiasValueTimelineItems();
+		this._addMeasurementTimelineItems();
+
+		this._timeline = new Timeline(
+			this._timelineContainer,
+			this._timelineItems,
+			Array.from(this._timelineGroups.values()),
+			{}
+		);
 	}
 
 	private _displayDatum(datum: Node): void {
@@ -178,6 +200,7 @@ export default class EvaluationView {
 	private _update(): void {
 		this._displayBasicInformation();
 		this._displayLastPlayerImage();
+		this._createTimeLineGroups();
 		this._displayTimeline();
 	}
 
