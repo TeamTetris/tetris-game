@@ -50,7 +50,7 @@ export default class BiasEventGenerator {
     	this._decreaseDetectionLevel(delta);
     	this.targetDetectionLevel = BiasEventGenerator._calculateTargetDetectionLevel(currentBias);
 
-    	if (!this._readyForBiasEvent(this._targetDetectionLevel)) {
+    	if (!this._readyForBiasEvent()) {
     		return;
 	    }
 
@@ -123,8 +123,8 @@ export default class BiasEventGenerator {
     	return 0.25 /* offset */ + Math.min(0.8, relativeBias) * 0.75;
 	}
 
-	private _readyForBiasEvent(targetDetectionLevel: number): boolean {
-    	if (this.currentDetectionLevel >= targetDetectionLevel) {
+	private _readyForBiasEvent(): boolean {
+    	if (this.currentDetectionLevel >= this.targetDetectionLevel) {
     		return false;
 	    }
 

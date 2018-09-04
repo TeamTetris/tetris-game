@@ -135,7 +135,7 @@ export default class EvaluationView {
 				type: 'point',
 				start: timestamp,
 				group: TIMELINE_GROUP_BIAS_VALUE,
-				content: this.biasEngine.currentBiasValueAsPercent,
+				content: this.biasEngine.getCurrentBiasValueAsPercent(),
 				className: biasValue < BiasEngine.NEUTRAL_BIAS_VALUE ? "negative-bias-value" : "positive-bias-value"
 			} as TimelineItem);
 		});

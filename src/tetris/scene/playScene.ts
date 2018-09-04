@@ -246,7 +246,7 @@ export default class PlayScene extends Phaser.Scene {
 
 	private _updateDebugInformation(): void {
 		const debugInformation = [
-			`Current Bias: ${this._game.biasEngine.currentBiasValueAsPercent}`,
+			`Current Bias: ${this._game.biasEngine.getCurrentBiasValueAsPercent()}`,
 		];
 		if (this._game.biasEngine.eventGenerator.latestBiasEvent) {
 			debugInformation.push(`Bias event active: ${this._game.biasEngine.eventGenerator.latestBiasEvent.isActive}`);
