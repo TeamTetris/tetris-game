@@ -44,11 +44,18 @@ export default class DebugWidget {
 	//region public methods
 	public update(debugInformationText: string[]): void {
 		const missingLines = debugInformationText.length - this.debugInformation.length;
-		if (missingLines) {
+		if (missingLines > 0) {
 			for (let i = 0; i < missingLines; i++) {
 				const line = this._scene.add.text(this._x, this._y, "", this._font.font);
 				line.setVisible(this._displayed);
 				this.debugInformation.push(line);
+			}
+			this._adjustTextY();
+		}
+
+		if (missingLines < 0) {
+			for (let i = debugInformationText.length; i < this.debugInformation.length; i++) {
+				this.debugInformation[i].setText("");
 			}
 			this._adjustTextY();
 		}

@@ -7,6 +7,10 @@ export default class Utility {
 	public static haveSameSign(value1: number, value2: number): boolean {
 		return value1 * value2 >= 0;
 	}
+
+	public static displayAsPercent(value: number): string {
+		return (value * 100.0).toFixed(4) + "%";
+	}
 	//endregion
 
 	//region public members

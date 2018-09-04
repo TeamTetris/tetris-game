@@ -18,6 +18,7 @@ import Match from "tetris/match/match";
 import DebugWidget from "tetris/ui/debugWidget";
 import BiasEventType from "tetris/biasEngine/biasEventType";
 import TextButton from "tetris/ui/textButton";
+import Utility from "tetris/utility";
 
 const PLAYER_FIELD_DRAW_OFFSET: Vector2 = new Vector2(
 	(config.graphics.width - config.field.width * config.field.blockSize) / 2, 
@@ -245,7 +246,7 @@ export default class PlayScene extends Phaser.Scene {
 
 	private _updateDebugInformation(): void {
 		const debugInformation = [
-			`Current Bias: ${this._game.biasEngine.currentBiasValue}`, 
+			`Current Bias: ${this._game.biasEngine.currentBiasValueAsPercent}`,
 		];
 		if (this._game.biasEngine.eventGenerator.latestBiasEvent) {
 			debugInformation.push(`Bias event active: ${this._game.biasEngine.eventGenerator.latestBiasEvent.isActive}`);
@@ -253,9 +254,10 @@ export default class PlayScene extends Phaser.Scene {
 				debugInformation.push(`Current Bias event type: ${BiasEventType[this._game.biasEngine.eventGenerator.latestBiasEvent.eventType]}`);
 			}
 		}
-		debugInformation.push(`Current detection level: ${this._game.biasEngine.eventGenerator.currentDetectionLevel}`);
-		debugInformation.push(`Geolocation confidence: ${this._game.profiler.profile.location.confidence}`);
-		debugInformation.push(`Face++ confidence: ${this._game.profiler.profile.fppFaceAnalysis.confidence}`);
+		debugInformation.push(`Current detection level: ${Utility.displayAsPercent(this._game.biasEngine.eventGenerator.currentDetectionLevel)}`);
+		debugInformation.push(`Target detection level: ${Utility.displayAsPercent(this._game.biasEngine.eventGenerator.targetDetectionLevel)}`);
+		debugInformation.push(`Geolocation confidence: ${Utility.displayAsPercent(this._game.profiler.profile.location.confidence)}`);
+		debugInformation.push(`Face++ confidence: ${Utility.displayAsPercent(this._game.profiler.profile.fppFaceAnalysis.confidence)}`);
 		this._debugWidget.update(debugInformation);
 	}
 
