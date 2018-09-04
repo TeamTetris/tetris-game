@@ -25,7 +25,7 @@ export default class BrickFactory {
 		return this._newBrick(bias.position, bias.chances, field);
 	}
 
-	public newCustomBrick(brickType: BrickType, position: Vector2) {
+	public newCustomBrick(brickType: BrickType, position: Vector2): Brick {
 		const brick = this._brickCreationFunctions[brickType]("colorful_01", position, null);
 		brick.custom = true;
 		return brick;

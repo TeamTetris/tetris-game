@@ -1,6 +1,7 @@
 import BrickType from "tetris/brick/brickType";
 import Skin from "tetris/brick/skin";
 import { SkinRarity } from "tetris/brick/skinRarity";
+import Brick from "tetris/brick/brick";
 
 export default class SkinStorage {
     //region public members
@@ -27,15 +28,15 @@ export default class SkinStorage {
     public constructor() {
         this.skins = new Map<BrickType, Array<Skin>>();
         this.equippedSkins = new Map<BrickType, Skin>();
-        const skinNameBases = ["colorful", "bw", "sepia", /* rare */ "aqua", "light", "purple", /* epic*/ "flat", "glitch", "shiny", /* legendary*/ "dotted", "relief", "retro",];
 
-        for (let brickType = 0; brickType < 7; brickType++) {
+        for (let brickType = 0; brickType < Object.keys(BrickType).length / 2; brickType++) {
             const brickSkins = [];
-            for (let s = 0; s < skinNameBases.length; s++) {
+            for (let s = 0; s < this.skinNameBases.length; s++) {
                 for (let i = 1; i < 7; i++) {
                     const rarity = Math.floor(s / 3);
-                    const name = [skinNameBases[s], i].join(' ');
-                    brickSkins.push(new Skin(skinNameBases[s] + '_0' + i, rarity, brickType, name, brickSkins.length));
+                    const skinName = [this.skinNameBases[s], i].join(' ');
+                    const frameName = this.skinNameBases[s] + '_0' + i;
+                    brickSkins.push(new Skin(frameName, rarity, brickType, skinName, brickSkins.length));
                 }
             }
             this.skins.set(brickType, brickSkins);
@@ -45,10 +46,16 @@ export default class SkinStorage {
 	//endregion
 
     //region private members
-    private skins: Map<BrickType, Array<Skin>>;
-    private equippedSkins: Map<BrickType, Skin>;
+    private readonly skins: Map<BrickType, Array<Skin>>;
+    private readonly equippedSkins: Map<BrickType, Skin>;
+    private readonly skinNameBases: Array<string> = [
+        /* common */ "colorful", "bw", "sepia", 
+        /* rare */ "aqua", "light", "purple", 
+        /* epic*/ "flat", "glitch", "shiny", 
+        /* legendary*/ "dotted", "relief", "retro"
+    ];
 	//endregion
 
-	//region private methods
+    //region private methods
 	//endregion
 }

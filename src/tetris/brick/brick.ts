@@ -29,7 +29,7 @@ export default class Brick {
 		this._stateChanged = changed;
 	}
 	
-	public get custom() {
+	public get custom(): boolean {
 		return this._custom;
 	}
 	

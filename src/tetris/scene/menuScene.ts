@@ -92,8 +92,24 @@ export default class MenuScene extends Phaser.Scene {
 		const menuStartY: number = config.graphics.height / 3;
 		const spacing: number = 20;
 
-		this._playButton = new TextButton(this, buttonPositionX, 0, "green_button00.png", "green_button01.png", "Quick Match", this._joinMatchmaking.bind(this));
-		this._collectionButton = new TextButton(this, buttonPositionX, 0, "blue_button00.png", "blue_button01.png", "My Collection", function(){ this._game.changeScene(config.sceneKeys.collectionScene); }.bind(this) );
+		this._playButton = new TextButton(
+			this, 
+			buttonPositionX, 
+			0, 
+			"green_button00.png", 
+			"green_button01.png", 
+			"Quick Match", 
+			this._joinMatchmaking.bind(this)
+		);
+		this._collectionButton = new TextButton(
+			this, 
+			buttonPositionX, 
+			0, 
+			"blue_button00.png", 
+			"blue_button01.png", 
+			"My Collection", 
+			this._game.changeScene.bind(this._game, config.sceneKeys.collectionScene) 
+		);
 		
 		this._exitButton = new TextButton(this, buttonPositionX, 0, "blue_button00.png", "blue_button01.png", "Exit Game", this._game.exit);
 		this._playButton.y = menuStartY;

@@ -26,7 +26,7 @@ export default class Skin {
 	//endregion
 
     //region public methods
-    public unlock() {
+    public unlock(): void {
         this._unlocked = true;
     }
 	//endregion
@@ -42,12 +42,12 @@ export default class Skin {
 	//endregion
 
     //region private members
-    private _frameName: string;
-    private _rarity: SkinRarity;
-    private _brickType: BrickType;
+    private readonly _frameName: string;
+    private readonly _rarity: SkinRarity;
+    private readonly _brickType: BrickType;
     private _unlocked: boolean = false;
-    private _name: string;
-    private _id: number;
+    private readonly _name: string;
+    private readonly _id: number;
 	//endregion
 
 	//region private methods
