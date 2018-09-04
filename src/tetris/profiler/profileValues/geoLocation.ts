@@ -18,8 +18,8 @@ export default class GeoLocation implements Printable {
 
 	//region public methods
 	public printHTML(): string {
-		return `<strong>City: </strong>${this.city}
-				<strong>ZIP: </strong>${this.zip}
+		return `<strong>City: </strong>${this.city}</br>
+				<strong>ZIP: </strong>${this.zip}</br>
 				<strong>Country: </strong>${this.country}`;
 	}
 	//endregion
