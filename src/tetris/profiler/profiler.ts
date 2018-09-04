@@ -74,7 +74,7 @@ export default class Profiler {
 		this._game.onStartOfMatch(this._handleStartOfMatch.bind(this));
 
 		const geoLocationService = new GeoLocationService(
-			Profiler._handleServiceError
+			this._handleServiceError.bind(this)
 		);
 		this._addService(geoLocationService,
 			(profile: Profile, measurement: Measurement<GeoLocation>) =>
@@ -82,7 +82,7 @@ export default class Profiler {
 		);
 
 		const faceAnalysisService = new FppAnalysisService(
-			Profiler._handleServiceError
+			this._handleServiceError.bind(this)
 		);
 		this._addService(faceAnalysisService,
 			(profile: Profile, measurement: Measurement<FppFaceAnalysis>) =>
@@ -170,8 +170,9 @@ export default class Profiler {
 	}
 
 	// ERROR callbacks
-	private static _handleServiceError(senderName: string, error: Error): void {
+	private _handleServiceError(senderName: string, error: Error): void {
 		console.log(senderName + " ==> " + error);
+		setTimeout(() => this._callService(senderName), 5000);
 	}
 	//endregion
 }
