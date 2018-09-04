@@ -61,7 +61,6 @@ export default class DebugWidget {
 
 	public toggleVisibility(): void {
 		this._displayed = !this.displayed;
-		console.log(this._displayed);
 		for (const line of this.debugInformation) {
 			line.setVisible(this._displayed);
 		}

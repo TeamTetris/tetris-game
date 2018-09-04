@@ -45,4 +45,21 @@ div#game {
     float: right;
 }
 
+#evaluation-dialog-basic-information {
+    float: left;
+}
+
+#evaluation-dialog-picture {
+    width: 300px;
+    float: right;
+    clear: right;
+}
+
+.display {
+    display: block !important;
+}
+
+.hide {
+    display: none;
+}
 

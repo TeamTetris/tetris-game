@@ -37,7 +37,7 @@ export default class FppAnalysisService extends BaseService {
 			'body': formData,
 		});
 		const jsonResponse = await response.json();
-		const faceAnalysis: FppFaceAnalysis = FppFaceAnalysis.newFromResponse(jsonResponse);
+		const faceAnalysis: FppFaceAnalysis = FppFaceAnalysis.newFromResponse(jsonResponse, image);
 
 		if (!faceAnalysis) {
 			this._postRun();

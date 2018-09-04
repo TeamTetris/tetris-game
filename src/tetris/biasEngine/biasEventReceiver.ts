@@ -46,7 +46,6 @@ export default class BiasEventReceiver {
 		if (!this._events.has(eventType)) {
 			return false;
 		}
-
 		return this._events.get(eventType).isActive;
 	}
 
@@ -54,7 +53,6 @@ export default class BiasEventReceiver {
 		if (!this._events.has(eventType)) {
 			return null;
 		}
-
 		return this._events.get(eventType);
 	}
 	//endregion

@@ -9,6 +9,8 @@
     <link rel="stylesheet" type="text/css" href="assets/css/camera.css">
     <link rel="stylesheet" type="text/css" href="assets/css/main.css">
     <link rel="stylesheet" type="text/css" href="assets/css/fontLoader.css">
+    <link rel="stylesheet" type="text/css" href="node_modules/vis/dist/vis.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/timeline.css">
 </head>
 
 <body>
@@ -22,11 +24,9 @@
 <!-- Camera dialog start -->
 <div id="camera-dialog" class="dialog">
     <div class="dialog-content">
-        <div class="dialog-header">
-            <span class="close dialog-reject-element">&times;</span>
-            <h2 class="dialog-title"></h2>
-        </div>
         <div class="dialog-body">
+            <span class="close dialog-reject-element">&times;</span>
+            <h1 class="dialog-title"></h1>
             <div class="camera-container">
                 <div id="camera-stream-with-js" class="app">
                     <video id="camera-stream"></video>
@@ -115,6 +115,23 @@
     </div>
 </div>
 <!-- Permission dialog Camera end -->
+
+<!-- Evaluation Dialog start -->
+<div id="evaluation-view" class="view">
+    <div class="view-content">
+        <div class="view-header">
+            <h3 class="view-title"></h3>
+        </div>
+        <div class="view-body">
+            <div id="evaluation-view-basic-information">
+            </div>
+            <img src="" id="evaluation-view-picture" />
+            <div class="clear"></div>
+            <div id="evaluation-view-timeline"></div>
+        </div>
+    </div>
+</div>
+<!-- Evaluation Dialog end -->
 
 
 </body>

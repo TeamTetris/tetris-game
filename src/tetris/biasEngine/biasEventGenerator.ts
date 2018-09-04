@@ -152,6 +152,7 @@ export default class BiasEventGenerator {
 	private _sendBiasEvent(event: BiasEvent): void {
     	console.log("sending bias event: ");
     	console.log(event);
+    	this._biasEngine.biasEvaluation.add(event);
     	this._latestBiasEvent = event;
 		this._biasEventReceivers.forEach((eventReceiver) => eventReceiver.receiveEvent(event));
 	}
