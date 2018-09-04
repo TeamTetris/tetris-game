@@ -56,7 +56,7 @@ div#game {
 }
 
 .display {
-    display: block;
+    display: block !important;
 }
 
 .hide {
