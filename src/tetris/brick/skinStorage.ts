@@ -32,7 +32,7 @@ export default class SkinStorage {
         for (let brickType = 0; brickType < Object.keys(BrickType).length / 2; brickType++) {
             const brickSkins = [];
             for (let s = 0; s < this.skinNameBases.length; s++) {
-                for (let i = 1; i < 7; i++) {
+                for (let i = 1; i <= this.skinAmountPerSkinSet; i++) {
                     const rarity = Math.floor(s / 3);
                     const skinName = [this.skinNameBases[s], i].join(' ');
                     const frameName = this.skinNameBases[s] + '_0' + i;
@@ -54,6 +54,7 @@ export default class SkinStorage {
         /* epic*/ "flat", "glitch", "shiny", 
         /* legendary*/ "dotted", "relief", "retro"
     ];
+    private readonly skinAmountPerSkinSet: number = 6;
 	//endregion
 
     //region private methods
