@@ -3,10 +3,27 @@ import Skin from "tetris/brick/skin";
 import { SkinRarity } from "tetris/brick/skinRarity";
 
 export default class SkinStorage {
-    private skins: Map<BrickType, Array<Skin>>;
-    private equippedSkins: Map<BrickType, Skin>;
-    public skinAmount: number;
+    //region public members
+    public get skinAmount(): number {
+        return this.skins.get(0).length; // skin amount for a single brick
+    }
+	//endregion
 
+    //region public methods
+    public getSkin(brickType: BrickType, skinIndex: number): Skin {
+        return this.skins.get(brickType)[skinIndex];
+    }
+
+    public getEquippedSkin(brickType: BrickType): Skin {
+        return this.equippedSkins.get(brickType);
+    }
+    
+    public equipSkin(brickType: BrickType, skin: Skin): void {
+        this.equippedSkins.set(brickType, skin);
+    }
+	//endregion
+
+    //region constructor
     public constructor() {
         this.skins = new Map<BrickType, Array<Skin>>();
         this.equippedSkins = new Map<BrickType, Skin>();
@@ -24,18 +41,14 @@ export default class SkinStorage {
             this.skins.set(brickType, brickSkins);
             this.equippedSkins.set(brickType, brickSkins[0]);
         }
-        this.skinAmount = skinNameBases.length * 6;
     }
-    
-    public getSkin(brickType: BrickType, skinIndex: number): Skin {
-        return this.skins.get(brickType)[skinIndex];
-    }
+	//endregion
 
-    public getEquippedSkin(brickType: BrickType): Skin {
-        return this.equippedSkins.get(brickType);
-    }
-    
-    public equipSkin(brickType: BrickType, skin: Skin): void {
-        this.equippedSkins.set(brickType, skin);
-    }
+    //region private members
+    private skins: Map<BrickType, Array<Skin>>;
+    private equippedSkins: Map<BrickType, Skin>;
+	//endregion
+
+	//region private methods
+	//endregion
 }
