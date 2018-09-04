@@ -7,9 +7,7 @@ export default class ScoreWidget {
 
 	//region public members
 	public score: Phaser.GameObjects.Text;
-	//endregion
 
-	//region public methods
 	public get height(): number {
 		return this.score.height;
 	}
@@ -40,6 +38,9 @@ export default class ScoreWidget {
         this.score.setText(score);
         this._adjustTextX();
 	}
+	//endregion
+
+	//region public methods
 	//endregion
 
 	//region constructor
