@@ -62,7 +62,7 @@ export default class BiasEngine {
     public get currentBiasValue(): number {
         return this._currentBiasValue;
 	}
-	
+
 	public get eventGenerator(): BiasEventGenerator {
 		return this._biasEventGenerator;
 	}

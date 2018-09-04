@@ -83,7 +83,7 @@ export default class BiasEventGenerator {
     //endregion
 
     //region private members
-	private readonly _minBiasEventIntervalInMs = 10000;
+	private readonly _minBiasEventIntervalInMs = 20000;
 	private readonly _biasEngine: BiasEngine;
 	private readonly _biasEventPrototypes: BiasEvent[];
 	private readonly _biasEventReceivers: BiasEventReceiver[] = [];
