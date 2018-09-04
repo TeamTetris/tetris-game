@@ -62,13 +62,18 @@ export default class BiasEngine {
     public get currentBiasValue(): number {
         return this._currentBiasValue;
 	}
-	
+
 	public get eventGenerator(): BiasEventGenerator {
 		return this._biasEventGenerator;
 	}
 	//endregion
 
 	//region public methods
+	public getCurrentBiasValueAsPercent(): string {
+		const factor = (this.currentBiasValue - BiasEngine.NEUTRAL_BIAS_VALUE) / (BiasEngine.BIAS_RANGE / 2);
+		return (factor * 100).toFixed(4) + "%";
+	}
+
 	public update(time: number, delta: number): void {
 		this._biasEventGenerator.update(time, delta);
 	}

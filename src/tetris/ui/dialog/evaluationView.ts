@@ -147,6 +147,7 @@ export default class EvaluationView {
 				type: 'range',
 				start: biasEvent.startTime,
 				end: biasEvent.endTime,
+				content: ((biasEvent.endTime - biasEvent.startTime) / 1000).toFixed(2) + "s",
 				group: this._timelineGroups.get(BiasEventType[biasEvent.eventType]).id,
 				subgroup: TIMELINE_GROUP_BIAS_EVENTS + " " + BiasEventType[biasEvent.eventType],
 			} as TimelineItem);

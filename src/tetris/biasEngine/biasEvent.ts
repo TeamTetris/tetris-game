@@ -9,11 +9,11 @@ export default abstract class BiasEvent {
 
 	//region public members
 	public get minDurationInMs(): number {
-		return 3000;
+		return 1500;
 	}
 
 	public get maxDurationInMs(): number {
-		return 6000;
+		return 2500;
 	}
 
 	public get durationRange(): number {
