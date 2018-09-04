@@ -93,11 +93,6 @@ export default class EvaluationView {
 		}
 	}
 
-	private static _getDisplayBiasValue(biasValue: number): string {
-		const factor = (biasValue - BiasEngine.NEUTRAL_BIAS_VALUE) / (BiasEngine.BIAS_RANGE / 2);
-		return (factor * 100).toFixed(4) + "%";
-	}
-
 	private _createTimeLineGroups(): void {
 		this._timelineGroups = new Map();
 		this._timelineGroups.set(TIMELINE_GROUP_BIAS_VALUE, {
@@ -147,6 +142,7 @@ export default class EvaluationView {
 				type: 'range',
 				start: biasEvent.startTime,
 				end: biasEvent.endTime,
+				content: ((biasEvent.endTime - biasEvent.startTime) / 1000).toFixed(2) + "s",
 				group: this._timelineGroups.get(BiasEventType[biasEvent.eventType]).id,
 				subgroup: TIMELINE_GROUP_BIAS_EVENTS + " " + BiasEventType[biasEvent.eventType],
 			} as TimelineItem);
