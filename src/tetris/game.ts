@@ -39,10 +39,8 @@ export default class Game extends Phaser.Game {
 	}
 
 	public exit(): void {
-		if (this.profiler) {
-			const evaluationDialog = new EvaluationView(this);
-			evaluationDialog.show();
-		}
+		const evaluationDialog = new EvaluationView(this);
+		evaluationDialog.show();
 	}
 	//endregion
 

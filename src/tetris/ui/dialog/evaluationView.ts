@@ -20,6 +20,9 @@ export default class EvaluationView {
 
 	//region publsic methods
 	public show(): EvaluationView {
+		if (!this.profiler) {
+			return this;
+		}
 		this._htmlElement.classList.add('visible');
 		this._update();
 		return this;
