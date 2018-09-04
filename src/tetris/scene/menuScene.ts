@@ -92,11 +92,8 @@ export default class MenuScene extends Phaser.Scene {
 		this._playButton.y = menuStartY;
 		this._optionsButton.y = menuStartY + this._playButton.height + spacing;
 
-		if(this._game.profiler) {
-			this._exitButton = new TextButton(this, buttonsXPosition, 0, "blue_button00.png", "blue_button01.png", "Exit Game", this._game.exit);
-			this._exitButton.y = this._optionsButton.y + this._optionsButton.height + spacing;
-
-		}
+		this._exitButton = new TextButton(this, buttonsXPosition, 0, "blue_button00.png", "blue_button01.png", "Exit Game", this._game.exit);
+		this._exitButton.y = this._optionsButton.y + this._optionsButton.height + spacing;
 	}
 
 	private _joinMatchmaking(): void {
@@ -108,11 +105,11 @@ export default class MenuScene extends Phaser.Scene {
 	}
 
 	private _registerNetworkEvents(): void {
-		this._game.networkingClient.receive(NetworkingEvents.MatchmakingUpdate, this._updateMatchmakingInfo.bind(this));
+		this._game.networkingClient.receive(NetworkingEvents.MatchmakingUpdate, MenuScene._updateMatchmakingInfo.bind(this));
 		this._game.networkingClient.receive(NetworkingEvents.MatchReady, this._joinMatch.bind(this));
 	}
 
-	private _updateMatchmakingInfo(matchmakingUpdate: MatchmakingInfo): void {
+	private static _updateMatchmakingInfo(matchmakingUpdate: MatchmakingInfo): void {
 		// TODO: Update Matchmaking Widget
 		console.log("matchmakingUpdate: " + JSON.stringify(matchmakingUpdate));
 	}

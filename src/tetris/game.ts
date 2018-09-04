@@ -39,8 +39,10 @@ export default class Game extends Phaser.Game {
 	}
 
 	public exit(): void {
-		const evaluationDialog = new EvaluationView(this);
-		evaluationDialog.show();
+		if (this.profiler) {
+			const evaluationDialog = new EvaluationView(this);
+			evaluationDialog.show();
+		}
 	}
 	//endregion
 
@@ -53,7 +55,7 @@ export default class Game extends Phaser.Game {
 		this.scene.add(config.sceneKeys.playScene, playScene);
 		this.scene.add(config.sceneKeys.menuScene, menuScene, true);
 		this._activeScene = config.sceneKeys.menuScene;
-		this._createGameProfile();
+		Game._createGameProfile();
 	}
 	
 	public step(time: number, delta: number): void {
@@ -107,7 +109,7 @@ export default class Game extends Phaser.Game {
 	//endregion
 
 	//region private methods
-	private async _createGameProfile(): Promise<void> {
+	private static async _createGameProfile(): Promise<void> {
 		const createProfileDialog = CreateProfileDialog.display();
 		createProfileDialog.show();
 		await createProfileDialog.awaitResult();

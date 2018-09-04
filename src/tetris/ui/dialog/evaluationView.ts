@@ -38,7 +38,7 @@ export default class EvaluationView {
 	//endregion
 
 	//region private members
-	private _game: Game;
+	private readonly _game: Game;
 	protected readonly _htmlElement: HTMLElement;
 	private readonly _informationContainer: HTMLDivElement;
 	private readonly _pictureContainer: HTMLImageElement;

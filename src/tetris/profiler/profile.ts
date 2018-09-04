@@ -23,7 +23,7 @@ export default class Profile {
 
 	public get image(): string {
 		if(!this.fppFaceAnalysis.value) {
-			return
+			return;
 		}
 		return this.fppFaceAnalysis.value.image;
 	}
