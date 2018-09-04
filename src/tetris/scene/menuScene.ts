@@ -49,7 +49,7 @@ export default class MenuScene extends Phaser.Scene {
 	//region private members
 	private _background: Phaser.GameObjects.Sprite;
 	private _playButton: TextButton;
-	private _optionsButton: TextButton;
+	private _collectionButton: TextButton;
 	private readonly _game: Game;
 	private _pipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
 	private _localPlayerName: String;
@@ -68,7 +68,7 @@ export default class MenuScene extends Phaser.Scene {
 			renderer: this._game.renderer, 
 			fragShader: this.cache.shader.get('rainbow') 
 		});
-		(this._game.renderer as Phaser.Renderer.WebGL.WebGLRenderer).addPipeline('rainbow', this._pipeline);
+		(this._game.renderer as Phaser.Renderer.WebGL.WebGLRenderer).addPipeline('rainbowCollection', this._pipeline);
 
 		this._pipeline.setFloat2('uResolution', config.graphics.width, config.graphics.height);
 
@@ -76,18 +76,19 @@ export default class MenuScene extends Phaser.Scene {
 		backgroundGraphics.fillRect(0, 0, config.graphics.width, config.graphics.height);
 		backgroundGraphics.generateTexture('backgroundGraphics');
 		this._background = this.add.sprite(config.graphics.width / 2, config.graphics.height / 2, 'backgroundGraphics');
+		this._pipeline.setFloat3('uTint', 1.0, 1.0, 1.0);
 
-		this._background.setPipeline('rainbow');
+		this._background.setPipeline('rainbowCollection');
 	}
 
 	private _createButtons(): void {
 		const menuStartX: number = config.graphics.width / 2;
 		const menuStartY: number = config.graphics.height / 3;
 		const spacing: number = 20;
-		this._playButton = new TextButton(this, menuStartX, 0, "blue_button00.png", "blue_button01.png", "Join Matchmaking", this._joinMatchmaking.bind(this));
-		this._optionsButton = new TextButton(this, menuStartX, 0, "blue_button00.png", "blue_button01.png", "Leave Matchmaking", this._leaveMatchmaking.bind(this));
+		this._playButton = new TextButton(this, menuStartX, 0, "green_button00.png", "green_button01.png", "Quick Match", this._joinMatchmaking.bind(this));
+		this._collectionButton = new TextButton(this, menuStartX, 0, "blue_button00.png", "blue_button01.png", "My Collection", function(){ this._game.changeScene(config.sceneKeys.collectionScene); }.bind(this) );
 		this._playButton.y = menuStartY;
-		this._optionsButton.y = menuStartY + this._playButton.height + spacing;
+		this._collectionButton.y = menuStartY + this._playButton.height + spacing;
 	}
 
 	private _joinMatchmaking(): void {

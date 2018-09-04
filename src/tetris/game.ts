@@ -10,6 +10,8 @@ import "tetris/styles/scss/styles.scss";
 import NetworkingClient from "tetris/networking/networkingClient";
 import Match from "tetris/match/match";
 import CreateProfileDialog from "tetris/ui/dialog/createProfileDialog";
+import CollectionScene from "tetris/scene/collectionScene";
+import SkinStorage from "tetris/brick/skinStorage";
 
 // main game configuration
 const gameConfig: GameConfig = {
@@ -42,9 +44,11 @@ export default class Game extends Phaser.Game {
 	public start(): void {
 		super.start();
 		const menuScene = new MenuScene(this);
-		const playScene = new PlayScene(this);
+		const playScene = new PlayScene(this, this._skinStorage);
+		const collectionScene = new CollectionScene(this, this._skinStorage);
 
 		this.scene.add(config.sceneKeys.playScene, playScene);
+		this.scene.add(config.sceneKeys.collectionScene, collectionScene);
 		this.scene.add(config.sceneKeys.menuScene, menuScene, true);
 		this._activeScene = config.sceneKeys.menuScene;
 		this._createGameProfile();
@@ -85,6 +89,7 @@ export default class Game extends Phaser.Game {
 		this._endOfMatchSubscribers = [];
 		this._startOfMatchSubscribers = [];
 		this._profiler = new Profiler(this);
+		this._skinStorage = new SkinStorage();
 		this._biasEngine = new BiasEngine(this._profiler);
 		this._networkingClient = new NetworkingClient(); 
 	}
@@ -93,6 +98,7 @@ export default class Game extends Phaser.Game {
 	//region private members
 	private readonly _biasEngine: BiasEngine;
 	private readonly _profiler: Profiler;
+	private readonly _skinStorage: SkinStorage;
 	private readonly _networkingClient: NetworkingClient;
 	private readonly _endOfMatchSubscribers: ((match: Match) => void)[];
 	private readonly _startOfMatchSubscribers: ((match: Match) => void)[];

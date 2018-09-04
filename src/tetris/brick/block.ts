@@ -19,6 +19,10 @@ export default class Block {
 	public get spriteFrameName(): string {
 		return this._sprite.frame.name;
 	}
+	
+	public set spriteFrameName(frameName: string) {
+		this._sprite.setFrame(frameName);
+	}
 
 	public get positions(): Vector2[] {
 		return this._positions;
@@ -52,8 +56,9 @@ export default class Block {
 		if (!this.sprite) {
 			return;
 		}
+		
 		// only display blocks that are below the field ceiling
-		if (this.currentPosition.y < 0) {
+		if (this._brick && !this._brick.custom && this.currentPosition.y < 0) {
 			this._sprite.setVisible(false);
 		} else {
 			this._sprite.setVisible(true);

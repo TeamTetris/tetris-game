@@ -7,6 +7,8 @@ import BiasEngine from "tetris/biasEngine/biasEngine";
 import Field from "tetris/field/field";
 import BrickChances from "tetris/brick/brickChances";
 import config from "tetris/config";
+import BrickType from "tetris/brick/brickType";
+import SkinStorage from "tetris/brick/skinStorage";
 
 interface BrickCreationFunction {
 	(blockAssetId: string, position: Vector2, field: Field): Brick;
@@ -19,16 +21,22 @@ export default class BrickFactory {
 
 	//region public methods
 	public newBrick(field: Field): Brick {
-		const blockAssetId = this._selectBlockAssetId();
 		const bias = this._biasEngine.newBrickBias(field);
-		return this._newBrick(blockAssetId, bias.position, bias.chances, field);
+		return this._newBrick(bias.position, bias.chances, field);
+	}
+
+	public newCustomBrick(brickType: BrickType, position: Vector2) {
+		const brick = this._brickCreationFunctions[brickType]("colorful_01", position, null);
+		brick.custom = true;
+		return brick;
 	}
 	//endregion
 
 	//region constructor
-	public constructor(scene: Phaser.Scene, biasEngine: BiasEngine) {
+	public constructor(scene: Phaser.Scene, biasEngine: BiasEngine, skinStorage: SkinStorage) {
 		this._biasEngine = biasEngine;
 		this._scene = scene;
+		this._skinStorage = skinStorage;
 
 		this._brickCreationFunctions = [
 			this._newI.bind(this),
@@ -41,12 +49,12 @@ export default class BrickFactory {
 		];
 
 		this._blockAssetIds = [
-			"element_blue_square",
-			"element_green_square",
-			"element_grey_square",
-			"element_purple_square",
-			"element_red_square",
-			"element_yellow_square",
+			"colorful_01",
+			"colorful_02",
+			"colorful_03",
+			"colorful_04",
+			"colorful_05",
+			"colorful_06",
 		];
 	}
 	//endregion
@@ -54,6 +62,7 @@ export default class BrickFactory {
 	//region private members
 	private _biasEngine: BiasEngine;
 	private _scene: Phaser.Scene;
+	private _skinStorage: SkinStorage;
 	private readonly _brickCreationFunctions: BrickCreationFunction[];
 	private readonly _blockAssetIds: string[];
 	//endregion
@@ -64,7 +73,7 @@ export default class BrickFactory {
 		return this._blockAssetIds[index];
 	}
 
-	private _newBrick(blockAssetId: string, position: Vector2, chances: BrickChances, field: Field): Brick {
+	private _newBrick(position: Vector2, chances: BrickChances, field: Field): Brick {
 		if (chances.chances.length != this._brickCreationFunctions.length) {
 			throw new Error("cannot generate brick: #chances did not match #brick.");
 		}
@@ -83,8 +92,8 @@ export default class BrickFactory {
 				random -= normalized_chance;
 				continue;
 			}
-
-			return this._brickCreationFunctions[i](blockAssetId, position, field);
+			
+			return this._brickCreationFunctions[i](this._skinStorage.getEquippedSkin(i).frameName, position, field);
 		}
 
 		throw new Error("cannot generate brick: no chance was met (random = " + random + ").");

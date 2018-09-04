@@ -17,6 +17,7 @@ import MatchPlayer, { PlayStatus } from "tetris/interfaces/MatchPlayer";
 import NetworkingEvents from "tetris/networking/networkingEvents";
 import DebugWidget from "tetris/ui/debugWidget";
 import BiasEventType from "tetris/biasEngine/biasEventType";
+import SkinStorage from "tetris/brick/skinStorage";
 
 const PLAYER_FIELD_DRAW_OFFSET: Vector2 = new Vector2(
 	(config.graphics.width - config.field.width * config.field.blockSize) / 2, 
@@ -87,12 +88,12 @@ export default class PlayScene extends Phaser.Scene {
 	//endregion
 
 	//region constructor
-	public constructor(game: Game) {
+	public constructor(game: Game, skinStorage: SkinStorage) {
 		super({
 			key: "PlayScene"
 		});
 		this._game = game;
-		this._brickFactory = new BrickFactory(this, this._game.biasEngine);
+		this._brickFactory = new BrickFactory(this, this._game.biasEngine, skinStorage);
 	}
 	//endregion
 
