@@ -59,17 +59,18 @@ export default class CollectionScene extends Phaser.Scene {
 			renderer: this._game.renderer, 
 			fragShader: this.cache.shader.get('rainbow') 
 		});
-		(this._game.renderer as Phaser.Renderer.WebGL.WebGLRenderer).addPipeline('rainbow', this._pipeline);
+		(this._game.renderer as Phaser.Renderer.WebGL.WebGLRenderer).addPipeline('rainbowCollection', this._pipeline);
 
-		this._pipeline.setFloat2('uResolution', config.graphics.width, config.graphics.height);
-
+		
 		backgroundGraphics.fillStyle(0xffffff);
 		backgroundGraphics.fillRect(0, 0, config.graphics.width, config.graphics.height);
 		backgroundGraphics.generateTexture('backgroundGraphics');
 		this._background = this.add.sprite(config.graphics.width / 2, config.graphics.height / 2, 'backgroundGraphics');
+		this._pipeline.setFloat2('uResolution', config.graphics.width, config.graphics.height);
 		this._pipeline.setFloat3('uTint', 0.6, 0.6, 0.3);
+		this._pipeline.setFloat1('uZoom', 2.0);
 
-		this._background.setPipeline('rainbow');
+		this._background.setPipeline('rainbowCollection');
 	}
 
 	private _createButtons(): void {
@@ -87,7 +88,7 @@ export default class CollectionScene extends Phaser.Scene {
 			const x = i < 4 ? menuX1 : menuX2;
 			const y = menuY + (i % 4) * spacingY + (i / 4) * spacingY * 0.5;
 			const brick = new BrickFactory(this, null, null).newCustomBrick(i as BrickType, customBrickOffsets[i]);
-			const text = this.add.bitmapText(0, y + 50, config.ui.fontKeys.kenneyMiniSquare, this._selectedSkins.get(i).name);
+			const text = this.add.bitmapText(0, y + 70, config.ui.fontKeys.kenneyMiniSquare, this._selectedSkins.get(i).name);
 			text.x = x - text.width / 2;
 			new TextButton(this, x - spacingX, y, "blue_sliderLeft.png", "blue_sliderLeft.png", "", this._changeSkin.bind(this, brick, i, -1, text, x));
 			brick.preDraw(new Vector2(x, y));

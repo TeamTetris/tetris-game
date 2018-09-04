@@ -73,17 +73,18 @@ export default class MenuScene extends Phaser.Scene {
 			renderer: this._game.renderer, 
 			fragShader: this.cache.shader.get('rainbow') 
 		});
-		(this._game.renderer as Phaser.Renderer.WebGL.WebGLRenderer).addPipeline('rainbowCollection', this._pipeline);
+		(this._game.renderer as Phaser.Renderer.WebGL.WebGLRenderer).addPipeline('rainbowMenu', this._pipeline);
 
-		this._pipeline.setFloat2('uResolution', config.graphics.width, config.graphics.height);
-
+		
 		backgroundGraphics.fillStyle(0xffffff);
 		backgroundGraphics.fillRect(0, 0, config.graphics.width, config.graphics.height);
 		backgroundGraphics.generateTexture('backgroundGraphics');
 		this._background = this.add.sprite(config.graphics.width / 2, config.graphics.height / 2, 'backgroundGraphics');
+		this._pipeline.setFloat2('uResolution', config.graphics.width, config.graphics.height);
 		this._pipeline.setFloat3('uTint', 1.0, 1.0, 1.0);
+		this._pipeline.setFloat1('uZoom', 1.0);
 
-		this._background.setPipeline('rainbowCollection');
+		this._background.setPipeline('rainbowMenu');
 	}
 
 	private _createButtons(): void {
