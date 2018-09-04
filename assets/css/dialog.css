@@ -130,20 +130,21 @@ input[type="button"].dialog-reject-element:hover, button.dialog-reject-element:h
     align-items: center;
 }
 
+.dialog-content h1, h2, h3, h4, p {
+    color: white;
+}
+
 .dialog-content h1 {
     font-size: 60px;
-    color: white;
 }
 
 .dialog-content h2 {
     margin-top: 60px;
     font-size: 35px;
-    color: white;
 }
 
 .dialog-content h3 {
     margin-bottom: 0;
-    color: white;
 }
 
 .dialog-content .icon-container {
@@ -221,8 +222,11 @@ input[type="button"].dialog-reject-element:hover, button.dialog-reject-element:h
     width: 30%;
 }
 
-#geolocation-permission-dialog .dialog-content {
-    width: 40%;
+.dialog-content p {
+    font-family: "Kenney Mini", Helvetica, Arial, sans-serif;
+    text-align: justify;
+    max-width: 600px;
+    font-size: 20px;
 }
 
 .dialog-reject-element {
