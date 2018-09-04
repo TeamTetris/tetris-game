@@ -18,6 +18,10 @@ export default class BiasEventGenerator {
     public static get DETECTION_LEVEL_RANGE(): number {
         return BiasEventGenerator.MAX_DETECTION_LEVEL - BiasEventGenerator.MIN_DETECTION_LEVEL;
 	}
+
+	public static get MIN_TARGET_DETECTION_LEVEL(): number {
+    	return BiasEventGenerator.MIN_DETECTION_LEVEL + 0.25 * BiasEventGenerator.DETECTION_LEVEL_RANGE;
+	}
 	
 	public get latestBiasEvent(): BiasEvent {
 		return this._latestBiasEvent;
@@ -26,6 +30,11 @@ export default class BiasEventGenerator {
 	// @ts-ignore
 	public get currentDetectionLevel(): number {
         return this._detectionLevel;
+    }
+
+	// @ts-ignore
+    public get targetDetectionLevel(): number {
+    	return this._targetDetectionLevel;
     }
     //endregion
 
@@ -39,9 +48,9 @@ export default class BiasEventGenerator {
 
     	const currentBias = this._biasEngine.currentBiasValue;
     	this._decreaseDetectionLevel(delta);
-    	const targetDetectionLevel = BiasEventGenerator._calculateTargetDetectionLevel(currentBias);
+    	this.targetDetectionLevel = BiasEventGenerator._calculateTargetDetectionLevel(currentBias);
 
-    	if (!this._readyForBiasEvent(targetDetectionLevel)) {
+    	if (!this._readyForBiasEvent(this._targetDetectionLevel)) {
     		return;
 	    }
 
@@ -50,7 +59,7 @@ export default class BiasEventGenerator {
     		return;
 	    }
 
-    	const event = eventPrototype.initializeFromPrototype(targetDetectionLevel - this.currentDetectionLevel);
+    	const event = eventPrototype.initializeFromPrototype(this.targetDetectionLevel - this.currentDetectionLevel);
     	this.currentDetectionLevel += event.totalDetectionLevelIncrease;
     	this._sendBiasEvent(event);
     }
@@ -79,6 +88,7 @@ export default class BiasEventGenerator {
 	private readonly _biasEventPrototypes: BiasEvent[];
 	private readonly _biasEventReceivers: BiasEventReceiver[] = [];
     private _detectionLevel: number = 0;
+    private _targetDetectionLevel: number = 0;
 
     private _latestBiasEvent: BiasEvent;
 
@@ -86,6 +96,11 @@ export default class BiasEventGenerator {
     private set currentDetectionLevel(level: number) {
     	this._detectionLevel = Utility.limitValueBetweenMinAndMax(level, BiasEventGenerator.MIN_DETECTION_LEVEL, BiasEventGenerator.MAX_DETECTION_LEVEL);
     }
+
+	// @ts-ignore
+	private set targetDetectionLevel(level: number) {
+    	this._targetDetectionLevel = Utility.limitValueBetweenMinAndMax(level, BiasEventGenerator.MIN_TARGET_DETECTION_LEVEL, BiasEventGenerator.MAX_DETECTION_LEVEL);
+	}
     //endregion
 
     //region private methods
@@ -104,9 +119,8 @@ export default class BiasEventGenerator {
 	}
 
 	private static _calculateTargetDetectionLevel(currentBias: number): number {
-    	const relativeBias = currentBias - BiasEngine.NEUTRAL_BIAS_VALUE;
-    	let targetDetectionLevel = 0.25 /* offset */ + Math.min(0.8, relativeBias) * 0.75;
-    	return Utility.limitValueBetweenMinAndMax(targetDetectionLevel, BiasEventGenerator.MIN_DETECTION_LEVEL, BiasEventGenerator.MAX_DETECTION_LEVEL);
+    	const relativeBias = Math.abs(currentBias - BiasEngine.NEUTRAL_BIAS_VALUE);
+    	return 0.25 /* offset */ + Math.min(0.8, relativeBias) * 0.75;
 	}
 
 	private _readyForBiasEvent(targetDetectionLevel: number): boolean {
