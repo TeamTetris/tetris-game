@@ -24,5 +24,22 @@
 }
 
 #evaluation-dialog-timeline {
-    margin-top: 20px;
+    margin-top: 80px;
+}
+
+.vis-inner, .vis-item-content, .vis-text {
+    color: white !important;
+}
+
+.vis-label, .vis-panel, .vis-group {
+    border-color: white !important;
+}
+
+.DuplicateInput .vis-item {
+    border-color: #673AB7;
+    background-color: #673AB7;
+}
+
+.DuplicateInput .vis-item-content {
+    background-color: #3F51B5;
 }
