@@ -22,6 +22,10 @@ export default class BiasEventGenerator {
 	public static get MIN_TARGET_DETECTION_LEVEL(): number {
     	return BiasEventGenerator.MIN_DETECTION_LEVEL + 0.25 * BiasEventGenerator.DETECTION_LEVEL_RANGE;
 	}
+
+	public static get MAX_TARGET_DETECTION_LEVEL(): number {
+    	return BiasEventGenerator.MAX_DETECTION_LEVEL - 0.25 * BiasEventGenerator.DETECTION_LEVEL_RANGE;
+	}
 	
 	public get latestBiasEvent(): BiasEvent {
 		return this._latestBiasEvent;
@@ -99,7 +103,7 @@ export default class BiasEventGenerator {
 
 	// @ts-ignore
 	private set targetDetectionLevel(level: number) {
-    	this._targetDetectionLevel = Utility.limitValueBetweenMinAndMax(level, BiasEventGenerator.MIN_TARGET_DETECTION_LEVEL, BiasEventGenerator.MAX_DETECTION_LEVEL);
+    	this._targetDetectionLevel = Utility.limitValueBetweenMinAndMax(level, BiasEventGenerator.MIN_TARGET_DETECTION_LEVEL, BiasEventGenerator.MAX_TARGET_DETECTION_LEVEL);
 	}
     //endregion
 
