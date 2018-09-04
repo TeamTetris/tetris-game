@@ -28,6 +28,14 @@ export default class Brick {
 	public set stateChanged(changed: boolean) {
 		this._stateChanged = changed;
 	}
+	
+	public get custom(): boolean {
+		return this._custom;
+	}
+	
+	public set custom(custom: boolean) {
+		this._custom = custom;
+	}
 	//endregion
 
 	//region public methods
@@ -100,6 +108,7 @@ export default class Brick {
 	private _position: Vector2;
 	private _blocks: Block[];
 	private _field: Field;
+	private _custom: boolean = false;
 	private _stuck: boolean = false;
 	private _stateChanged: boolean = false;
 	//endregion

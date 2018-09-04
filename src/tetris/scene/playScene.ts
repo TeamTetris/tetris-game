@@ -17,6 +17,7 @@ import NetworkingEvents from "tetris/networking/networkingEvents";
 import Match from "tetris/match/match";
 import DebugWidget from "tetris/ui/debugWidget";
 import BiasEventType from "tetris/biasEngine/biasEventType";
+import SkinStorage from "tetris/brick/skinStorage";
 import TextButton from "tetris/ui/textButton";
 
 const PLAYER_FIELD_DRAW_OFFSET: Vector2 = new Vector2(
@@ -29,13 +30,6 @@ export default class PlayScene extends Phaser.Scene {
 	//endregion
 
 	//region public methods
-	public preload(): void {
-		this.load.image(config.graphics.noiseTextureKey, "./assets/images/noise.png");
-		this.load.glsl('interstellar', "./assets/shaders/interstellar.glsl");
-		this.load.atlas(config.atlasKeys.blockSpriteAtlasKey, "./assets/images/blockSprites.png", "./assets/images/blockSprites.json");
-		this.load.bitmapFont(config.ui.fontKeys.kenneyMiniSquare, "./assets/font/KenneyMiniSquare.png", "./assets/font/KenneyMiniSquare.fnt", );
-	}
-
 	public create(): void {
 		this._createUi();
 
@@ -95,12 +89,12 @@ export default class PlayScene extends Phaser.Scene {
 	//endregion
 
 	//region constructor
-	public constructor(game: Game) {
+	public constructor(game: Game, skinStorage: SkinStorage) {
 		super({
 			key: "PlayScene"
 		});
 		this._game = game;
-		this._brickFactory = new BrickFactory(this, this._game.biasEngine);
+		this._brickFactory = new BrickFactory(this, this._game.biasEngine, skinStorage);
 	}
 	//endregion
 

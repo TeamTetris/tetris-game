@@ -2,6 +2,7 @@ const config = {
     sceneKeys: {
         playScene: 'PlayScene',
         menuScene: 'MenuScene',
+        collectionScene: 'CollectionScene'
     },
     atlasKeys: {
         uiSpriteAtlasKey: "uiSpriteAtlas",

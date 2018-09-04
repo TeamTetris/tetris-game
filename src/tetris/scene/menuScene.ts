@@ -16,8 +16,12 @@ export default class MenuScene extends Phaser.Scene {
 
 	//region public methods
 	public preload(): void {
+		this.load.atlas(config.atlasKeys.blockSpriteAtlasKey, "./assets/images/blockSprites.png", "./assets/images/blockSprites.json");
 		this.load.atlas(config.atlasKeys.uiSpriteAtlasKey, "./assets/images/uiSprites.png", "./assets/images/uiSprites.json");
-		this.load.glsl('rainbow', "./assets/shaders/rainbow.glsl")
+		this.load.image(config.graphics.noiseTextureKey, "./assets/images/noise.png");
+		this.load.bitmapFont(config.ui.fontKeys.kenneyMiniSquare, "./assets/font/KenneyMiniSquare.png", "./assets/font/KenneyMiniSquare.fnt", );
+		this.load.glsl('rainbow', "./assets/shaders/rainbow.glsl");
+		this.load.glsl('interstellar', "./assets/shaders/interstellar.glsl");
 	}
 
 	public create(): void {
@@ -49,8 +53,8 @@ export default class MenuScene extends Phaser.Scene {
 	//region private members
 	private _background: Phaser.GameObjects.Sprite;
 	private _playButton: TextButton;
+	private _collectionButton: TextButton;
 	private _exitButton: TextButton;
-	private _optionsButton: TextButton;
 	private readonly _game: Game;
 	private _pipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
 	private _localPlayerName: String;
@@ -69,31 +73,48 @@ export default class MenuScene extends Phaser.Scene {
 			renderer: this._game.renderer, 
 			fragShader: this.cache.shader.get('rainbow') 
 		});
-		(this._game.renderer as Phaser.Renderer.WebGL.WebGLRenderer).addPipeline('rainbow', this._pipeline);
+		(this._game.renderer as Phaser.Renderer.WebGL.WebGLRenderer).addPipeline('rainbowMenu', this._pipeline);
 
-		this._pipeline.setFloat2('uResolution', config.graphics.width, config.graphics.height);
-
+		
 		backgroundGraphics.fillStyle(0xffffff);
 		backgroundGraphics.fillRect(0, 0, config.graphics.width, config.graphics.height);
 		backgroundGraphics.generateTexture('backgroundGraphics');
 		this._background = this.add.sprite(config.graphics.width / 2, config.graphics.height / 2, 'backgroundGraphics');
+		this._pipeline.setFloat2('uResolution', config.graphics.width, config.graphics.height);
+		this._pipeline.setFloat3('uTint', 1.0, 1.0, 1.0);
+		this._pipeline.setFloat1('uZoom', 1.0);
 
-		this._background.setPipeline('rainbow');
+		this._background.setPipeline('rainbowMenu');
 	}
 
 	private _createButtons(): void {
-		const buttonsXPosition: number = config.graphics.width / 2;
+		const buttonPositionX: number = config.graphics.width / 2;
 		const menuStartY: number = config.graphics.height / 3;
 		const spacing: number = 20;
 
-		this._playButton = new TextButton(this, buttonsXPosition, 0, "blue_button00.png", "blue_button01.png", "Join Matchmaking", this._joinMatchmaking.bind(this));
-		this._optionsButton = new TextButton(this, buttonsXPosition, 0, "blue_button00.png", "blue_button01.png", "Leave Matchmaking", this._leaveMatchmaking.bind(this));
-
+		this._playButton = new TextButton(
+			this, 
+			buttonPositionX, 
+			0, 
+			"green_button00.png", 
+			"green_button01.png", 
+			"Quick Match", 
+			this._joinMatchmaking.bind(this)
+		);
+		this._collectionButton = new TextButton(
+			this, 
+			buttonPositionX, 
+			0, 
+			"blue_button00.png", 
+			"blue_button01.png", 
+			"My Collection", 
+			this._game.changeScene.bind(this._game, config.sceneKeys.collectionScene) 
+		);
+		
+		this._exitButton = new TextButton(this, buttonPositionX, 0, "blue_button00.png", "blue_button01.png", "Exit Game", this._game.exit);
 		this._playButton.y = menuStartY;
-		this._optionsButton.y = menuStartY + this._playButton.height + spacing;
-
-		this._exitButton = new TextButton(this, buttonsXPosition, 0, "blue_button00.png", "blue_button01.png", "Exit Game", this._game.exit);
-		this._exitButton.y = this._optionsButton.y + this._optionsButton.height + spacing;
+		this._collectionButton.y = menuStartY + this._playButton.height + spacing;
+		this._exitButton.y = this._collectionButton.y + this._collectionButton.height + spacing;
 	}
 
 	private _joinMatchmaking(): void {
