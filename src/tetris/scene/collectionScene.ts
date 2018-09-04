@@ -90,7 +90,7 @@ export default class CollectionScene extends Phaser.Scene {
 		for (let i = 0; i < 7; i++) {
 			const x = i < 4 ? menuX1 : menuX2;
 			const y = menuY + (i % 4) * spacingY + (i / 4) * spacingY * 0.5;
-			const brick = new BrickFactory(this, null).newCustomBrick(i as BrickType, customBrickOffsets[i]);
+			const brick = new BrickFactory(this, null, null).newCustomBrick(i as BrickType, customBrickOffsets[i]);
 			new TextButton(this, x - spacingX, y, "blue_sliderLeft.png", "blue_sliderLeft.png", "", this._changeSkin.bind(this, brick, i, -1));
 			brick.preDraw(new Vector2(x, y));
 			new TextButton(this, x + spacingX, y, "blue_sliderRight.png", "blue_sliderRight.png", "", this._changeSkin.bind(this, brick, i, 1));
