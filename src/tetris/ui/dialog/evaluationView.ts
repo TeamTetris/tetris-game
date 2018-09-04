@@ -115,7 +115,6 @@ export default class EvaluationView {
 		});
 
 		Object.keys(BiasEventType).forEach(key => {
-			console.log(BiasEventType);
 			if (!isNaN(Number(key))) {
 				return;
 			}
