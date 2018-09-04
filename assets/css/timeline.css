@@ -22,3 +22,7 @@
 .positive-bias-value {
     border-color: #408440;
 }
+
+#evaluation-view-timeline {
+    margin-top: 20px;
+}

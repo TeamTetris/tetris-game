@@ -50,6 +50,11 @@ input[type="button"].dialog-reject-element:hover, button.dialog-reject-element:h
 .view-content {
     background: white;
     height: 100%;
+    padding: 10px;
+}
+
+.view-title {
+    margin: 0;
 }
 
 .visible {
