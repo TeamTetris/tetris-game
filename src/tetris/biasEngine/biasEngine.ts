@@ -75,6 +75,9 @@ export default class BiasEngine {
 	}
 
 	public update(time: number, delta: number): void {
+		if (this._profiler.isPaused) {
+			return;
+		}
 		this._biasEventGenerator.update(time, delta);
 	}
 
