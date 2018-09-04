@@ -47,11 +47,7 @@ export default class BiasEventReceiver {
 			return false;
 		}
 
-		if (!this._events.get(eventType).isActive) {
-			return false;
-		}
-
-		return true;
+		return this._events.get(eventType).isActive;
 	}
 
 	public get(eventType: BiasEventType): BiasEvent {

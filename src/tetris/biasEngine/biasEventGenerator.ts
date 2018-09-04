@@ -39,7 +39,7 @@ export default class BiasEventGenerator {
 
     	const currentBias = this._biasEngine.currentBiasValue;
     	this._decreaseDetectionLevel(delta);
-    	const targetDetectionLevel = this._calculateTargetDetectionLevel(currentBias);
+    	const targetDetectionLevel = BiasEventGenerator._calculateTargetDetectionLevel(currentBias);
 
     	if (!this._readyForBiasEvent(targetDetectionLevel)) {
     		return;
@@ -90,7 +90,7 @@ export default class BiasEventGenerator {
 
     //region private methods
 	private _decreaseDetectionLevel(deltaInMs: number): void {
-    	let decrease = this._calculateFallbackDetectionLevelDecrease(deltaInMs);
+    	let decrease = BiasEventGenerator._calculateFallbackDetectionLevelDecrease(deltaInMs);
     	if (this._latestBiasEvent) {
     		decrease = this._latestBiasEvent.calculateDetectionLevelDecrease(deltaInMs);
 	    }
@@ -98,12 +98,12 @@ export default class BiasEventGenerator {
 	    this.currentDetectionLevel = this.currentDetectionLevel - decrease;
 	}
 
-	private _calculateFallbackDetectionLevelDecrease(deltaInMs: number): number {
+	private static _calculateFallbackDetectionLevelDecrease(deltaInMs: number): number {
     	// decrease at a rate of 5% per second
     	return BiasEventGenerator.DETECTION_LEVEL_RANGE * 0.05 * (deltaInMs / 1000.0);
 	}
 
-	private _calculateTargetDetectionLevel(currentBias: number): number {
+	private static _calculateTargetDetectionLevel(currentBias: number): number {
     	const relativeBias = currentBias - BiasEngine.NEUTRAL_BIAS_VALUE;
     	let targetDetectionLevel = 0.25 /* offset */ + Math.min(0.8, relativeBias) * 0.75;
     	return Utility.limitValueBetweenMinAndMax(targetDetectionLevel, BiasEventGenerator.MIN_DETECTION_LEVEL, BiasEventGenerator.MAX_DETECTION_LEVEL);
@@ -118,11 +118,7 @@ export default class BiasEventGenerator {
 	    	return false;
 	    }
 
-	    if (this._latestBiasEvent && Date.now() < this._latestBiasEvent.endTime + this._minBiasEventIntervalInMs) {
-	    	return false;
-	    }
-
-	    return true;
+	    return !(this._latestBiasEvent && Date.now() < this._latestBiasEvent.endTime + this._minBiasEventIntervalInMs);
 	}
 
 	private _selectEventPrototype(): BiasEvent {
