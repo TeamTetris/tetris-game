@@ -33,6 +33,10 @@ export default class Profiler {
 		return this._profile;
 	}
 
+	public get isPaused(): boolean {
+		return this._paused;
+	}
+
 	public forEachMeasurement(callback: (Measurement) => void): void {
 		this._measurementHistory.forEach(callback);
 	}
@@ -44,6 +48,9 @@ export default class Profiler {
 	}
 
 	public update(time: number, delta: number): void {
+		if(this.isPaused) {
+			return;
+		}
 		this._profile.update(time, delta);
 		this._profile.forEachProperty((property: BaseProfileData) => {
 			if (property.confidence > CONFIDENCE_THRESHOLD * BaseProfileData.CONFIDENCE_RANGE) {
@@ -86,6 +93,7 @@ export default class Profiler {
 
 	//region private members
 	private readonly _profile: Profile;
+	private _paused: boolean;
 	private readonly _game: Game;
 	private readonly _services: Map<string, BaseService>;
 	private readonly _serviceConsumers: Map<string, BaseServiceConsumer[]>;
@@ -95,6 +103,7 @@ export default class Profiler {
 
 	//region private methods
 	private async _handleEndOfMatch(match: Match): Promise<void> {
+		this._paused = true;
 		this._profile.addMatch(match);
 
 		if (this._profile.numberOfMatches >= 1 && !this._services.get(GeoLocationService.serviceName).hasBeenStarted) {
@@ -120,6 +129,7 @@ export default class Profiler {
 	}
 
 	private _handleStartOfMatch(match: Match): void {
+		this._paused = false;
 		if (this._profile.numberOfMatches < 1) {
 			this._callService(FppAnalysisService.serviceName);
 		}
