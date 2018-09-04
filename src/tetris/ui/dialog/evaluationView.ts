@@ -90,6 +90,11 @@ export default class EvaluationView {
 		}
 	}
 
+	private static _getDisplayBiasValue(biasValue: number): string {
+		const factor = (biasValue - BiasEngine.NEUTRAL_BIAS_VALUE) / (BiasEngine.BIAS_RANGE / 2);
+		return (factor * 100).toFixed(4) + "%";
+	}
+
 	private _displayTimeline(): void {
 		const timelineItems = new DataSet();
 		const timelineGroups = new Map();
@@ -104,7 +109,7 @@ export default class EvaluationView {
 				type: 'point',
 				start: timestamp,
 				group: TIMELINE_GROUP_BIAS_VALUE,
-				content: biasValue.toFixed(4),
+				content: EvaluationView._getDisplayBiasValue(biasValue),
 				className: biasValue < BiasEngine.NEUTRAL_BIAS_VALUE ? "negative-bias-value" : "positive-bias-value"
 			});
 		});
