@@ -236,3 +236,12 @@ input[type="button"].dialog-reject-element:hover, button.dialog-reject-element:h
 #evaluation-dialog-basic-information h2 {
     margin-bottom: 5px;
 }
+
+#evaluation-dialog {
+    max-height: 100%;
+    height: unset;
+}
+
+#evaluation-dialog .dialog-body {
+    align-items: unset;
+}

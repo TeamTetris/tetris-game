@@ -84,12 +84,17 @@ export default class EvaluationView {
 	}
 
 	private _displayLastPlayerImage(): void {
-		if (this.profile.image) {
-			this._pictureContainer.classList.add("display");
-			this._pictureContainer.src = BASE64_IMAGE_PREFIX + this.profile.image;
-		} else {
-			this._pictureContainer.classList.remove("display");
-		}
+		// for (const [index, fppAnalysis] of this.profile.fppFaceAnalysis.valueHistory.entries()) {
+		// 	this._informationContainer.innerHTML += `<img src"${BASE64_IMAGE_PREFIX + fppAnalysis.image}" class="display">`
+		// 	this._pictureContainer.classList.add("display");
+		// 	this._pictureContainer.src = BASE64_IMAGE_PREFIX + this.profile.image;
+		// }
+		// if (this.profile.image) {
+		// 	this._pictureContainer.classList.add("display");
+		// 	this._pictureContainer.src = BASE64_IMAGE_PREFIX + this.profile.image;
+		// } else {
+		// 	this._pictureContainer.classList.remove("display");
+		// }
 	}
 
 	private static _getDisplayBiasValue(biasValue: number): string {
