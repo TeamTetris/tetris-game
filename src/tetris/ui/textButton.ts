@@ -8,34 +8,35 @@ export default class TextButton {
 	//region public members
 	public button: Phaser.GameObjects.Sprite;
 	public text: Phaser.GameObjects.Text;
-	//endregion
 
-	//region public methods
-	get height(): number {
+	public get height(): number {
 		return this.button.height;
 	}
 
-	get width(): number {
+	public get width(): number {
 		return this.button.width;
 	}
 
-	get x(): number {
+	public get x(): number {
 		return this.button.x;
 	}
 
-	get y(): number {
+	public get y(): number {
 		return this.button.y;
 	}
 
-	set x(x: number) {
+	public set x(x: number) {
 		this.button.x = x;
 		this._adjustTextX();
 	}
 
-	set y(y: number) {
+	public set y(y: number) {
 		this.button.y = y;
 		this._adjustTextY();
 	}
+	//endregion
+
+	//region public methods
 	//endregion
 
 	//region constructor

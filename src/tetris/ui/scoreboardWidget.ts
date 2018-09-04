@@ -17,11 +17,9 @@ export default class ScoreboardWidget {
     public ranks: Phaser.GameObjects.Text[] = [];
     public names: Phaser.GameObjects.Text[] = [];
     public scores: Phaser.GameObjects.Text[] = [];
-	public dividers: Phaser.GameObjects.Graphics[] = [];
-	//endregion
-
-	//region public methods
-	get height(): number {
+    public dividers: Phaser.GameObjects.Graphics[] = [];
+    
+    get height(): number {
         if (this.ranks.length === 0) {
             return 0;
         }
@@ -54,7 +52,9 @@ export default class ScoreboardWidget {
         this._adjustTextY();
         this._adjustDividerY();
 	}
+	//endregion
 
+	//region public methods
 	public update(localSocketId: String, players: MatchPlayer[]): void {
         this._localSocketId = localSocketId;
         this._updatePlayerText(players);

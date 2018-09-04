@@ -16,7 +16,7 @@ export enum PlayStatus {
 	Won
 }
 
-export default interface BlockState {
+export interface BlockState {
 	spriteFrameName: string;
 }
 

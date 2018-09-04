@@ -32,6 +32,7 @@ export default class PlayScene extends Phaser.Scene {
 		this.load.image(config.graphics.noiseTextureKey, "./assets/images/noise.png");
 		this.load.glsl('interstellar', "./assets/shaders/interstellar.glsl");
 		this.load.atlas(config.atlasKeys.blockSpriteAtlasKey, "./assets/images/blockSprites.png", "./assets/images/blockSprites.json");
+		this.load.bitmapFont(config.ui.fontKeys.kenneyMiniSquare, "./assets/font/KenneyMiniSquare.png", "./assets/font/KenneyMiniSquare.fnt", );
 	}
 
 	public create(): void {
@@ -188,7 +189,7 @@ export default class PlayScene extends Phaser.Scene {
 
 	private _updateRemoteFields(players: MatchPlayer[]): void {
 		for (const [index, player] of players.slice(0, 2).entries()) {
-			this._remotePlayerFields[index].updateSprites(player.field);
+			this._remotePlayerFields[index].update(player);
 		}
 	}
 
