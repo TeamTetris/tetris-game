@@ -10,6 +10,7 @@ import "tetris/styles/scss/styles.scss";
 import NetworkingClient from "tetris/networking/networkingClient";
 import Match from "tetris/match/match";
 import CreateProfileDialog from "tetris/ui/dialog/createProfileDialog";
+import EvaluationView from "tetris/ui/dialog/evaluationView";
 
 // main game configuration
 const gameConfig: GameConfig = {
@@ -36,6 +37,11 @@ export default class Game extends Phaser.Game {
 	public get profiler(): Profiler {
 		return this._profiler;
 	}
+
+	public exit(): void {
+		const evaluationDialog = new EvaluationView(this);
+		evaluationDialog.show();
+	}
 	//endregion
 
 	//region public methods
@@ -47,7 +53,7 @@ export default class Game extends Phaser.Game {
 		this.scene.add(config.sceneKeys.playScene, playScene);
 		this.scene.add(config.sceneKeys.menuScene, menuScene, true);
 		this._activeScene = config.sceneKeys.menuScene;
-		this._createGameProfile();
+		Game._createGameProfile();
 	}
 	
 	public step(time: number, delta: number): void {
@@ -86,7 +92,8 @@ export default class Game extends Phaser.Game {
 		this._startOfMatchSubscribers = [];
 		this._profiler = new Profiler(this);
 		this._biasEngine = new BiasEngine(this._profiler);
-		this._networkingClient = new NetworkingClient(); 
+		this._networkingClient = new NetworkingClient();
+		this.exit = this.exit.bind(this);
 	}
 	//endregion
 
@@ -100,7 +107,7 @@ export default class Game extends Phaser.Game {
 	//endregion
 
 	//region private methods
-	private async _createGameProfile(): Promise<void> {
+	private static async _createGameProfile(): Promise<void> {
 		const createProfileDialog = CreateProfileDialog.display();
 		createProfileDialog.show();
 		await createProfileDialog.awaitResult();

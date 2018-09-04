@@ -1,4 +1,6 @@
-export default class GeoLocation {
+import Printable from "tetris/profiler/profileValues/printable";
+
+export default class GeoLocation implements Printable {
 
 	//region public members
 	public get zip(): number {
@@ -15,6 +17,11 @@ export default class GeoLocation {
 	//endregion
 
 	//region public methods
+	public printHTML(): string {
+		return `<strong>City: </strong>${this.city}
+				<strong>ZIP: </strong>${this.zip}
+				<strong>Country: </strong>${this.country}`;
+	}
 	//endregion
 
 	//region constructor

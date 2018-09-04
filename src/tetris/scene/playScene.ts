@@ -12,11 +12,12 @@ import CountdownWidget from "tetris/ui/countdownWidget";
 import ScoreboardWidget from "tetris/ui/scoreboardWidget";
 import ScoreWidget from "tetris/ui/scoreWidget";
 import Game from "tetris/game";
-import Match from "tetris/interfaces/Match";
 import MatchPlayer, { PlayStatus } from "tetris/interfaces/MatchPlayer";
 import NetworkingEvents from "tetris/networking/networkingEvents";
+import Match from "tetris/match/match";
 import DebugWidget from "tetris/ui/debugWidget";
 import BiasEventType from "tetris/biasEngine/biasEventType";
+import TextButton from "tetris/ui/textButton";
 
 const PLAYER_FIELD_DRAW_OFFSET: Vector2 = new Vector2(
 	(config.graphics.width - config.field.width * config.field.blockSize) / 2, 
@@ -38,26 +39,33 @@ export default class PlayScene extends Phaser.Scene {
 	public create(): void {
 		this._createUi();
 
-		this._localPlayerField = this._newField(config.field.width, config.field.height, PLAYER_FIELD_DRAW_OFFSET);
-		this._player = new LocalPlayer(this._localPlayerField, this.input.keyboard, this._game.biasEngine.newEventReceiver());
 		this._debugKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
 		
 		this._addRemoteFields();
 		this._registerNetworkEvents();
 	}
 
+	public start(): void {
+		this._sceneStarted = true;
+		this._localPlayerField = this._newField(config.field.width, config.field.height, PLAYER_FIELD_DRAW_OFFSET);
+		this._player = new LocalPlayer(this._localPlayerField, this.input.keyboard, this._game.biasEngine.newEventReceiver());
+	}
+
 	public update(time: number, delta: number): void {
+		if (!this._sceneStarted) {
+			this.start();
+		}
 		this._localPlayerField.update(time, delta);
 		this._player.update(time, delta);
 
 		// Update UI widgets
 		this._scoreWidget.update(this._localPlayerField.score.toString());
 
-		const matchStart = new Date(this._match.startTime).valueOf() / 1000;
+		const matchStart = this._match.startTime / 1000;
 		const currentTime = Date.now() / 1000;
 		const preGame = currentTime < matchStart;		
 		if (!preGame && this._match.nextElimination) {
-			const nextElimination = new Date(this._match.nextElimination).valueOf() / 1000;
+			const nextElimination = this._match.nextElimination / 1000;
 			this._countdownWidget.update(Math.max(0, nextElimination - currentTime), Math.max(nextElimination - matchStart, matchStart - currentTime), preGame);
 		} else {
 			if (!this._matchStartTimer) {
@@ -107,6 +115,7 @@ export default class PlayScene extends Phaser.Scene {
 	private _countdownWidget: CountdownWidget;
 	private _scoreboardWidget: ScoreboardWidget;
 	private _debugWidget: DebugWidget;
+	private _exitButton: TextButton;
 	private readonly _game: Game;
 	private _rainbowPipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
 	private _startTimerStarted: boolean;
@@ -114,6 +123,7 @@ export default class PlayScene extends Phaser.Scene {
 	private _backgroundGraphicsPipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
 	private _backgroundSprite: Phaser.GameObjects.Sprite;
 	private _matchStartTimer: number;
+	private _sceneStarted: boolean = false;
 	//endregion
 	
 	//region private methods
@@ -150,16 +160,16 @@ export default class PlayScene extends Phaser.Scene {
 		this._localPlayerField.reset();
 	}
 
-	private _updateMatch(match: Match): void {
-		this._match = match;
-		const matchHasStarted = Date.now() > Date.parse(match.startTime);
+	private _updateMatch(serverMatch: object): void {
+		this._match = new Match(serverMatch);
+		const matchHasStarted = Date.now() > this._match.startTime;
 		if (!this._startTimerStarted && !matchHasStarted) {
 			this._startTimerStarted = true;
-			setTimeout(this._startMatch.bind(this), Date.parse(match.startTime) - Date.now(), {});
+			setTimeout(this._startMatch.bind(this), this._match.startTime - Date.now(), {});
 		}
-		this._scoreboardWidget.update(this._localSocketId, match.players);
-		this._updateRemoteFields(match.players);
-		this._determinePlayStatus(match.players);
+		this._scoreboardWidget.update(this._localSocketId, this._match.players);
+		this._updateRemoteFields(this._match.players);
+		this._determinePlayStatus(this._match.players);
 	}
 
 	private _determinePlayStatus(players: MatchPlayer[]) : void {
@@ -213,6 +223,13 @@ export default class PlayScene extends Phaser.Scene {
 		}
 	}
 
+	private _exitMatch(): void {
+		this._game.handleEndOfMatch(this._match);
+		this._sceneStarted = false;
+		this._localPlayerField.reset();
+		this._game.changeScene(config.sceneKeys.menuScene);
+	}
+
 	private _createFieldBackground(offset: Vector2, drawScale: number = 1): Phaser.GameObjects.Graphics {
 		const fieldBackground = this.add.graphics();
 		fieldBackground.fillStyle(0x002d4f);
@@ -251,6 +268,7 @@ export default class PlayScene extends Phaser.Scene {
 		this._scoreWidget = new ScoreWidget(this, config.graphics.width / 2, (config.graphics.height - config.field.height * config.field.blockSize) / 4);
 		this._countdownWidget = new CountdownWidget(this, config.graphics.width / 5 * 4, config.graphics.height / 30 * 8);
 		this._scoreboardWidget = new ScoreboardWidget(this, config.graphics.width / 5 * 4, config.graphics.height / 20 * 9);
+		this._exitButton = new TextButton(this, config.graphics.width / 2, config.graphics.height - 50, "blue_button00.png", "blue_button01.png", "Leave Match", this._exitMatch.bind(this));
 		this._debugWidget = new DebugWidget(this, 10, 10);
 	}
 
