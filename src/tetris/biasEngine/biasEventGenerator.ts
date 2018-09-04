@@ -126,7 +126,8 @@ export default class BiasEventGenerator {
 
 	private static _calculateTargetDetectionLevel(currentBias: number): number {
     	const relativeBias = Math.abs(currentBias - BiasEngine.NEUTRAL_BIAS_VALUE);
-    	return 0.25 /* offset */ + Math.min(0.8, relativeBias) * 0.75;
+    	const levelRange = BiasEventGenerator.MAX_TARGET_DETECTION_LEVEL - BiasEventGenerator.MIN_TARGET_DETECTION_LEVEL;
+    	return BiasEventGenerator.MIN_TARGET_DETECTION_LEVEL + relativeBias * levelRange;
 	}
 
 	private _readyForBiasEvent(): boolean {
