@@ -40,14 +40,14 @@ export default class FppFaceAnalysis implements Printable {
 
 	//region public methods
 	public printHTML(): string {
-		return 	"<strong>Age: </strong> " + this.age + " </br>" +
-				"<strong>Beauty: </strong> " + (this.beauty * 100).toFixed(2) + "%</br>" +
-				"<strong>Ethnicity: </strong> " + this.ethnicity + " </br>" +
-				"<strong>Gender: </strong> " + this.gender + " </br>" +
-				"<strong>Glasses: </strong> " + this.glasses + " </br>" +
-				"<strong>Acne: </strong> " + (this.skinAcne * 100).toFixed(2) + "%</br>" +
-				"<strong>Skin health: </strong> " + (this.skinHealth * 100).toFixed(2) + "%</br>" +
-				"<img height='200' src='data:image/png;base64, " + this.image + "' />";
+		return `<strong>Age: </strong>${this.age}</br> 
+				<strong>Beauty: </strong>${(this.beauty * 100).toFixed(2)}%</br> 
+				<strong>Ethnicity: </strong>${this.ethnicity}</br> 
+				<strong>Gender: </strong>${this.gender}</br> 
+				<strong>Glasses: </strong>${this.glasses}</br> 
+				<strong>Acne: </strong>${(this.skinAcne * 100).toFixed(2)}%</br> 
+				<strong>Skin health: </strong>${(this.skinHealth * 100).toFixed(2)}%</br> 
+				<img height='200' src='data:image/png;base64, ${this.image}' />`;
 	}
 	//endregion
 
