@@ -18,7 +18,7 @@ export default class EvaluationView {
 	//region public members
 	//endregion
 
-	//region publsic methods
+	//region public methods
 	public show(): EvaluationView {
 		if (!this.profiler) {
 			return this;
@@ -84,12 +84,10 @@ export default class EvaluationView {
 
 	private _displayLastPlayerImage(): void {
 		if (this.profile.image) {
-			this._pictureContainer.classList.remove("hide");
 			this._pictureContainer.classList.add("display");
 			this._pictureContainer.src = BASE64_IMAGE_PREFIX + this.profile.image;
 		} else {
 			this._pictureContainer.classList.remove("display");
-			this._pictureContainer.classList.add("hide");
 		}
 	}
 
@@ -172,7 +170,7 @@ export default class EvaluationView {
 		const wrapper = document.createElement('div');
 		wrapper.classList.add(CSS_CLASS_DATA_WRAPPER);
 		wrapper.classList.add(key);
-		wrapper.setAttribute("id", "evaluation-" + key);
+		wrapper.id = "evaluation-" + key;
 		wrapper.innerHTML = "<strong>" + key.replace(/-/g, " ") + ":</strong> " + value.toString() || "undefined";
 		return wrapper;
 	}

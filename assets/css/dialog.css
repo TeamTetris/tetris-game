@@ -237,6 +237,7 @@ input[type="button"].dialog-reject-element:hover, button.dialog-reject-element:h
 }
 
 #evaluation-view-picture {
+    display: none;
     float: right;
     width: 300px;
 }
