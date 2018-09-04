@@ -1,6 +1,5 @@
 import BaseProfileData from 'tetris/profiler/baseProfileData';
 import ProfileDataUpdateStrategy from "tetris/profiler/updateStrategy/profileDataUpdateStrategy";
-import ProfileDataConfidenceStrategy from "tetris/profiler/confidenceStrategy/profileDataConfidenceStrategy";
 
 export default class ProfileData<ValueType> extends BaseProfileData {
 

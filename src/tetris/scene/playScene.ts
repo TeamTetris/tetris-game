@@ -102,7 +102,6 @@ export default class PlayScene extends Phaser.Scene {
 	private _match: Match;
 	private _debugKey: Phaser.Input.Keyboard.Key;
 	private _remotePlayerFields: RemoteField[];
-	private _playerFieldBackground: Phaser.GameObjects.Graphics;
 	private _scoreWidget: ScoreWidget;
 	private _countdownWidget: CountdownWidget;
 	private _scoreboardWidget: ScoreboardWidget;
@@ -229,7 +228,7 @@ export default class PlayScene extends Phaser.Scene {
 	private _updateDebugInformation(): void {
 		const debugInformation = [
 			`Current Bias: ${this._game.biasEngine.currentBiasValue}`, 
-		]
+		];
 		if (this._game.biasEngine.eventGenerator.latestBiasEvent) {
 			debugInformation.push(`Bias event active: ${this._game.biasEngine.eventGenerator.latestBiasEvent.isActive}`);
 			if (this._game.biasEngine.eventGenerator.latestBiasEvent.isActive) {

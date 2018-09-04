@@ -10,7 +10,6 @@ import Gender from "tetris/profiler/profileValues/gender";
 import PassportValue from "tetris/biasEngine/datasources/PassportValue";
 import OperatingSystem from "tetris/profiler/profileValues/OperatingSystem";
 import BiasEventGenerator from "tetris/biasEngine/biasEventGenerator";
-import BiasEvent from "tetris/biasEngine/biasEvent";
 import Utility from "tetris/utility";
 
 interface CalculateBiasForProfileData {

@@ -181,8 +181,7 @@ export default class ScoreboardWidget {
 
     private _adjustDividerY(): void {
         for (const [index, divider] of this.dividers.entries()) {
-            const y = this.y + index * (config.ui.spacing + this._font.size) - config.ui.spacing / 2;
-            divider.y = y;
+            divider.y = this.y + index * (config.ui.spacing + this._font.size) - config.ui.spacing / 2;;
         }
     }
 	//endregion

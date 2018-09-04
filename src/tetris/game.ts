@@ -111,5 +111,5 @@ export default class Game extends Phaser.Game {
 
 // when the page is loaded, create our game instance
 window.onload = () => {
-  const game = new Game(gameConfig);
+  new Game(gameConfig);
 };
