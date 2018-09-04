@@ -125,6 +125,7 @@ export default class RemoteField {
 		this._name.setText(player.displayName);
 		this._score.setText(player.points.toString());
 		this._adjustTextX();
+		this._adjustTextY();
 	}
 
 	private _adjustTextX(): void {
