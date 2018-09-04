@@ -4,6 +4,7 @@ import BiasEventDisableInput from "tetris/biasEngine/events/biasEventDisableInpu
 import BiasEventDuplicateInput from "tetris/biasEngine/events/biasEventDuplicateInput";
 import BiasEventReceiver from "tetris/biasEngine/biasEventReceiver";
 import Utility from "tetris/utility";
+import BiasEventFreezeLocalField from "tetris/biasEngine/events/biasEventFreezeLocalField";
 
 export default class BiasEventGenerator {
     //region public members
@@ -82,6 +83,7 @@ export default class BiasEventGenerator {
     	this._biasEventPrototypes = [
     		new BiasEventDisableInput(),
 		    new BiasEventDuplicateInput(),
+			new BiasEventFreezeLocalField(),
 		]
 	}
     //endregion
