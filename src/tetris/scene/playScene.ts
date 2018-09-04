@@ -39,15 +39,22 @@ export default class PlayScene extends Phaser.Scene {
 	public create(): void {
 		this._createUi();
 
-		this._localPlayerField = this._newField(config.field.width, config.field.height, PLAYER_FIELD_DRAW_OFFSET);
-		this._player = new LocalPlayer(this._localPlayerField, this.input.keyboard, this._game.biasEngine.newEventReceiver());
 		this._debugKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
 		
 		this._addRemoteFields();
 		this._registerNetworkEvents();
 	}
 
+	public start(): void {
+		this._sceneStarted = true;
+		this._localPlayerField = this._newField(config.field.width, config.field.height, PLAYER_FIELD_DRAW_OFFSET);
+		this._player = new LocalPlayer(this._localPlayerField, this.input.keyboard, this._game.biasEngine.newEventReceiver());
+	}
+
 	public update(time: number, delta: number): void {
+		if (!this._sceneStarted) {
+			this.start();
+		}
 		this._localPlayerField.update(time, delta);
 		this._player.update(time, delta);
 
@@ -116,6 +123,7 @@ export default class PlayScene extends Phaser.Scene {
 	private _backgroundGraphicsPipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
 	private _backgroundSprite: Phaser.GameObjects.Sprite;
 	private _matchStartTimer: number;
+	private _sceneStarted: boolean = false;
 	//endregion
 	
 	//region private methods
@@ -217,6 +225,8 @@ export default class PlayScene extends Phaser.Scene {
 
 	private _exitMatch(): void {
 		this._game.handleEndOfMatch(this._match);
+		this._sceneStarted = false;
+		this._localPlayerField.reset();
 		this._game.changeScene(config.sceneKeys.menuScene);
 	}
 
