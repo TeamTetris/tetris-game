@@ -47,15 +47,6 @@ export default class BrickFactory {
 			this._newS.bind(this),
 			this._newZ.bind(this)
 		];
-
-		this._blockAssetIds = [
-			"colorful_01",
-			"colorful_02",
-			"colorful_03",
-			"colorful_04",
-			"colorful_05",
-			"colorful_06",
-		];
 	}
 	//endregion
 
@@ -64,15 +55,9 @@ export default class BrickFactory {
 	private _scene: Phaser.Scene;
 	private _skinStorage: SkinStorage;
 	private readonly _brickCreationFunctions: BrickCreationFunction[];
-	private readonly _blockAssetIds: string[];
 	//endregion
 
 	//region private methods
-	private _selectBlockAssetId(): string {
-		const index = Math.floor(Math.random() * Math.floor(this._blockAssetIds.length));
-		return this._blockAssetIds[index];
-	}
-
 	private _newBrick(position: Vector2, chances: BrickChances, field: Field): Brick {
 		if (chances.chances.length != this._brickCreationFunctions.length) {
 			throw new Error("cannot generate brick: #chances did not match #brick.");
