@@ -3,7 +3,7 @@
 import Field from 'tetris/field/field';
 import Player from "tetris/player/player";
 import BiasEventReceiver from 'tetris/biasEngine/biasEventReceiver';
-import KeyboardManager = Phaser.Input.Keyboard.KeyboardManager;
+import KeyboardPlugin = Phaser.Input.Keyboard.KeyboardPlugin;
 import BiasEventType from 'tetris/biasEngine/biasEventType';
 import BiasEventDuplicateInput from 'tetris/biasEngine/events/biasEventDuplicateInput';
 
@@ -41,18 +41,18 @@ export default class LocalPlayer extends Player {
 	//endregion
 
 	//region constructor
-	public constructor(field: Field, keyboard: KeyboardManager, biasEventReceiver: BiasEventReceiver) {
+	public constructor(field: Field, keyboardPlugin: KeyboardPlugin, biasEventReceiver: BiasEventReceiver) {
 		super(field);
-		this._keyboard = keyboard;
-		this._cursorKeys = keyboard.createCursorKeys();
+		this._keyboardPlugin = keyboardPlugin;
+		this._cursorKeys = keyboardPlugin.createCursorKeys();
 		this._biasEventReceiver = biasEventReceiver;
 		this._biasEventReceiver.filters = [ BiasEventType.DisableInput, BiasEventType.DuplicateInput ];
 	}
 	//endregion
 
 	//region private members
-	private _cursorKeys: CursorKeys;
-	private _keyboard: KeyboardManager;
+	private _cursorKeys: Phaser.Input.Keyboard.CursorKeys;
+	private _keyboardPlugin: KeyboardPlugin;
 	private _biasEventReceiver: BiasEventReceiver;
 	//endregion
 
