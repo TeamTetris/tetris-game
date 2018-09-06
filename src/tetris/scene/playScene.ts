@@ -235,7 +235,7 @@ export default class PlayScene extends Phaser.Scene {
 
 	private _newField(fieldWidth: number, fieldHeight: number, drawOffset: Vector2): Field {
 		this._createFieldBackground(drawOffset);
-		return new Field(fieldWidth, fieldHeight, drawOffset, this._brickFactory);
+		return new Field(fieldWidth, fieldHeight, drawOffset, this._brickFactory, this._game.biasEngine.newEventReceiver());
 	}
 
 	private _updateDebugInformation(): void {

@@ -3,8 +3,10 @@
 import Brick from 'tetris/brick/brick';
 import Block from 'tetris/brick/block';
 import BrickFactory from 'tetris/brick/brickFactory';
-import Vector2 = Phaser.Math.Vector2;
 import FieldState from 'tetris/field/fieldState';
+import BiasEventReceiver from "tetris/biasEngine/biasEventReceiver";
+import BiasEventType from "tetris/biasEngine/biasEventType";
+import Vector2 = Phaser.Math.Vector2;
 
 export default class Field {
 
@@ -93,7 +95,9 @@ export default class Field {
 		if (this._fieldState != FieldState.Playing) {
 			return;
 		}
-
+		if (this._biasEventReceiver.has(BiasEventType.FreezeLocalField)) {
+			return;
+		}
 		if (!this.activeBrick) {
 			this._generateNewBrick(time);
 			this._blockStateChanged = true;
@@ -171,9 +175,11 @@ export default class Field {
 	public constructor(width: number,
 					   height: number,
 					   drawOffset: Vector2,
-					   brickFactory: BrickFactory) {
+					   brickFactory: BrickFactory,
+					   biasEventReceiver: BiasEventReceiver) {
 		this._width = width;
 		this._height = height;
+		this._biasEventReceiver = biasEventReceiver.addFilter(BiasEventType.FreezeLocalField);
 		this._drawOffset = drawOffset;
 		this._bricks = [];
 		this._brickFactory = brickFactory;
@@ -185,6 +191,7 @@ export default class Field {
 	//region private members
 	private _activeBrick: Brick;
 	private readonly _width: integer;
+	private readonly _biasEventReceiver: BiasEventReceiver;
 	private readonly _height: integer;
 	private readonly _drawOffset: Vector2;
 	private readonly _brickFactory: BrickFactory;
