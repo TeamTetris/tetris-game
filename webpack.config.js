@@ -1,6 +1,6 @@
 const path = require('path');
 const pathToPhaser = path.join(__dirname, '/node_modules/phaser/');
-const phaser = path.join(pathToPhaser, 'dist/phaser.js');
+const phaser = path.join(pathToPhaser, 'dist/phaser.min.js');
 
 module.exports = {
 	entry: './src/tetris/game.ts',
@@ -29,8 +29,19 @@ module.exports = {
 	module: {
 		rules: [
 			{test: /\.ts$/, loader: 'ts-loader', exclude: '/node_modules/'},
-			{test: /phaser\.js$/, loader: 'expose-loader?Phaser'},
+			{test: /phaser\.min\.js$/, loader: 'expose-loader?Phaser'},
 			{test:/\.(s*)css$/, use:['style-loader','css-loader', 'sass-loader']}
 		]
-	}
+	},
+	optimization: {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'libs',
+          chunks: 'all'
+        }
+      }
+    }
+  }
 };
