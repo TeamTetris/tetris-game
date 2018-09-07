@@ -15,9 +15,11 @@ module.exports = {
 	devServer: {
 		contentBase: path.resolve(__dirname, './'),
 		publicPath: '/build/',
-		host: '127.0.0.1',
-		port: 8080,
-		open: true
+		host: '0.0.0.0',
+		port: 80,
+		open: false,
+		compress: true,
+		public: 'tetrisroyale.tk'
 	},
 	resolve: {
 		extensions: ['.ts', '.js', '.json'],
@@ -34,14 +36,14 @@ module.exports = {
 		]
 	},
 	optimization: {
-    splitChunks: {
-      cacheGroups: {
-        commons: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'libs',
-          chunks: 'all'
-        }
-      }
-    }
-  }
+		splitChunks: {
+      			cacheGroups: {
+        			commons: {
+          				test: /[\\/]node_modules[\\/]/,
+          				name: '1',
+          				chunks: 'all'
+        			}
+			}
+    		}
+	}
 };
