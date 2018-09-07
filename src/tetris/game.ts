@@ -20,7 +20,9 @@ const gameConfig: GameConfig = {
 	height: config.graphics.height,
 	type: Phaser.WEBGL,
 	parent: "game",
-	"render.antialias": false,
+	render: {
+		antialias: false,		
+	}
 };
 
 

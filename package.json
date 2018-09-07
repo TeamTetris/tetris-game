@@ -19,7 +19,7 @@
     "@types/vis": "^4.21.7",
     "googlemaps": "^1.12.0",
     "net": "^1.0.2",
-    "phaser": "3.9.0",
+    "phaser": "3.12.0",
     "socket.io-client": "2.1.1",
     "tls": "0.0.1",
     "vis": "^4.21.0"
