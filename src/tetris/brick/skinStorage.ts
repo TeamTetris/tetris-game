@@ -34,7 +34,7 @@ export default class SkinStorage {
         this.equippedSkins = new Map<BrickType, Skin>();
 
         for (let brickType = 0; brickType < Object.keys(BrickType).length / 2; brickType++) {
-            const brickSkins = [];
+            const brickSkins: Skin[] = [];
             for (let s = 0; s < this.skinNameBases.length; s++) {
                 for (let i = 1; i <= this.skinAmountPerSkinSet; i++) {
                     const rarity = Math.floor(s / 3);
@@ -44,7 +44,8 @@ export default class SkinStorage {
                 }
             }
             this.skins.set(brickType, brickSkins);
-            this.equippedSkins.set(brickType, brickSkins[brickType % this.skinAmountPerSkinSet]);
+            brickSkins[brickType % this.skinAmountPerSkinSet].unlock();
+            this.equipSkin(brickType, brickSkins[brickType % this.skinAmountPerSkinSet]);
         }
     }
 	//endregion

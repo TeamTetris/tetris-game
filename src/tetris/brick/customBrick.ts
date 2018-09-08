@@ -21,6 +21,10 @@ export default class CustomBrick {
   public setSpriteDepth(depth: number): void {
     this._brick.blocks.forEach(b => b.sprite.setDepth(depth));
   }
+
+  public setTint(tint: number): void {
+    this._brick.blocks.forEach(b => b.sprite.setTint(tint));
+  }
 	//endregion
 
   //region constructor

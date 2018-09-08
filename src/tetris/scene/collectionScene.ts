@@ -98,6 +98,9 @@ export default class CollectionScene extends Phaser.Scene {
 			const brick = new CustomBrick(this, i, this._selectedSkins.get(i).frameName, x, y);
 			const text = this.add.bitmapText(0, y + 70, config.ui.fontKeys.kenneyMiniSquare, this._selectedSkins.get(i).name);
 			text.x = x - text.width / 2;
+
+			const lock = this.add.sprite(x, y, config.graphics.lockTextureKey);
+			lock.setVisible(false);
 			new TextButton(
 				this, 
 				x - spacingX, 
@@ -105,7 +108,7 @@ export default class CollectionScene extends Phaser.Scene {
 				"blue_sliderLeft.png", 
 				"blue_sliderLeft.png", 
 				"", 
-				this._changeSkin.bind(this, brick, i, -1, text, x)
+				this._changeSkin.bind(this, brick, i as BrickType, lock, -1, text, x)
 			);
 			new TextButton(
 				this, 
@@ -114,19 +117,26 @@ export default class CollectionScene extends Phaser.Scene {
 				"blue_sliderRight.png", 
 				"blue_sliderRight.png", 
 				"", 
-				this._changeSkin.bind(this, brick, i, 1, text, x)
+				this._changeSkin.bind(this, brick, i as BrickType, lock, 1, text, x)
 			);
 		}
 	}
 
-	private _changeSkin(brick: CustomBrick, brickType: BrickType, indexMovement: number, text: Phaser.GameObjects.BitmapText, textBaseX: number): void {
+	private _changeSkin(brick: CustomBrick, brickType: BrickType, lock: Phaser.GameObjects.Sprite, indexMovement: number, text: Phaser.GameObjects.BitmapText, textBaseX: number): void {
 		const newSkin = this._skinStorage.getSkin(brickType, (this._selectedSkins.get(brickType).id + indexMovement + this._skinStorage.skinAmount) % this._skinStorage.skinAmount);
 		this._selectedSkins.set(brickType, newSkin);
 		brick.setFrameName(newSkin.frameName);
 		text.setText(newSkin.name);
 		text.x = textBaseX - text.width / 2;
 		text.tint = skinRarityColor[newSkin.rarity];
-		this._skinStorage.equipSkin(brickType, newSkin);
+		if (newSkin.isUnlocked) {
+			this._skinStorage.equipSkin(brickType, newSkin);
+			lock.setVisible(false);
+			brick.setTint(0xffffff);
+		} else {
+			lock.setVisible(true);
+			brick.setTint(0x000000);
+		}
 	}	
  	//endregion
 }

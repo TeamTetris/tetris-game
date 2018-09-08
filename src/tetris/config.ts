@@ -68,7 +68,8 @@ const config = {
     graphics: {
         width: window.innerWidth,
         height: window.innerHeight,
-        noiseTextureKey: 'noise'
+        noiseTextureKey: 'noise',
+        lockTextureKey: 'lock',
     },
     serverAddress: "https://tetrisboi.herokuapp.com",
 };
