@@ -19,6 +19,10 @@ export default class MenuScene extends Phaser.Scene {
 		this.load.atlas(config.atlasKeys.blockSpriteAtlasKey, "./assets/images/blockSprites.png", "./assets/images/blockSprites.json");
 		this.load.atlas(config.atlasKeys.uiSpriteAtlasKey, "./assets/images/uiSprites.png", "./assets/images/uiSprites.json");
 		this.load.atlas(config.atlasKeys.goldChestAtlasKey, "./assets/images/goldChest.png", "./assets/images/chestSprites.json");
+		this.load.atlas(config.atlasKeys.bronzeChestAtlasKey, "./assets/images/bronzeChest.png", "./assets/images/chestSprites.json");
+		this.load.atlas(config.atlasKeys.silverChestAtlasKey, "./assets/images/silverChest.png", "./assets/images/chestSprites.json");
+		this.load.atlas(config.atlasKeys.diamondChestAtlasKey, "./assets/images/diamondChest.png", "./assets/images/chestSprites.json");
+		this.load.atlas(config.atlasKeys.cyberChestAtlasKey, "./assets/images/cyberChest.png", "./assets/images/chestSprites.json");
 		this.load.image(config.graphics.noiseTextureKey, "./assets/images/noise.png");
 		this.load.image(config.graphics.lockTextureKey, "./assets/images/lock.png");
 		this.load.bitmapFont(config.ui.fontKeys.kenneyMiniSquare, "./assets/font/KenneyMiniSquare.png", "./assets/font/KenneyMiniSquare.fnt", );

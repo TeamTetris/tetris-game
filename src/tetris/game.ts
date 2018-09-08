@@ -57,9 +57,9 @@ export default class Game extends Phaser.Game {
 		const collectionScene = new CollectionScene(this, this._skinStorage);
 		const lootboxScene = new LootboxScene(this, this._skinStorage);
 
+		this.scene.add(config.sceneKeys.menuScene, menuScene, true);
 		this.scene.add(config.sceneKeys.playScene, playScene);
 		this.scene.add(config.sceneKeys.collectionScene, collectionScene);
-		this.scene.add(config.sceneKeys.menuScene, menuScene, true);
 		this.scene.add(config.sceneKeys.lootboxScene, lootboxScene);
 		this._activeScene = config.sceneKeys.menuScene;
 		Game._createGameProfile();

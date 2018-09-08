@@ -13,6 +13,7 @@ import Skin from "tetris/brick/skin";
 import { skinRarityColor, SkinRarity } from "tetris/brick/skinRarity";
 import LootboxSprite from "tetris/lootbox/lootboxSprite";
 import CustomBrick from "tetris/brick/customBrick";
+import { LootboxType } from "tetris/lootbox/lootboxType";
 
 export default class LootboxScene extends Phaser.Scene {
 
@@ -45,12 +46,21 @@ export default class LootboxScene extends Phaser.Scene {
 	private _lootboxSprite: LootboxSprite;
 	private _exitButton: TextButton;
 	private _overlay: Phaser.GameObjects.Sprite;
+	private _lootboxTypeText: Phaser.GameObjects.BitmapText;
 	private _displayedBricks: CustomBrick[] = [];
+	private _chestTypeLootFactor: Map<LootboxType, number> = new Map([
+		[LootboxType.Bronze, 0.1],
+		[LootboxType.Silver, 0.5],
+		[LootboxType.Gold, 1],
+		[LootboxType.Diamond, 3],
+		[LootboxType.Cyber, 30],
+	]);
 	private _displayedTexts: Phaser.GameObjects.BitmapText[] = [];
 	private readonly _depthBackground: number = 0.1;
 	private readonly _depthBackgroundElements: number = 0.2;
 	private readonly _depthOverlay: number = 0.3;
 	private readonly _depthOverlayElements: number = 0.4;
+	private _selectedLootboxType: LootboxType = LootboxType.Bronze;
 	//endregion
 
 	//region private methods
@@ -78,8 +88,8 @@ export default class LootboxScene extends Phaser.Scene {
 		const skinsPerLootbox = 4;
 		const allSkins = this._skinStorage.getAllSkins();
 
-		const chances = [0.67, 0.23, 0.08, 0.02];
-
+		const c = this._chestTypeLootFactor.get(this._selectedLootboxType);
+		const chances = [0.65*c, 0.3*c, 0.04*c, 0.01*c];
 		const commonSkins = allSkins.filter(s => s.rarity == SkinRarity.Common);
 		const rareSkins = allSkins.filter(s => s.rarity == SkinRarity.Rare);
 		const epicSkins = allSkins.filter(s => s.rarity == SkinRarity.Epic);
@@ -109,7 +119,6 @@ export default class LootboxScene extends Phaser.Scene {
 		this._lootboxSprite.playOpenAnimation();
 
 		const unlockedSkins = this._unlockSkins();
-		console.log('Unlocked following skins', unlockedSkins.map(s => s.name));
 
 		this._lootboxSprite.active = false;
 		this._exitButton.active = false;
@@ -151,11 +160,48 @@ export default class LootboxScene extends Phaser.Scene {
 		this._lootboxSprite.resetAnimation();
 	}
 
+	private _changeLootboxType(indexMovement: number, x: number, lootboxTypeText: Phaser.GameObjects.BitmapText): void {
+		const chestAmount = Object.keys(LootboxType).length / 2;
+		this._selectedLootboxType = (this._selectedLootboxType + indexMovement + chestAmount) % chestAmount;
+		this._lootboxSprite.setLootboxType(this._selectedLootboxType);
+		lootboxTypeText.setText(LootboxType[this._selectedLootboxType] + ' Chest');
+		lootboxTypeText.x = x - lootboxTypeText.width / 2;
+		// if (more than 1 lootbox of this type in storage) { set alpha opaque } else { set alpha 0.2 transparent? }
+		// set amount lootbox text
+	}
+
 	private _createButtons(): void {
-		this._lootboxSprite = new LootboxSprite(this, config.graphics.width / 2, config.graphics.height / 2, this._openChest.bind(this));
+		const x = config.graphics.width / 2;
+		const y = config.graphics.height / 2;
+		const spacingX = 220;
+		const spacingY = 200;
+
+		this._lootboxSprite = new LootboxSprite(this, x, y - 30, this._openChest.bind(this));
 		this._lootboxSprite.setSpriteDepth(this._depthBackgroundElements);
-		this._exitButton = new TextButton(this, config.graphics.width / 2, config.graphics.height * 7 / 8, "green_button00.png", "green_button01.png", "Done", function(){ this._game.changeScene(config.sceneKeys.menuScene); }.bind(this));
-		this._exitButton.setDepth(this._depthBackgroundElements);	
+		this._exitButton = new TextButton(this, x, config.graphics.height * 7 / 8, "green_button00.png", "green_button01.png", "Done", function(){ this._game.changeScene(config.sceneKeys.menuScene); }.bind(this));
+		this._exitButton.setDepth(this._depthBackgroundElements);
+		
+		const lootboxTypeText = this.add.bitmapText(0, y + spacingY, config.ui.fontKeys.kenneyMiniSquare, 'Bronze Chest');
+		lootboxTypeText.setDepth(this._depthBackgroundElements);
+		lootboxTypeText.x = x - lootboxTypeText.width / 2;
+		new TextButton(
+			this, 
+			x - spacingX,
+			y, 
+			"blue_sliderLeft.png", 
+			"blue_sliderLeft.png", 
+			"", 
+			this._changeLootboxType.bind(this, -1, x, lootboxTypeText)
+		).setDepth(this._depthBackgroundElements);
+		new TextButton(
+			this, 
+			x + spacingX, 
+			y, 
+			"blue_sliderRight.png", 
+			"blue_sliderRight.png", 
+			"", 
+			this._changeLootboxType.bind(this, 1, x, lootboxTypeText)
+		).setDepth(this._depthBackgroundElements);
 	}
  	//endregion
 }

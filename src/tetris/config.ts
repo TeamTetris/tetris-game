@@ -8,7 +8,11 @@ const config = {
     atlasKeys: {
         uiSpriteAtlasKey: "uiSpriteAtlas",
         blockSpriteAtlasKey: "blockSpriteAtlas",
-        goldChestAtlasKey: "goldChestAtlas"
+        goldChestAtlasKey: "goldChestAtlas",
+        bronzeChestAtlasKey: "bronzeChestAtlas",
+        silverChestAtlasKey: "silverChestAtlas",
+        diamondChestAtlasKey: "diamondChestAtlas",
+        cyberChestAtlasKey: "cyberChestAtlas",
     },
     ui: {
         spacing: 20,

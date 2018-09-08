@@ -3,6 +3,7 @@
 
 import config from "tetris/config";
 import Font from "tetris/interfaces/Font";
+import { LootboxType } from "tetris/lootbox/lootboxType";
 
 export default class LootboxSprite {
 	//region public members
@@ -55,6 +56,10 @@ export default class LootboxSprite {
 	public setSpriteDepth(depth: number): void {
 		this.sprite.setDepth(depth);
 	}
+
+	public setLootboxType(lootboxType: LootboxType) {
+		this.sprite.setTexture(LootboxSprite.lootboxTypeTextureMap.get(lootboxType));
+	}
 	//endregion
 
 	//region constructor
@@ -75,6 +80,13 @@ export default class LootboxSprite {
   private readonly chestFrameCount = 6;
 	private readonly chestAnimationSpeed = 23;
 	private _active: boolean = true;
+	private static readonly lootboxTypeTextureMap: Map<LootboxType, string> = new Map([
+			[LootboxType.Bronze, config.atlasKeys.bronzeChestAtlasKey],
+			[LootboxType.Silver, config.atlasKeys.silverChestAtlasKey],
+			[LootboxType.Gold, config.atlasKeys.goldChestAtlasKey],
+			[LootboxType.Diamond, config.atlasKeys.diamondChestAtlasKey],
+			[LootboxType.Cyber, config.atlasKeys.cyberChestAtlasKey],
+		]);
 	//endregion
 
 	//region private methods  
