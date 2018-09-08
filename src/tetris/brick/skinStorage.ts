@@ -40,7 +40,7 @@ export default class SkinStorage {
                 }
             }
             this.skins.set(brickType, brickSkins);
-            this.equippedSkins.set(brickType, brickSkins[0]);
+            this.equippedSkins.set(brickType, brickSkins[brickType % this.skinAmountPerSkinSet]);
         }
     }
 	//endregion

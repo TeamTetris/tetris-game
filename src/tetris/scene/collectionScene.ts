@@ -95,6 +95,7 @@ export default class CollectionScene extends Phaser.Scene {
 			const x = i < 4 ? menuX1 : menuX2;
 			const y = menuY + (i % 4) * spacingY + (i / 4) * spacingY * 0.5;
 			const brick = new BrickFactory(this, null, null).newCustomBrick(i as BrickType, customBrickOffsets[i]);
+			brick.blocks.forEach(b => b.spriteFrameName = this._selectedSkins.get(i).frameName);
 			const text = this.add.bitmapText(0, y + 70, config.ui.fontKeys.kenneyMiniSquare, this._selectedSkins.get(i).name);
 			text.x = x - text.width / 2;
 			new TextButton(
