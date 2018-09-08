@@ -73,7 +73,7 @@ export default class LootboxSprite {
   private readonly _onClick: () => any;
   private readonly chestFrameKeyPrefix = "chest_00";
   private readonly chestFrameCount = 6;
-	private readonly chestAnimationSpeed = 90;
+	private readonly chestAnimationSpeed = 23;
 	private _active: boolean = true;
 	//endregion
 

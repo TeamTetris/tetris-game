@@ -46,6 +46,7 @@ export default class LootboxScene extends Phaser.Scene {
 	private _exitButton: TextButton;
 	private _overlay: Phaser.GameObjects.Sprite;
 	private _displayedBricks: CustomBrick[] = [];
+	private _displayedTexts: Phaser.GameObjects.BitmapText[] = [];
 	private readonly _depthBackground: number = 0.1;
 	private readonly _depthBackgroundElements: number = 0.2;
 	private readonly _depthOverlay: number = 0.3;
@@ -114,15 +115,23 @@ export default class LootboxScene extends Phaser.Scene {
 		this._exitButton.active = false;
 		this._overlay.setVisible(true);
 		const spacingX = config.graphics.width / 6;
+		const spacingY = 70;
 		for (let i = 0; i < unlockedSkins.length; i++) {
+			const x = config.graphics.width / 2 + ((i - unlockedSkins.length / 2 + 0.5) * spacingX);
+			const y = config.graphics.height / 2;
 			const newBrick = new CustomBrick(
 				this, 
 				unlockedSkins[i].brickType, 
 				unlockedSkins[i].frameName, 
-				config.graphics.width / 2 + ((i - unlockedSkins.length / 2 + 0.5) * spacingX), 
-				config.graphics.height / 2
+				x, 
+				y
 			);
+			const text = this.add.bitmapText(0, y + spacingY, config.ui.fontKeys.kenneyMiniSquare, unlockedSkins[i].name);
+			text.setDepth(this._depthOverlayElements);
+			text.x = x - text.width / 2;
+			text.tint = skinRarityColor[unlockedSkins[i].rarity];
 			newBrick.setSpriteDepth(this._depthOverlayElements);
+			this._displayedTexts.push(text);
 			this._displayedBricks.push(newBrick);
 		}
 	}
@@ -134,8 +143,12 @@ export default class LootboxScene extends Phaser.Scene {
 		for (let b of this._displayedBricks) {
 			b.destroy();
 		}
+		for (let t of this._displayedTexts) {
+			t.destroy();
+		}
+		this._displayedTexts = [];
 		this._displayedBricks = [];
-		this._lootboxSprite.playCloseAnimation();
+		this._lootboxSprite.resetAnimation();
 	}
 
 	private _createButtons(): void {
