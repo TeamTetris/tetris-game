@@ -26,6 +26,8 @@
 #evaluation-dialog-timeline {
     margin-top: 80px;
     margin-bottom: 300px;
+    margin-left: -1px;
+    margin-right: -1px;
 }
 
 .vis-inner, .vis-item-content, .vis-text {

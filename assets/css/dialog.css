@@ -225,6 +225,8 @@ input[type="button"].dialog-reject-element:hover, button.dialog-reject-element:h
     display: grid;
     grid-template-columns: auto auto auto auto;
     grid-column-gap: 75px;
+    max-width: 900px;
+    align-self: center;
 }
 
 #evaluation-dialog-basic-information > div {
@@ -240,8 +242,15 @@ input[type="button"].dialog-reject-element:hover, button.dialog-reject-element:h
 #evaluation-dialog {
     max-height: 100%;
     height: unset;
+    font-family: Helvetica, Arial, sans-serif;
 }
 
 #evaluation-dialog .dialog-body {
     align-items: unset;
+    width: 100%;
+    padding: 0px;
+}
+
+#evaluation-dialog h1 {
+    text-align: center;
 }
