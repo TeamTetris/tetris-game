@@ -34,6 +34,13 @@ export default class TextButton {
 		this.button.y = y;
 		this._adjustTextY();
 	}
+
+	public set active(active: boolean) {
+		if (!active && this._active) {
+			this._setVisualPressedState(false);
+		}
+		this._active = active;
+	}
 	//endregion
 
 	//region public methods
@@ -58,6 +65,7 @@ export default class TextButton {
 	private readonly _buttonSpriteUp: string;
 	private readonly _buttonSpriteDown: string;
 	private _buttonPressed: boolean = false;
+	private _active: boolean = true;
 	//endregion
 
 	//region private methods
@@ -79,19 +87,31 @@ export default class TextButton {
 
 	private _registerButtonEvents(): void {
 		this.button.on('pointerdown', () => {
+			if (!this._active) {
+				return;
+			}
 			this._setVisualPressedState(true);
 		});
 
 		this.button.on('pointerup', () => {
+			if (!this._active) {
+				return;
+			}
 			this._setVisualPressedState(false);			
 			this._onClick();
 		});
 
 		this.button.on('pointerover', () => {
+			if (!this._active) {
+				return;
+			}
 			this.button.tint = 0xe0e0e0;
 		});
 		
 		this.button.on('pointerout', () => {
+			if (!this._active) {
+				return;
+			}
 			this.button.tint = 0xffffff;
 			if (this._buttonPressed) {
 				this._setVisualPressedState(false);
