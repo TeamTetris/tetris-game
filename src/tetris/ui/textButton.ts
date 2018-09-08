@@ -44,6 +44,10 @@ export default class TextButton {
 	//endregion
 
 	//region public methods
+	public setDepth(depth: number): void {
+		this.button.setDepth(depth);
+		this.text.setDepth(depth);
+	}
 	//endregion
 
 	//region constructor

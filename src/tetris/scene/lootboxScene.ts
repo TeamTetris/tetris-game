@@ -46,6 +46,10 @@ export default class LootboxScene extends Phaser.Scene {
 	private _exitButton: TextButton;
 	private _overlay: Phaser.GameObjects.Sprite;
 	private _displayedBricks: CustomBrick[] = [];
+	private readonly _depthBackground: number = 0.1;
+	private readonly _depthBackgroundElements: number = 0.2;
+	private readonly _depthOverlay: number = 0.3;
+	private readonly _depthOverlayElements: number = 0.4;
 	//endregion
 
 	//region private methods
@@ -53,6 +57,7 @@ export default class LootboxScene extends Phaser.Scene {
 		const backgroundGraphics = this.add.graphics();
 		backgroundGraphics.fillStyle(0x2f2f2f);
 		backgroundGraphics.fillRect(0, 0, config.graphics.width, config.graphics.height);
+		backgroundGraphics.setDepth(this._depthBackground);
 	}
 
 	private _createOverlay(): void {
@@ -62,11 +67,9 @@ export default class LootboxScene extends Phaser.Scene {
 		rectangle.generateTexture('overlay');
 		this._overlay = this.add.sprite(config.graphics.width / 2, config.graphics.height / 2, 'overlay');
 		this._overlay.setVisible(false);
-		this._overlay.setDepth(0.5);
+		this._overlay.setDepth(this._depthOverlay);
 		this._overlay.setInteractive();
-		this._overlay.on('pointerup', function(){
-			this._closeOverlay();
-		}.bind(this));
+		this._overlay.on('pointerup', this._closeOverlay.bind(this));
 	}
 
 	private _unlockSkins(): Skin[] {
@@ -119,7 +122,7 @@ export default class LootboxScene extends Phaser.Scene {
 				config.graphics.width / 2 + ((i - unlockedSkins.length / 2 + 0.5) * spacingX), 
 				config.graphics.height / 2
 			);
-			newBrick.setSpriteDepth(1.0);
+			newBrick.setSpriteDepth(this._depthOverlayElements);
 			this._displayedBricks.push(newBrick);
 		}
 	}
@@ -137,7 +140,9 @@ export default class LootboxScene extends Phaser.Scene {
 
 	private _createButtons(): void {
 		this._lootboxSprite = new LootboxSprite(this, config.graphics.width / 2, config.graphics.height / 2, this._openChest.bind(this));
+		this._lootboxSprite.setSpriteDepth(this._depthBackgroundElements);
 		this._exitButton = new TextButton(this, config.graphics.width / 2, config.graphics.height * 7 / 8, "green_button00.png", "green_button01.png", "Done", function(){ this._game.changeScene(config.sceneKeys.menuScene); }.bind(this));
+		this._exitButton.setDepth(this._depthBackgroundElements);	
 	}
  	//endregion
 }

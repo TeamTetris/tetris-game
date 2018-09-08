@@ -50,7 +50,11 @@ export default class LootboxSprite {
 
   public resetAnimation(): void {
     this.sprite.setFrame(this.chestFrameKeyPrefix + "1");
-  }
+	}
+	
+	public setSpriteDepth(depth: number): void {
+		this.sprite.setDepth(depth);
+	}
 	//endregion
 
 	//region constructor
@@ -69,7 +73,7 @@ export default class LootboxSprite {
   private readonly _onClick: () => any;
   private readonly chestFrameKeyPrefix = "chest_00";
   private readonly chestFrameCount = 6;
-	private readonly chestAnimationSpeed = 10;
+	private readonly chestAnimationSpeed = 90;
 	private _active: boolean = true;
 	//endregion
 
