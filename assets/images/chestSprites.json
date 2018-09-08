@@ -1,0 +1,40 @@
+{
+"frames": {
+	"chest_001": {
+		"frame": {"x":257, "y":0, "w":256, "h":304},
+		"spriteSourceSize": {"x":0,"y":0,"w":256,"h":304},
+		"sourceSize": {"w":256,"h":304}
+	},
+	"chest_002": {
+		"frame": {"x":514, "y":0, "w":256, "h":304},
+		"spriteSourceSize": {"x":0,"y":0,"w":256,"h":304},
+		"sourceSize": {"w":256,"h":304}
+	},
+	"chest_003": {
+		"frame": {"x":257, "y":305, "w":256, "h":304},
+		"spriteSourceSize": {"x":0,"y":0,"w":256,"h":304},
+		"sourceSize": {"w":256,"h":304}
+	},
+	"chest_004": {
+		"frame": {"x":514, "y":305, "w":256, "h":304},
+		"spriteSourceSize": {"x":0,"y":0,"w":256,"h":304},
+		"sourceSize": {"w":256,"h":304}
+	},
+	"chest_005": {
+		"frame": {"x":0, "y":305, "w":256, "h":304},
+		"spriteSourceSize": {"x":0,"y":0,"w":256,"h":304},
+		"sourceSize": {"w":256,"h":304}
+	},
+	"chest_006": {
+		"frame": {"x":0, "y":0, "w":256, "h":304},
+		"spriteSourceSize": {"x":0,"y":0,"w":256,"h":304},
+		"sourceSize": {"w":256,"h":304}
+	}
+
+},
+"meta": {
+	"image": "bronzeChest.png",
+	"size": {"w": 771, "h": 610},
+	"scale": "1"
+}
+}

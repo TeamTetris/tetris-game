@@ -2,11 +2,13 @@ const config = {
     sceneKeys: {
         playScene: 'PlayScene',
         menuScene: 'MenuScene',
-        collectionScene: 'CollectionScene'
+        collectionScene: 'CollectionScene',
+        lootboxScene: 'LootboxScene'
     },
     atlasKeys: {
         uiSpriteAtlasKey: "uiSpriteAtlas",
         blockSpriteAtlasKey: "blockSpriteAtlas",
+        goldChestAtlasKey: "goldChestAtlas"
     },
     ui: {
         spacing: 20,

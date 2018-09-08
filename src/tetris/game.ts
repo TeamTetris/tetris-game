@@ -13,6 +13,7 @@ import CreateProfileDialog from "tetris/ui/dialog/createProfileDialog";
 import CollectionScene from "tetris/scene/collectionScene";
 import SkinStorage from "tetris/brick/skinStorage";
 import EvaluationView from "tetris/ui/dialog/evaluationView";
+import LootboxScene from "tetris/scene/lootboxScene";
 
 // main game configuration
 const gameConfig: GameConfig = {
@@ -54,10 +55,12 @@ export default class Game extends Phaser.Game {
 		const menuScene = new MenuScene(this);
 		const playScene = new PlayScene(this, this._skinStorage);
 		const collectionScene = new CollectionScene(this, this._skinStorage);
+		const lootboxScene = new LootboxScene(this, this._skinStorage);
 
 		this.scene.add(config.sceneKeys.playScene, playScene);
 		this.scene.add(config.sceneKeys.collectionScene, collectionScene);
 		this.scene.add(config.sceneKeys.menuScene, menuScene, true);
+		this.scene.add(config.sceneKeys.lootboxScene, lootboxScene);
 		this._activeScene = config.sceneKeys.menuScene;
 		Game._createGameProfile();
 	}
