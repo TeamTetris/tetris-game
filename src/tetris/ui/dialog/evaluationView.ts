@@ -83,20 +83,6 @@ export default class EvaluationView {
 		nodes.forEach(datum => this._displayDatum(datum));
 	}
 
-	private _displayLastPlayerImage(): void {
-		// for (const [index, fppAnalysis] of this.profile.fppFaceAnalysis.valueHistory.entries()) {
-		// 	this._informationContainer.innerHTML += `<img src"${BASE64_IMAGE_PREFIX + fppAnalysis.image}" class="display">`
-		// 	this._pictureContainer.classList.add("display");
-		// 	this._pictureContainer.src = BASE64_IMAGE_PREFIX + this.profile.image;
-		// }
-		// if (this.profile.image) {
-		// 	this._pictureContainer.classList.add("display");
-		// 	this._pictureContainer.src = BASE64_IMAGE_PREFIX + this.profile.image;
-		// } else {
-		// 	this._pictureContainer.classList.remove("display");
-		// }
-	}
-
 	private static _getDisplayBiasValue(biasValue: number): string {
 		const factor = (biasValue - BiasEngine.NEUTRAL_BIAS_VALUE) / (BiasEngine.BIAS_RANGE / 2);
 		return (factor * 100).toFixed(4) + "%";
@@ -204,7 +190,6 @@ export default class EvaluationView {
 
 	private _update(): void {
 		this._displayBasicInformation();
-		this._displayLastPlayerImage();
 		this._createTimeLineGroups();
 		this._displayTimeline();
 	}
