@@ -118,9 +118,12 @@ export default class LootboxScene extends Phaser.Scene {
 	}
 
 	private _openChest(): void {
-		this._lootboxSprite.playOpenAnimation();
-
 		const unlockedSkins = this._unlockSkins();
+		this._openOverlay(unlockedSkins);
+	}
+
+	private _openOverlay(unlockedSkins: Skin[]) {
+		this._lootboxSprite.playOpenAnimation();
 
 		this._lootboxSprite.active = false;
 		this._exitButton.active = false;		
@@ -150,8 +153,10 @@ export default class LootboxScene extends Phaser.Scene {
 	}
 
 	private _closeOverlay(): void {
-		this._exitButton.active = true;
+		this._lootboxSprite.resetAnimation();
+
 		this._lootboxSprite.active = true;
+		this._exitButton.active = true;
 		this._buttonChangeLootboxTypeLeft.active = true;
 		this._buttonChangeLootboxTypeRight.active = true;
 		this._overlay.setVisible(false);
@@ -163,7 +168,6 @@ export default class LootboxScene extends Phaser.Scene {
 		}
 		this._displayedTexts = [];
 		this._displayedBricks = [];
-		this._lootboxSprite.resetAnimation();
 	}
 
 	private _changeLootboxType(indexMovement: number, x: number, lootboxTypeText: Phaser.GameObjects.BitmapText): void {
