@@ -43,6 +43,7 @@ export default class PlayScene extends Phaser.Scene {
 
 	public start(): void {
 		this._sceneStarted = true;
+		this.adjustBackgroundParameters(0.10, [0.2, 0.2, 0.2]);
 		if (!this._localPlayerField) {
 			this._localPlayerField = this._newField(config.field.width, config.field.height, PLAYER_FIELD_DRAW_OFFSET);
 		} else {
@@ -168,7 +169,7 @@ export default class PlayScene extends Phaser.Scene {
 	}
 
 	private _updateMatch(serverMatch: object): void {
-		if (!this._sceneStarted) {
+		if (!this._sceneStarted || (this._match && serverMatch["id"] !== this._match.id)) {
 			return;
 		}
 		this._match = new Match(serverMatch);
@@ -240,6 +241,7 @@ export default class PlayScene extends Phaser.Scene {
 		this._game.networkingClient.emit(NetworkingEvents.LeaveMatch, {});
 		this._game.handleEndOfMatch(this._match);
 		this._startTimerStarted = false;
+		this._match = null;
 	}
 
 	private _createFieldBackground(offset: Vector2, drawScale: number = 1): Phaser.GameObjects.Graphics {
