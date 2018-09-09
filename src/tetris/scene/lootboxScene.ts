@@ -47,6 +47,8 @@ export default class LootboxScene extends Phaser.Scene {
 	private _exitButton: TextButton;
 	private _overlay: Phaser.GameObjects.Sprite;
 	private _lootboxTypeText: Phaser.GameObjects.BitmapText;
+	private _buttonChangeLootboxTypeLeft: TextButton;
+	private _buttonChangeLootboxTypeRight: TextButton;
 	private _displayedBricks: CustomBrick[] = [];
 	private _chestTypeLootFactor: Map<LootboxType, number> = new Map([
 		[LootboxType.Bronze, 0.1],
@@ -121,7 +123,9 @@ export default class LootboxScene extends Phaser.Scene {
 		const unlockedSkins = this._unlockSkins();
 
 		this._lootboxSprite.active = false;
-		this._exitButton.active = false;
+		this._exitButton.active = false;		
+		this._buttonChangeLootboxTypeLeft.active = false;
+		this._buttonChangeLootboxTypeRight.active = false;
 		this._overlay.setVisible(true);
 		const spacingX = config.graphics.width / 6;
 		const spacingY = 70;
@@ -148,6 +152,8 @@ export default class LootboxScene extends Phaser.Scene {
 	private _closeOverlay(): void {
 		this._exitButton.active = true;
 		this._lootboxSprite.active = true;
+		this._buttonChangeLootboxTypeLeft.active = true;
+		this._buttonChangeLootboxTypeRight.active = true;
 		this._overlay.setVisible(false);
 		for (let b of this._displayedBricks) {
 			b.destroy();
@@ -184,7 +190,7 @@ export default class LootboxScene extends Phaser.Scene {
 		const lootboxTypeText = this.add.bitmapText(0, y + spacingY, config.ui.fontKeys.kenneyMiniSquare, 'Bronze Chest');
 		lootboxTypeText.setDepth(this._depthBackgroundElements);
 		lootboxTypeText.x = x - lootboxTypeText.width / 2;
-		new TextButton(
+		this._buttonChangeLootboxTypeLeft = new TextButton(
 			this, 
 			x - spacingX,
 			y, 
@@ -192,8 +198,9 @@ export default class LootboxScene extends Phaser.Scene {
 			"blue_sliderLeft.png", 
 			"", 
 			this._changeLootboxType.bind(this, -1, x, lootboxTypeText)
-		).setDepth(this._depthBackgroundElements);
-		new TextButton(
+		);
+		this._buttonChangeLootboxTypeLeft.setDepth(this._depthBackgroundElements);
+		this._buttonChangeLootboxTypeRight = new TextButton(
 			this, 
 			x + spacingX, 
 			y, 
@@ -201,7 +208,8 @@ export default class LootboxScene extends Phaser.Scene {
 			"blue_sliderRight.png", 
 			"", 
 			this._changeLootboxType.bind(this, 1, x, lootboxTypeText)
-		).setDepth(this._depthBackgroundElements);
+		);
+		this._buttonChangeLootboxTypeRight.setDepth(this._depthBackgroundElements);
 	}
  	//endregion
 }
