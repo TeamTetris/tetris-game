@@ -39,10 +39,12 @@ export default class CountdownWidget {
 	//region public methods
 	public update(time: number, totalTime: number, preGame: boolean): void {
 		if (totalTime <= 0) {
-			throw new Error(`Can't update countdown with total time smaller or equal 0. totalTime: ${totalTime}`);
+			console.error(`Can't update countdown with total time smaller or equal 0. totalTime: ${totalTime}`);
+			return;
 		}
 		if (time < 0) {
-			throw new Error(`Can't update countdown with time smaller 0. time: ${time}`);
+			console.error(`Can't update countdown with time smaller 0. time: ${time}`);
+			return;
 		}
 
 		// Redraw countdown widget
