@@ -43,12 +43,19 @@ export default class PlayScene extends Phaser.Scene {
 
 	public start(): void {
 		this._sceneStarted = true;
-		this._localPlayerField = this._newField(config.field.width, config.field.height, PLAYER_FIELD_DRAW_OFFSET);
+		if (!this._localPlayerField) {
+			this._localPlayerField = this._newField(config.field.width, config.field.height, PLAYER_FIELD_DRAW_OFFSET);
+		} else {
+			this._localPlayerField.fieldState = FieldState.Playing;
+		}
 		this._player = new LocalPlayer(this._localPlayerField, this.input.keyboard, this._game.biasEngine.newEventReceiver());
 	}
 
 	public update(time: number, delta: number): void {
-		if (!this._sceneStarted && this.isSceneActive()) {
+		if (!this.isSceneActive()) {
+			return;
+		}
+		if (!this._sceneStarted) {
 			this.start();
 		}
 		this._localPlayerField.update(time, delta);
@@ -232,6 +239,7 @@ export default class PlayScene extends Phaser.Scene {
 		this._localPlayerField.reset();
 		this._game.networkingClient.emit(NetworkingEvents.LeaveMatch, {});
 		this._game.handleEndOfMatch(this._match);
+		this._startTimerStarted = false;
 	}
 
 	private _createFieldBackground(offset: Vector2, drawScale: number = 1): Phaser.GameObjects.Graphics {
