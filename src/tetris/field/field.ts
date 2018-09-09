@@ -92,7 +92,7 @@ export default class Field {
 	}
 
 	public update(time: number, delta: number): void {
-		if (this._fieldState != FieldState.Playing) {
+		if (this._fieldState !== FieldState.Playing) {
 			return;
 		}
 		if (this._biasEventReceiver.has(BiasEventType.FreezeLocalField)) {
@@ -163,12 +163,11 @@ export default class Field {
 			}
 		}
 		this._score = 0;
-		this._setupField();
+		this._setupBlockArray();
 		if (this.activeBrick) {
 			this.activeBrick.destroy();
 		}
 		this.activeBrick = null;
-		this.fieldState = FieldState.Playing;
 		this.fieldStateChanged = false;
 	}
 	//endregion
@@ -186,7 +185,7 @@ export default class Field {
 		this._bricks = [];
 		this._brickFactory = brickFactory;
 		this._blockRows = new Array(this._height);
-		this._setupField();
+		this._setupBlockArray();
 	}
 	//endregion
 
@@ -222,7 +221,7 @@ export default class Field {
 		}
 	}
 
-	private _setupField(): void {
+	private _setupBlockArray(): void {
 		const iterator = this._blockRows.keys();
 		for (let key of iterator) {
 			this._blockRows[key] = new Array(this._width).fill(null);
