@@ -168,6 +168,8 @@ export default class Field {
 			this.activeBrick.destroy();
 		}
 		this.activeBrick = null;
+		this.fieldState = FieldState.Playing;
+		this.fieldStateChanged = false;
 	}
 	//endregion
 
