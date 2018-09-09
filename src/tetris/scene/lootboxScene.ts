@@ -14,6 +14,8 @@ import { skinRarityColor, SkinRarity } from "tetris/brick/skinRarity";
 import LootboxSprite from "tetris/lootbox/lootboxSprite";
 import CustomBrick from "tetris/brick/customBrick";
 import { LootboxType } from "tetris/lootbox/lootboxType";
+import LootboxStorage from "tetris/lootbox/lootboxStorage";
+import { ScaleModes } from "phaser";
 
 export default class LootboxScene extends Phaser.Scene {
 
@@ -33,20 +35,23 @@ export default class LootboxScene extends Phaser.Scene {
 	//endregion
 
 	//region constructor
-	public constructor(game: Game, skinStorage: SkinStorage) {
+	public constructor(game: Game, skinStorage: SkinStorage, lootboxStorage: LootboxStorage) {
 		super({ key: "LootboxScene" });
 		this._game = game;
 		this._skinStorage = skinStorage;
+		this._lootboxStorage = lootboxStorage;
 	}
 	//endregion
 
 	//region private members
 	private readonly _game: Game;
 	private _skinStorage: SkinStorage;
+	private _lootboxStorage: LootboxStorage;
 	private _lootboxSprite: LootboxSprite;
 	private _exitButton: TextButton;
 	private _overlay: Phaser.GameObjects.Sprite;
 	private _lootboxTypeText: Phaser.GameObjects.BitmapText;
+	private _lootboxAmountText: Phaser.GameObjects.BitmapText;
 	private _buttonChangeLootboxTypeLeft: TextButton;
 	private _buttonChangeLootboxTypeRight: TextButton;
 	private _displayedBricks: CustomBrick[] = [];
@@ -63,6 +68,7 @@ export default class LootboxScene extends Phaser.Scene {
 	private readonly _depthOverlay: number = 0.3;
 	private readonly _depthOverlayElements: number = 0.4;
 	private _selectedLootboxType: LootboxType = LootboxType.Bronze;
+	private readonly _keyBaseX: string = 'baseX';
 	//endregion
 
 	//region private methods
@@ -118,6 +124,7 @@ export default class LootboxScene extends Phaser.Scene {
 	}
 
 	private _openChest(): void {
+		this._lootboxStorage.modifyAmount(this._selectedLootboxType, -1);
 		const unlockedSkins = this._unlockSkins();
 		this._openOverlay(unlockedSkins);
 	}
@@ -150,6 +157,7 @@ export default class LootboxScene extends Phaser.Scene {
 			this._displayedTexts.push(text);
 			this._displayedBricks.push(newBrick);
 		}
+		this._updateSpritesAndText();
 	}
 
 	private _closeOverlay(): void {
@@ -168,32 +176,61 @@ export default class LootboxScene extends Phaser.Scene {
 		}
 		this._displayedTexts = [];
 		this._displayedBricks = [];
+		this._updateSpritesAndText();
 	}
 
-	private _changeLootboxType(indexMovement: number, x: number, lootboxTypeText: Phaser.GameObjects.BitmapText): void {
+	private _updateAmountText(): void {
+		this._lootboxAmountText.setText(this._lootboxStorage.getAmount(this._selectedLootboxType) + 'x');
+		this._lootboxAmountText.x = this._lootboxAmountText.getData(this._keyBaseX) - this._lootboxAmountText.width / 2;
+	}
+
+	private _updateTypeText(): void {
+		this._lootboxTypeText.setText(LootboxType[this._selectedLootboxType] + ' Chest');
+		this._lootboxTypeText.x = this._lootboxTypeText.getData(this._keyBaseX)  - this._lootboxTypeText.width / 2;
+	}
+
+	private _changeLootboxType(indexMovement: number): void {
 		const chestAmount = Object.keys(LootboxType).length / 2;
 		this._selectedLootboxType = (this._selectedLootboxType + indexMovement + chestAmount) % chestAmount;
 		this._lootboxSprite.setLootboxType(this._selectedLootboxType);
-		lootboxTypeText.setText(LootboxType[this._selectedLootboxType] + ' Chest');
-		lootboxTypeText.x = x - lootboxTypeText.width / 2;
-		// if (more than 1 lootbox of this type in storage) { set alpha opaque } else { set alpha 0.2 transparent? }
-		// set amount lootbox text
+		this._updateTypeText();
+		this._updateAmountText();
+		const lootboxAmount = this._lootboxStorage.getAmount(this._selectedLootboxType);
+		if (lootboxAmount > 0) {
+			this._lootboxSprite.setSpriteAlpha(1.0);
+			this._lootboxSprite.active = true;
+		} else {
+			this._lootboxSprite.setSpriteAlpha(0.1);
+			this._lootboxSprite.active = false;
+		}
+	}
+
+	private _updateSpritesAndText(): void {
+		this._changeLootboxType(0);
 	}
 
 	private _createButtons(): void {
 		const x = config.graphics.width / 2;
 		const y = config.graphics.height / 2;
 		const spacingX = 220;
-		const spacingY = 200;
+		const spacingY1 = 130;
+		const spacingY2 = 200;
 
 		this._lootboxSprite = new LootboxSprite(this, x, y - 30, this._openChest.bind(this));
 		this._lootboxSprite.setSpriteDepth(this._depthBackgroundElements);
-		this._exitButton = new TextButton(this, x, config.graphics.height * 7 / 8, "green_button00.png", "green_button01.png", "Done", function(){ this._game.changeScene(config.sceneKeys.menuScene); }.bind(this));
+		this._exitButton = new TextButton(this, x, config.graphics.height * 7 / 8, "green_button00.png", "green_button01.png", "Done", this._game.changeScene.bind(this._game, config.sceneKeys.menuScene));
 		this._exitButton.setDepth(this._depthBackgroundElements);
 		
-		const lootboxTypeText = this.add.bitmapText(0, y + spacingY, config.ui.fontKeys.kenneyMiniSquare, 'Bronze Chest');
-		lootboxTypeText.setDepth(this._depthBackgroundElements);
-		lootboxTypeText.x = x - lootboxTypeText.width / 2;
+		this._lootboxTypeText = this.add.bitmapText(0, y + spacingY2, config.ui.fontKeys.kenneyMiniSquare, '');
+		this._lootboxTypeText.setDepth(this._depthBackgroundElements);
+		this._lootboxTypeText.setData(this._keyBaseX, x);
+
+		this._lootboxAmountText = this.add.bitmapText(0, y + spacingY1, config.ui.fontKeys.kenneyMiniSquare, '');
+		this._lootboxAmountText.setDepth(this._depthBackgroundElements);
+		this._lootboxAmountText.setScale(2);
+		this._lootboxAmountText.setScaleMode(ScaleModes.NEAREST);
+		this._lootboxAmountText.setData(this._keyBaseX, x);
+
 		this._buttonChangeLootboxTypeLeft = new TextButton(
 			this, 
 			x - spacingX,
@@ -201,7 +238,7 @@ export default class LootboxScene extends Phaser.Scene {
 			"blue_sliderLeft.png", 
 			"blue_sliderLeft.png", 
 			"", 
-			this._changeLootboxType.bind(this, -1, x, lootboxTypeText)
+			this._changeLootboxType.bind(this, -1)
 		);
 		this._buttonChangeLootboxTypeLeft.setDepth(this._depthBackgroundElements);
 		this._buttonChangeLootboxTypeRight = new TextButton(
@@ -211,9 +248,11 @@ export default class LootboxScene extends Phaser.Scene {
 			"blue_sliderRight.png", 
 			"blue_sliderRight.png", 
 			"", 
-			this._changeLootboxType.bind(this, 1, x, lootboxTypeText)
+			this._changeLootboxType.bind(this, 1)
 		);
 		this._buttonChangeLootboxTypeRight.setDepth(this._depthBackgroundElements);
+
+		this._updateSpritesAndText();
 	}
  	//endregion
 }

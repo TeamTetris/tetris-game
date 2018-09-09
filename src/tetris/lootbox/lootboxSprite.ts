@@ -60,6 +60,10 @@ export default class LootboxSprite {
 	public setLootboxType(lootboxType: LootboxType) {
 		this.sprite.setTexture(LootboxSprite.lootboxTypeTextureMap.get(lootboxType));
 	}
+
+	public setSpriteAlpha(alpha: number): void {
+		this.sprite.setAlpha(alpha);
+	}
 	//endregion
 
 	//region constructor
