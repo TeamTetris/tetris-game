@@ -119,7 +119,9 @@ export default class Game extends Phaser.Game {
 		const createProfileDialog = CreateProfileDialog.display();
 		createProfileDialog.show();
 		await createProfileDialog.awaitResult();
-		// TODO: Add Profile Creation on remote based on data stored in CreateProfileDialog
+		if (createProfileDialog.getRewards) {
+			// TODO: Give chests
+		}
 	}
 	//endregion
 }
