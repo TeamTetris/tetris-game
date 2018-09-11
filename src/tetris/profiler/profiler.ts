@@ -11,6 +11,8 @@ import Match from "tetris/match/match";
 import FppFaceAnalysis from "tetris/profiler/profileValues/fppFaceAnalysis";
 import Dialog from "tetris/ui/dialog/dialog";
 import DialogResult from "tetris/ui/dialog/dialogResult";
+import CameraController from "tetris/profiler/hardwareController/cameraController";
+import HardwarePermission from "tetris/profiler/hardwareController/hardwarePermission";
 
 const CONFIDENCE_THRESHOLD = 0.25;
 
@@ -124,9 +126,10 @@ export default class Profiler {
 		this._callService(GeoLocationService.serviceName);
 	}
 
-	private _handleStartOfMatch(match: Match): void {
+	private _handleStartOfMatch(): void {
 		this._paused = false;
-		if (this._profile.numberOfMatches < 1) {
+		if (CameraController.instance.permissionState === HardwarePermission.Granted
+			&& !this._services.get(FppAnalysisService.serviceName).hasBeenStarted) {
 			this._callService(FppAnalysisService.serviceName);
 		}
 	}
