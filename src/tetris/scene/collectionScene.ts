@@ -11,6 +11,7 @@ import BrickFactory from "tetris/brick/brickFactory";
 import SkinStorage from "tetris/brick/skinStorage";
 import Skin from "tetris/brick/skin";
 import { skinRarityColor } from "tetris/brick/skinRarity";
+import CustomBrick from "tetris/brick/customBrick";
 
 export default class CollectionScene extends Phaser.Scene {
 
@@ -94,9 +95,16 @@ export default class CollectionScene extends Phaser.Scene {
 		for (let i = 0; i < Object.keys(BrickType).length / 2; i++) {
 			const x = i < 4 ? menuX1 : menuX2;
 			const y = menuY + (i % 4) * spacingY + (i / 4) * spacingY * 0.5;
-			const brick = new BrickFactory(this, null, null).newCustomBrick(i as BrickType, customBrickOffsets[i]);
-			const text = this.add.bitmapText(0, y + 70, config.ui.fontKeys.kenneyMiniSquare, this._selectedSkins.get(i).name);
+			const brick = new CustomBrick(this, i, this._selectedSkins.get(i).frameName, x, y);
+			const text = this.add.bitmapText(
+				0,
+				y + 70,
+				config.ui.fontKeys.kenneyMiniSquare,
+				this._selectedSkins.get(i).name);
 			text.x = x - text.width / 2;
+
+			const lock = this.add.sprite(x, y, config.graphics.lockTextureKey);
+			lock.setVisible(false);
 			new TextButton(
 				this, 
 				x - spacingX, 
@@ -104,9 +112,8 @@ export default class CollectionScene extends Phaser.Scene {
 				"blue_sliderLeft.png", 
 				"blue_sliderLeft.png", 
 				"", 
-				this._changeSkin.bind(this, brick, i, -1, text, x)
+				this._changeSkin.bind(this, brick, i as BrickType, lock, -1, text, x)
 			);
-			brick.preDraw(new Vector2(x, y));
 			new TextButton(
 				this, 
 				x + spacingX, 
@@ -114,19 +121,33 @@ export default class CollectionScene extends Phaser.Scene {
 				"blue_sliderRight.png", 
 				"blue_sliderRight.png", 
 				"", 
-				this._changeSkin.bind(this, brick, i, 1, text, x)
+				this._changeSkin.bind(this, brick, i as BrickType, lock, 1, text, x)
 			);
 		}
 	}
 
-	private _changeSkin(brick: Brick, brickType: BrickType, indexMovement: number, text: Phaser.GameObjects.BitmapText, textBaseX: number): void {
-		const newSkin = this._skinStorage.getSkin(brickType, (this._selectedSkins.get(brickType).id + indexMovement + this._skinStorage.skinAmount) % this._skinStorage.skinAmount);
+	private _changeSkin(
+			brick: CustomBrick, 
+			brickType: BrickType, 
+			lock: Phaser.GameObjects.Sprite, 
+			indexMovement: number, 
+			text: Phaser.GameObjects.BitmapText, 
+			textBaseX: number): void {
+		const newSkinIndex = this._selectedSkins.get(brickType).id + indexMovement + this._skinStorage.skinAmount;
+		const newSkin = this._skinStorage.getSkin(brickType, newSkinIndex % this._skinStorage.skinAmount);
 		this._selectedSkins.set(brickType, newSkin);
-		brick.blocks.forEach(b => b.spriteFrameName = newSkin.frameName);
+		brick.setFrameName(newSkin.frameName);
 		text.setText(newSkin.name);
 		text.x = textBaseX - text.width / 2;
 		text.tint = skinRarityColor[newSkin.rarity];
-		this._skinStorage.equipSkin(brickType, newSkin);
+		if (newSkin.isUnlocked) {
+			this._skinStorage.equipSkin(brickType, newSkin);
+			lock.setVisible(false);
+			brick.setTint(0xffffff);
+		} else {
+			lock.setVisible(true);
+			brick.setTint(0x000000);
+		}
 	}	
  	//endregion
 }

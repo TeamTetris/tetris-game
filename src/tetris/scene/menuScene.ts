@@ -18,7 +18,13 @@ export default class MenuScene extends Phaser.Scene {
 	public preload(): void {
 		this.load.atlas(config.atlasKeys.blockSpriteAtlasKey, "./assets/images/blockSprites.png", "./assets/images/blockSprites.json");
 		this.load.atlas(config.atlasKeys.uiSpriteAtlasKey, "./assets/images/uiSprites.png", "./assets/images/uiSprites.json");
+		this.load.atlas(config.atlasKeys.goldChestAtlasKey, "./assets/images/goldChest.png", "./assets/images/chestSprites.json");
+		this.load.atlas(config.atlasKeys.bronzeChestAtlasKey, "./assets/images/bronzeChest.png", "./assets/images/chestSprites.json");
+		this.load.atlas(config.atlasKeys.silverChestAtlasKey, "./assets/images/silverChest.png", "./assets/images/chestSprites.json");
+		this.load.atlas(config.atlasKeys.diamondChestAtlasKey, "./assets/images/diamondChest.png", "./assets/images/chestSprites.json");
+		this.load.atlas(config.atlasKeys.cyberChestAtlasKey, "./assets/images/cyberChest.png", "./assets/images/chestSprites.json");
 		this.load.image(config.graphics.noiseTextureKey, "./assets/images/noise.png");
+		this.load.image(config.graphics.lockTextureKey, "./assets/images/lock.png");
 		this.load.bitmapFont(config.ui.fontKeys.kenneyMiniSquare, "./assets/font/KenneyMiniSquare.png", "./assets/font/KenneyMiniSquare.fnt", );
 		this.load.glsl('rainbow', "./assets/shaders/rainbow.glsl");
 		this.load.glsl('interstellar', "./assets/shaders/interstellar.glsl");
@@ -54,6 +60,7 @@ export default class MenuScene extends Phaser.Scene {
 	private _background: Phaser.GameObjects.Sprite;
 	private _playButton: TextButton;
 	private _collectionButton: TextButton;
+	private _lootboxButton: TextButton;
 	private _exitButton: TextButton;
 	private readonly _game: Game;
 	private _pipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
@@ -110,11 +117,29 @@ export default class MenuScene extends Phaser.Scene {
 			"My Collection", 
 			this._game.changeScene.bind(this._game, config.sceneKeys.collectionScene) 
 		);
-		
-		this._exitButton = new TextButton(this, buttonPositionX, 0, "blue_button00.png", "blue_button01.png", "Exit Game", this._game.exit);
+		this._lootboxButton = new TextButton(
+			this, 
+			buttonPositionX, 
+			0, 
+			"blue_button00.png", 
+			"blue_button01.png", 
+			"Open Lootboxes", 
+			this._game.changeScene.bind(this._game, config.sceneKeys.lootboxScene) 
+		);
+		this._exitButton = new TextButton(
+			this, 
+			buttonPositionX, 
+			0, 
+			"red_button01.png", 
+			"red_button00.png", 
+			"Exit Game", 
+			this._game.exit
+		);
+
 		this._playButton.y = menuStartY;
 		this._collectionButton.y = menuStartY + this._playButton.height + spacing;
-		this._exitButton.y = this._collectionButton.y + this._collectionButton.height + spacing;
+		this._lootboxButton.y = this._collectionButton.y + this._collectionButton.height + spacing;
+		this._exitButton.y = this._lootboxButton.y + this._lootboxButton.height + spacing;
 	}
 
 	private _joinMatchmaking(): void {

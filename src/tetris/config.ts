@@ -2,11 +2,17 @@ const config = {
     sceneKeys: {
         playScene: 'PlayScene',
         menuScene: 'MenuScene',
-        collectionScene: 'CollectionScene'
+        collectionScene: 'CollectionScene',
+        lootboxScene: 'LootboxScene'
     },
     atlasKeys: {
         uiSpriteAtlasKey: "uiSpriteAtlas",
         blockSpriteAtlasKey: "blockSpriteAtlas",
+        goldChestAtlasKey: "goldChestAtlas",
+        bronzeChestAtlasKey: "bronzeChestAtlas",
+        silverChestAtlasKey: "silverChestAtlas",
+        diamondChestAtlasKey: "diamondChestAtlas",
+        cyberChestAtlasKey: "cyberChestAtlas",
     },
     ui: {
         spacing: 20,
@@ -66,7 +72,8 @@ const config = {
     graphics: {
         width: window.innerWidth,
         height: window.innerHeight,
-        noiseTextureKey: 'noise'
+        noiseTextureKey: 'noise',
+        lockTextureKey: 'lock',
     },
     serverAddress: "https://tetrisboi.herokuapp.com",
 };

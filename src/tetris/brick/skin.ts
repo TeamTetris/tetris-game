@@ -23,6 +23,10 @@ export default class Skin {
     public get rarity(): SkinRarity {
         return this._rarity;
     }
+
+    public get brickType(): BrickType {
+        return this._brickType;
+    }
 	//endregion
 
     //region public methods
