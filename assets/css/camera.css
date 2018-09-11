@@ -13,6 +13,13 @@
     height: 100%;
 }
 
+.loading-animation {
+    position: absolute;
+    top: 140px;
+    left: 220px;
+    display: none;
+}
+
 .app #start-camera{
     display: none;
     border-radius: 3px;
