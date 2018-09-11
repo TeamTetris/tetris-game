@@ -1,4 +1,5 @@
 import HardwarePermission from "tetris/profiler/hardwareController/hardwarePermission";
+import Utility from "tetris/utility";
 
 export default class CameraController {
 
@@ -67,6 +68,7 @@ export default class CameraController {
 		} catch (error) {
 			throw error;
 		}
+		await Utility.sleep(1000);
 		return Promise.resolve(this._takeSnapshot());
 	}
 

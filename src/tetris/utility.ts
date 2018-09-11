@@ -11,6 +11,10 @@ export default class Utility {
 	public static displayAsPercent(value: number): string {
 		return (value * 100.0).toFixed(4) + "%";
 	}
+
+	public static sleep(millisecondOfDelay: number): Promise<void> {
+		return new Promise(resolve => setTimeout(resolve, millisecondOfDelay));
+	}
 	//endregion
 
 	//region public members
