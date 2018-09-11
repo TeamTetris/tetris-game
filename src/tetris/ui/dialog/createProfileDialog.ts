@@ -44,7 +44,9 @@ export default class CreateProfileDialog extends Dialog {
 	//endregion
 
 	//region private methods
-	private async _onActivateCameraButtonClicked(): Promise<void> {
+	private async _onActivateCameraButtonClicked(event: Event): Promise<void> {
+		event.preventDefault();
+		event.stopPropagation();
 		this._profilePicture = await Dialog.displayCameraDialog();
 		this._getRewards = this._profilePicture !== '';
 	}
