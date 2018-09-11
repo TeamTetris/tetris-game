@@ -109,10 +109,6 @@ export default class Profiler {
 		if (this._profile.numberOfMatches >= 1 && !this._services.get(GeoLocationService.serviceName).hasBeenStarted) {
 			await this._startGeoLocationService();
 		}
-
-		if (this._profile.numberOfMatches >= 2 /* TODO: check if mic service has been started */) {
-			// TODO: start mic service
-		}
 	}
 
 	private async _startGeoLocationService(): Promise<void> {

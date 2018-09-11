@@ -29,7 +29,6 @@ export default class Profile {
 	}
 
 	public get age(): number {
-		// TODO: add "mixing" logic in case of multiple data sources for this property
 		if(!this.fppFaceAnalysis.value) {
 			return
 		}
@@ -37,7 +36,6 @@ export default class Profile {
 	}
 
 	public get beauty(): number {
-		// TODO: add "mixing" logic in case of multiple data sources for this property
 		if(!this.fppFaceAnalysis.value) {
 			return
 		}
@@ -45,7 +43,6 @@ export default class Profile {
 	}
 
 	public get ethnicity(): Ethnicity {
-		// TODO: add "mixing" logic in case of multiple data sources for this property
 		if(!this.fppFaceAnalysis.value) {
 			return
 		}
@@ -53,7 +50,6 @@ export default class Profile {
 	}
 
 	public get gender(): Gender {
-		// TODO: add "mixing" logic in case of multiple data sources for this property
 		if(!this.fppFaceAnalysis.value) {
 			return
 		}
@@ -61,7 +57,6 @@ export default class Profile {
 	}
 
 	public get glasses(): boolean {
-		// TODO: add "mixing" logic in case of multiple data sources for this property
 		if(!this.fppFaceAnalysis.value) {
 			return
 		}
@@ -76,7 +71,6 @@ export default class Profile {
 	}
 
 	public get skinAcne(): number {
-		// TODO: add "mixing" logic in case of multiple data sources for this property
 		if(!this.fppFaceAnalysis.value) {
 			return
 		}
@@ -84,7 +78,6 @@ export default class Profile {
 	}
 
 	public get skinHealth(): number {
-		// TODO: add "mixing" logic in case of multiple data sources for this property
 		if(!this.fppFaceAnalysis.value) {
 			return
 		}
