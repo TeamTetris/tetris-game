@@ -18,7 +18,7 @@ export default abstract class Player {
 	//region private members
 	private _field: Field;
 	private _lastMoveDown: number = new Date().valueOf();
-	private _moveDownInterval: number = 50;
+	private readonly _moveDownInterval: number = 50;
 	//endregion
 
 	//region private methods
@@ -46,7 +46,8 @@ export default abstract class Player {
 			return;
 		}
 
-		if (this._lastMoveDown + this._moveDownInterval < new Date().valueOf() && this._field.activeBrick.moveDown()) {
+		const moveDown = this._lastMoveDown + this._moveDownInterval < new Date().valueOf();
+		if (moveDown && this._field.activeBrick.moveDown()) {
 			this._lastMoveDown = this._lastMoveDown + this._moveDownInterval;
 			this._field.addMoveBonusPoints();
 		}

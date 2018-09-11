@@ -8,27 +8,27 @@ import { LootboxType } from "tetris/lootbox/lootboxType";
 export default class LootboxSprite {
 	//region public members
 	public get height(): number {
-		return this.sprite.height;
+		return this._sprite.height;
 	}
 
 	public get width(): number {
-		return this.sprite.width;
+		return this._sprite.width;
 	}
 
 	public get x(): number {
-		return this.sprite.x;
+		return this._sprite.x;
 	}
 
 	public get y(): number {
-		return this.sprite.y;
+		return this._sprite.y;
 	}
 
 	public set x(x: number) {
-		this.sprite.x = x;
+		this._sprite.x = x;
 	}
 
 	public set y(y: number) {
-		this.sprite.y = y;
+		this._sprite.y = y;
 	}
 
 	public set active(active: boolean) {
@@ -38,23 +38,28 @@ export default class LootboxSprite {
 
   //region public methods
   public playOpenAnimation(): void {
-    for (let i = 1; i < this.chestFrameCount; i++) {
-      setTimeout(this.sprite.setFrame.bind(this.sprite, this.chestFrameKeyPrefix + (i + 1)), i * this.chestAnimationSpeed);
+    for (let i = 1; i < this._chestFrameCount; i++) {
+      setTimeout(
+				this._sprite.setFrame.bind(this._sprite, this._chestFrameKeyPrefix + (i + 1)),
+				i * this._chestAnimationSpeed);
     }
 	}
 	
   public playCloseAnimation(): void {
-    for (let i = this.chestFrameCount - 1; i > 0; i--) {
-      setTimeout(this.sprite.setFrame.bind(this.sprite, this.chestFrameKeyPrefix + i), (this.chestFrameCount - i) * this.chestAnimationSpeed);
+    for (let i = this._chestFrameCount - 1; i > 0; i--) {
+			setTimeout(
+				this._sprite.setFrame.bind(this._sprite, this._chestFrameKeyPrefix + i), 
+				(this._chestFrameCount - i) * this._chestAnimationSpeed
+			);
     }
   }
 
   public resetAnimation(): void {
-    this.sprite.setFrame(this.chestFrameKeyPrefix + "1");
+    this._sprite.setFrame(this._chestFrameKeyPrefix + "1");
 	}
 	
 	public setSpriteDepth(depth: number): void {
-		this.sprite.setDepth(depth);
+		this._sprite.setDepth(depth);
 	}
 
 	public setLootboxType(lootboxType: LootboxType) {
@@ -62,20 +67,20 @@ export default class LootboxSprite {
 			return;
 		}
 		this.lootboxType = lootboxType;
-		this.sprite.setTexture(LootboxSprite.lootboxTypeTextureMap.get(lootboxType));
+		this._sprite.setTexture(LootboxSprite.lootboxTypeTextureMap.get(lootboxType));
 	}
 
 	public setSpriteAlpha(alpha: number): void {
-		this.sprite.setAlpha(alpha);
+		this._sprite.setAlpha(alpha);
 	}
 	//endregion
 
 	//region constructor
 	public constructor(scene: Phaser.Scene, x: number, y: number, lootboxType: LootboxType, onClick: () => any) {
-		this.sprite = scene.add.sprite(x, y, config.atlasKeys.goldChestAtlasKey, this.chestFrameKeyPrefix + "1");
+		this._sprite = scene.add.sprite(x, y, config.atlasKeys.goldChestAtlasKey, this._chestFrameKeyPrefix + "1");
 		this._onClick = onClick;
 		this.setLootboxType(lootboxType);
-		this.sprite.setInteractive();
+		this._sprite.setInteractive();
 		this._registerButtonEvents();
 		this.x = x;
 		this.y = y;
@@ -83,11 +88,11 @@ export default class LootboxSprite {
 	//endregion
 
 	//region private members
-	private sprite: Phaser.GameObjects.Sprite;
+	private _sprite: Phaser.GameObjects.Sprite;
   private readonly _onClick: () => any;
-  private readonly chestFrameKeyPrefix = "chest_00";
-  private readonly chestFrameCount = 6;
-	private readonly chestAnimationSpeed = 23;
+  private readonly _chestFrameKeyPrefix = "chest_00";
+  private readonly _chestFrameCount = 6;
+	private readonly _chestAnimationSpeed = 23;
 	private _active: boolean = true;
 	private lootboxType: LootboxType;
 	private static readonly lootboxTypeTextureMap: Map<LootboxType, string> = new Map([
@@ -101,21 +106,21 @@ export default class LootboxSprite {
 
 	//region private methods  
 	private _registerButtonEvents(): void {
-		this.sprite.on('pointerover', () => {
+		this._sprite.on('pointerover', () => {
 			if (!this._active) {
 				return;
 			}
-			this.sprite.tint = 0xe0e0e0;
+			this._sprite.tint = 0xe0e0e0;
 		});
 		
-		this.sprite.on('pointerout', () => {
+		this._sprite.on('pointerout', () => {
 			if (!this._active) {
 				return;
 			}
-			this.sprite.tint = 0xffffff;
+			this._sprite.tint = 0xffffff;
     });
     
-		this.sprite.on('pointerup', () => {
+		this._sprite.on('pointerup', () => {
 			if (!this._active) {
 				return;
 			}

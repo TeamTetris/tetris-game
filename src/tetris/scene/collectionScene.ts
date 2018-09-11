@@ -96,7 +96,11 @@ export default class CollectionScene extends Phaser.Scene {
 			const x = i < 4 ? menuX1 : menuX2;
 			const y = menuY + (i % 4) * spacingY + (i / 4) * spacingY * 0.5;
 			const brick = new CustomBrick(this, i, this._selectedSkins.get(i).frameName, x, y);
-			const text = this.add.bitmapText(0, y + 70, config.ui.fontKeys.kenneyMiniSquare, this._selectedSkins.get(i).name);
+			const text = this.add.bitmapText(
+				0,
+				y + 70,
+				config.ui.fontKeys.kenneyMiniSquare,
+				this._selectedSkins.get(i).name);
 			text.x = x - text.width / 2;
 
 			const lock = this.add.sprite(x, y, config.graphics.lockTextureKey);
@@ -122,8 +126,15 @@ export default class CollectionScene extends Phaser.Scene {
 		}
 	}
 
-	private _changeSkin(brick: CustomBrick, brickType: BrickType, lock: Phaser.GameObjects.Sprite, indexMovement: number, text: Phaser.GameObjects.BitmapText, textBaseX: number): void {
-		const newSkin = this._skinStorage.getSkin(brickType, (this._selectedSkins.get(brickType).id + indexMovement + this._skinStorage.skinAmount) % this._skinStorage.skinAmount);
+	private _changeSkin(
+			brick: CustomBrick, 
+			brickType: BrickType, 
+			lock: Phaser.GameObjects.Sprite, 
+			indexMovement: number, 
+			text: Phaser.GameObjects.BitmapText, 
+			textBaseX: number): void {
+		const newSkinIndex = this._selectedSkins.get(brickType).id + indexMovement + this._skinStorage.skinAmount;
+		const newSkin = this._skinStorage.getSkin(brickType, newSkinIndex % this._skinStorage.skinAmount);
 		this._selectedSkins.set(brickType, newSkin);
 		brick.setFrameName(newSkin.frameName);
 		text.setText(newSkin.name);

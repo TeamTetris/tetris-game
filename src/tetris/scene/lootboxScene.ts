@@ -135,7 +135,7 @@ export default class LootboxScene extends Phaser.Scene {
 		setTimeout(this._openOverlay.bind(this, unlockedSkins), 400);
 	}
 
-	private _openOverlay(unlockedSkins: Skin[]) {
+	private _openOverlay(unlockedSkins: Skin[]): void {
 		this._overlay.setVisible(true);
 		const spacingX = config.graphics.width / 6;
 		const spacingY = 70;
