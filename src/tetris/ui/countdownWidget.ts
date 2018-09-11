@@ -1,12 +1,13 @@
 /// <reference path="../../../definitions/phaser.d.ts"/>
 
 import config from "tetris/config";
+import { ScaleModes } from "phaser";
 
 export default class CountdownWidget {
 
 	//region public members
-	public titleText: Phaser.GameObjects.Text;
-	public countdownText: Phaser.GameObjects.Text;
+	public titleText: Phaser.GameObjects.BitmapText;
+	public countdownText: Phaser.GameObjects.BitmapText;
 	public circle: Phaser.GameObjects.Graphics;
 
 	public get height(): number {
@@ -57,8 +58,12 @@ export default class CountdownWidget {
 	//region constructor
 	public constructor(scene: Phaser.Scene, x: number, y: number) {
 		this.circle = scene.add.graphics();
-		this.titleText = scene.add.text(0, 0, " \n ", config.ui.fonts.countdown.font);
-		this.countdownText = scene.add.text(0, 0, "0", config.ui.fonts.large.font);
+		this.titleText = scene.add.bitmapText(0, 0, config.ui.fontKeys.kenneyMiniSquare, " \n ", config.ui.fonts.countdown.size);
+		this.titleText.setScaleMode(ScaleModes.NEAREST);
+		this.titleText.setCenterAlign();
+		this.countdownText = scene.add.bitmapText(0, 0, config.ui.fontKeys.kenneyMiniSquare, "0", config.ui.fonts.large.size);
+		this.countdownText.setScaleMode(ScaleModes.NEAREST);
+		this.countdownText.setCenterAlign();
 		this.x = x;
 		this.y = y;
 	}
@@ -104,20 +109,20 @@ export default class CountdownWidget {
 	private _setColors(percentage: number): void {
 		if (percentage < 25) {
 			this.circle.lineStyle(config.ui.countdown.lineWidth, config.ui.colors.red.hex);
-			this.titleText.setColor(config.ui.colors.red.string);
-			this.countdownText.setColor(config.ui.colors.red.string);
+			this.titleText.setTint(config.ui.colors.red.hex);
+			this.countdownText.setTint(config.ui.colors.red.hex);
 		} else if (percentage < 50) {
 			this.circle.lineStyle(config.ui.countdown.lineWidth, config.ui.colors.orange.hex);
-			this.titleText.setColor(config.ui.colors.orange.string);
-			this.countdownText.setColor(config.ui.colors.orange.string);
+			this.titleText.setTint(config.ui.colors.orange.hex);
+			this.countdownText.setTint(config.ui.colors.orange.hex);
 		} else if (percentage < 75) {
 			this.circle.lineStyle(config.ui.countdown.lineWidth, config.ui.colors.yellow.hex);
-			this.titleText.setColor(config.ui.colors.yellow.string);
-			this.countdownText.setColor(config.ui.colors.yellow.string);
+			this.titleText.setTint(config.ui.colors.yellow.hex);
+			this.countdownText.setTint(config.ui.colors.yellow.hex);
 		} else {
 			this.circle.lineStyle(config.ui.countdown.lineWidth, config.ui.colors.white.hex);
-			this.titleText.setColor(config.ui.colors.white.string);
-			this.countdownText.setColor(config.ui.colors.white.string);
+			this.titleText.setTint(config.ui.colors.white.hex);
+			this.countdownText.setTint(config.ui.colors.white.hex);
 		}
 	}
 

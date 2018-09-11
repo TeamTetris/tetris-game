@@ -46,15 +46,15 @@ const config = {
             },
             countdown: {
                 size: 32,
-                font: {font: "30px Kenney Mini Square", fill: "#fff", align: 'center'},
+                font: {font: "32px Kenney Mini Square", fill: "#fff", align: 'center'},
             },
             small: {
                 size: 22,
                 font: {font: "20px Kenney Mini Square", fill: "#fff", align: 'center'},
             },
             large: {
-                size: 42,
-                font: {font: "40px Kenney Mini Square", fill: "#fff", align: 'center'},
+                size: 64,
+                font: {font: "64px Kenney Mini Square", fill: "#fff", align: 'center'},
             },
         },
     },
