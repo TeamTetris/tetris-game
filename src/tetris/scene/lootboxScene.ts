@@ -67,8 +67,9 @@ export default class LootboxScene extends Phaser.Scene {
 	private readonly _depthBackgroundElements: number = 0.2;
 	private readonly _depthOverlay: number = 0.3;
 	private readonly _depthOverlayElements: number = 0.4;
-	private _selectedLootboxType: LootboxType = LootboxType.Bronze;
 	private readonly _keyBaseX: string = 'baseX';
+	private readonly _initalLootboxType: LootboxType = LootboxType.Bronze;
+	private _selectedLootboxType: LootboxType = this._initalLootboxType;
 	//endregion
 
 	//region private methods
@@ -126,16 +127,15 @@ export default class LootboxScene extends Phaser.Scene {
 	private _openChest(): void {
 		this._lootboxStorage.modifyAmount(this._selectedLootboxType, -1);
 		const unlockedSkins = this._unlockSkins();
-		this._openOverlay(unlockedSkins);
-	}
-
-	private _openOverlay(unlockedSkins: Skin[]) {
 		this._lootboxSprite.playOpenAnimation();
-
 		this._lootboxSprite.active = false;
 		this._exitButton.active = false;		
 		this._buttonChangeLootboxTypeLeft.active = false;
 		this._buttonChangeLootboxTypeRight.active = false;
+		setTimeout(this._openOverlay.bind(this, unlockedSkins), 400);
+	}
+
+	private _openOverlay(unlockedSkins: Skin[]) {
 		this._overlay.setVisible(true);
 		const spacingX = config.graphics.width / 6;
 		const spacingY = 70;
@@ -216,7 +216,7 @@ export default class LootboxScene extends Phaser.Scene {
 		const spacingY1 = 130;
 		const spacingY2 = 200;
 
-		this._lootboxSprite = new LootboxSprite(this, x, y - 30, this._openChest.bind(this));
+		this._lootboxSprite = new LootboxSprite(this, x, y - 30, this._initalLootboxType, this._openChest.bind(this));
 		this._lootboxSprite.setSpriteDepth(this._depthBackgroundElements);
 		this._exitButton = new TextButton(this, x, config.graphics.height * 7 / 8, "green_button00.png", "green_button01.png", "Done", this._game.changeScene.bind(this._game, config.sceneKeys.menuScene));
 		this._exitButton.setDepth(this._depthBackgroundElements);

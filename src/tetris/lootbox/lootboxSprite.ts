@@ -58,6 +58,10 @@ export default class LootboxSprite {
 	}
 
 	public setLootboxType(lootboxType: LootboxType) {
+		if (this.lootboxType !== null && lootboxType === this.lootboxType) {
+			return;
+		}
+		this.lootboxType = lootboxType;
 		this.sprite.setTexture(LootboxSprite.lootboxTypeTextureMap.get(lootboxType));
 	}
 
@@ -67,9 +71,10 @@ export default class LootboxSprite {
 	//endregion
 
 	//region constructor
-	public constructor(scene: Phaser.Scene, x: number, y: number, onClick: () => any) {
+	public constructor(scene: Phaser.Scene, x: number, y: number, lootboxType: LootboxType, onClick: () => any) {
 		this.sprite = scene.add.sprite(x, y, config.atlasKeys.goldChestAtlasKey, this.chestFrameKeyPrefix + "1");
 		this._onClick = onClick;
+		this.setLootboxType(lootboxType);
 		this.sprite.setInteractive();
 		this._registerButtonEvents();
 		this.x = x;
@@ -84,6 +89,7 @@ export default class LootboxSprite {
   private readonly chestFrameCount = 6;
 	private readonly chestAnimationSpeed = 23;
 	private _active: boolean = true;
+	private lootboxType: LootboxType;
 	private static readonly lootboxTypeTextureMap: Map<LootboxType, string> = new Map([
 			[LootboxType.Bronze, config.atlasKeys.bronzeChestAtlasKey],
 			[LootboxType.Silver, config.atlasKeys.silverChestAtlasKey],
