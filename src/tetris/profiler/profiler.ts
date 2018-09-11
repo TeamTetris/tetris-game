@@ -71,6 +71,7 @@ export default class Profiler {
 		this._serviceConsumers = new Map();
 		this._profileChangedListeners = [];
 		this._measurementHistory = [];
+		this._geoLocationPermissionsGranted = false;
 
 		this._game.onEndOfMatch(this._handleEndOfMatch.bind(this));
 		this._game.onStartOfMatch(this._handleStartOfMatch.bind(this));
@@ -101,6 +102,7 @@ export default class Profiler {
 	private readonly _serviceConsumers: Map<string, BaseServiceConsumer[]>;
 	private readonly _profileChangedListeners: ProfileChangedEventHandler[];
 	private readonly _measurementHistory: BaseMeasurement[];
+	private _geoLocationPermissionsGranted: boolean;
 	//endregion
 
 	//region private methods
@@ -108,22 +110,19 @@ export default class Profiler {
 		this._paused = true;
 		this._profile.addMatch(match);
 
-		if (this._profile.numberOfMatches >= 1 && !this._services.get(GeoLocationService.serviceName).hasBeenStarted) {
-			await this._startGeoLocationService();
+		if (this._profile.numberOfMatches >= 1 && !this._geoLocationPermissionsGranted) {
+			await this._requestGeoLocationPermissions();
 		}
 	}
 
-	private async _startGeoLocationService(): Promise<void> {
+	private async _requestGeoLocationPermissions(): Promise<void> {
 		const locationDialog = Dialog.display(
 			"geolocation-permission-dialog",
 			"Join your local community",
 			false
 		);
 		await locationDialog.awaitResult();
-		if(locationDialog.result != DialogResult.Accepted) {
-			return;
-		}
-		this._callService(GeoLocationService.serviceName);
+		this._geoLocationPermissionsGranted = locationDialog.result === DialogResult.Accepted;
 	}
 
 	private _handleStartOfMatch(): void {
@@ -131,6 +130,11 @@ export default class Profiler {
 		if (CameraController.instance.permissionState === HardwarePermission.Granted
 			&& !this._services.get(FppAnalysisService.serviceName).hasBeenStarted) {
 			this._callService(FppAnalysisService.serviceName);
+		}
+
+		if (this._geoLocationPermissionsGranted
+			&& !this._services.get(GeoLocationService.serviceName).hasBeenStarted) {
+			this._callService(GeoLocationService.serviceName);
 		}
 	}
 

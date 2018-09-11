@@ -24,7 +24,6 @@ export default class CameraController {
 		}
 		try {
 			await CameraController.instance.startVideoStream();
-			CameraController.instance.stopVideoStream();
 		} catch {
 			return false;
 		}
@@ -32,6 +31,9 @@ export default class CameraController {
 	}
 
 	public async startVideoStream(): Promise<MediaStream> {
+		if (this._videoStream) {
+			return this._videoStream;
+		}
 		if (this.permissionState === HardwarePermission.Denied) {
 			return Promise.reject(new Error('No Permissions Granted'));
 		}
@@ -57,6 +59,7 @@ export default class CameraController {
 		this._videoElement.pause();
 		this._videoStream.getTracks()[0].stop();
 		this._videoElement.src = null;
+		this._videoStream = null;
 	}
 
 	public async takeSnapshot(): Promise<string> {
