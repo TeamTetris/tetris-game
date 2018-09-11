@@ -132,7 +132,7 @@ export default class PlayScene extends Phaser.Scene {
 	
 	//region private methods
 	private isSceneActive(): boolean {
-		return this.game.scene.isActive(config.sceneKeys.playScene);
+		return this._game.scene.isActive(config.sceneKeys.playScene);
 	}
 
 	private _createBackground(): void {
