@@ -6,7 +6,7 @@ import Font from "tetris/interfaces/Font";
 export default class ScoreWidget {
 
 	//region public members
-	public score: Phaser.GameObjects.Text;
+	public score: Phaser.GameObjects.BitmapText;
 
 	public get height(): number {
 		return this.score.height;
@@ -45,7 +45,7 @@ export default class ScoreWidget {
 
 	//region constructor
 	public constructor(scene: Phaser.Scene, x: number, y: number, font: Font = config.ui.fonts.large) {
-        this.score = scene.add.text(0, 0, "0", font.font);
+        this.score = scene.add.bitmapText(0, 0, font.fontKey, "0", font.size);
 		this.x = x;
 		this.y = y;
 	}

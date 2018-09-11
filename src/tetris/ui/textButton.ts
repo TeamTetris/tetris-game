@@ -7,7 +7,7 @@ export default class TextButton {
 
 	//region public members
 	public button: Phaser.GameObjects.Sprite;
-	public text: Phaser.GameObjects.Text;
+	public text: Phaser.GameObjects.BitmapText;
 
 	public get height(): number {
 		return this.button.height;
@@ -53,7 +53,7 @@ export default class TextButton {
 	//region constructor
 	public constructor(scene: Phaser.Scene, x: number, y: number, buttonSpriteUp: string, buttonSpriteDown: string, text: string, onClick: () => any, font: Font = config.ui.fonts.small) {
 		this.button = scene.add.sprite(0, 0, config.atlasKeys.uiSpriteAtlasKey, buttonSpriteUp);
-		this.text = scene.add.text(0, 0, text, font.font);
+		this.text = scene.add.bitmapText(0, 0, font.fontKey, text, font.size);
 		this._buttonSpriteDown = buttonSpriteDown;
 		this._buttonSpriteUp = buttonSpriteUp;
 		this._onClick = onClick;

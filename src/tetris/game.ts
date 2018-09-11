@@ -23,7 +23,7 @@ const gameConfig: GameConfig = {
 	type: Phaser.WEBGL,
 	parent: "game",
 	render: {
-		antialias: false,		
+		antialias: true,		
 	}
 };
 

@@ -3,6 +3,7 @@
 import config from "tetris/config";
 import MatchPlayer, { ScoreboardStatus, PlayStatus } from "tetris/interfaces/MatchPlayer";
 import Font from 'tetris/interfaces/Font';
+import { ScaleModes } from "phaser";
 
 export interface Color {
     string: string,
@@ -14,9 +15,9 @@ const DISPLAYED_PLAYERS = 8;
 export default class ScoreboardWidget {
 
     //region public members
-    public ranks: Phaser.GameObjects.Text[] = [];
-    public names: Phaser.GameObjects.Text[] = [];
-    public scores: Phaser.GameObjects.Text[] = [];
+    public ranks: Phaser.GameObjects.BitmapText[] = [];
+    public names: Phaser.GameObjects.BitmapText[] = [];
+    public scores: Phaser.GameObjects.BitmapText[] = [];
     public dividers: Phaser.GameObjects.Graphics[] = [];
     
     get height(): number {
@@ -84,9 +85,19 @@ export default class ScoreboardWidget {
     //region private methods
     private _createTextObjects(): void {
         for (let index = 0; index < DISPLAYED_PLAYERS; index++) {
-            this.ranks.push(this._scene.add.text(0, 0, "", this._font.font));
-            this.names.push(this._scene.add.text(0, 0, "", this._font.font));
-            this.scores.push(this._scene.add.text(0, 0, "", this._font.font)); 
+            const bitmapTexts = [
+                this._scene.add.bitmapText(0, 0, this._font.fontKey, '', this._font.size),
+                this._scene.add.bitmapText(0, 0, this._font.fontKey, '', this._font.size),
+                this._scene.add.bitmapText(0, 0, this._font.fontKey, '', this._font.size)
+            ];
+
+            bitmapTexts.forEach(b => {
+                b.setScaleMode(ScaleModes.NEAREST);
+            });
+            
+            this.ranks.push(bitmapTexts[0]);
+            this.names.push(bitmapTexts[1]);
+            this.scores.push(bitmapTexts[2]); 
         }
     }
 
@@ -151,9 +162,9 @@ export default class ScoreboardWidget {
             this.names[index].setPipeline(color);
             this.scores[index].setPipeline(color);
         } else {
-            this.ranks[index].setColor(color.string);
-            this.names[index].setColor(color.string);
-            this.scores[index].setColor(color.string);
+            this.ranks[index].setTint(color.hex);
+            this.names[index].setTint(color.hex);
+            this.scores[index].setTint(color.hex);
         }
     }
 
