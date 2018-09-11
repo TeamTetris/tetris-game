@@ -4,6 +4,7 @@ enum NetworkingEvents {
     MatchmakingUpdate = "matchmakingUpdate",
     MatchReady = "matchReady",
     JoinMatch = "joinMatch",
+    LeaveMatch = "leaveMatch",
     MatchUpdate = "matchUpdate",
     SelfEliminated = "selfEliminated",
 }

@@ -20,6 +20,7 @@ import BiasEventType from "tetris/biasEngine/biasEventType";
 import SkinStorage from "tetris/brick/skinStorage";
 import TextButton from "tetris/ui/textButton";
 import Utility from "tetris/utility";
+import { Scene } from "phaser";
 
 const PLAYER_FIELD_DRAW_OFFSET: Vector2 = new Vector2(
 	(config.graphics.width - config.field.width * config.field.blockSize) / 2, 
@@ -42,11 +43,19 @@ export default class PlayScene extends Phaser.Scene {
 
 	public start(): void {
 		this._sceneStarted = true;
-		this._localPlayerField = this._newField(config.field.width, config.field.height, PLAYER_FIELD_DRAW_OFFSET);
+		this.adjustBackgroundParameters(0.10, [0.2, 0.2, 0.2]);
+		if (!this._localPlayerField) {
+			this._localPlayerField = this._newField(config.field.width, config.field.height, PLAYER_FIELD_DRAW_OFFSET);
+		} else {
+			this._localPlayerField.fieldState = FieldState.Playing;
+		}
 		this._player = new LocalPlayer(this._localPlayerField, this.input.keyboard, this._game.biasEngine.newEventReceiver());
 	}
 
 	public update(time: number, delta: number): void {
+		if (!this.isSceneActive()) {
+			return;
+		}
 		if (!this._sceneStarted) {
 			this.start();
 		}
@@ -122,6 +131,10 @@ export default class PlayScene extends Phaser.Scene {
 	//endregion
 	
 	//region private methods
+	private isSceneActive(): boolean {
+		return this._game.scene.isActive(config.sceneKeys.playScene);
+	}
+
 	private _createBackground(): void {
 		this._backgroundGraphicsPipeline = new Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline({
 			game: this._game,
@@ -156,6 +169,9 @@ export default class PlayScene extends Phaser.Scene {
 	}
 
 	private _updateMatch(serverMatch: object): void {
+		if (!this._sceneStarted || (this._match && serverMatch["id"] !== this._match.id)) {
+			return;
+		}
 		this._match = new Match(serverMatch);
 		const matchHasStarted = Date.now() > this._match.startTime;
 		if (!this._startTimerStarted && !matchHasStarted) {
@@ -209,7 +225,7 @@ export default class PlayScene extends Phaser.Scene {
 	}
 
 	private _processWin(): void {	
-		console.log('Local player won');		
+		console.log('Local player won');
 		this.adjustBackgroundParameters(0.08, [0.8, 0.6, 0.0]);
 		this._localPlayerField.fieldState = FieldState.Victory;
 		if (this._localPlayerField.activeBrick) {
@@ -219,10 +235,13 @@ export default class PlayScene extends Phaser.Scene {
 	}
 
 	private _exitMatch(): void {
-		this._game.handleEndOfMatch(this._match);
+		this._game.changeScene(config.sceneKeys.menuScene);
 		this._sceneStarted = false;
 		this._localPlayerField.reset();
-		this._game.changeScene(config.sceneKeys.menuScene);
+		this._game.networkingClient.emit(NetworkingEvents.LeaveMatch, {});
+		this._game.handleEndOfMatch(this._match);
+		this._startTimerStarted = false;
+		this._match = null;
 	}
 
 	private _createFieldBackground(offset: Vector2, drawScale: number = 1): Phaser.GameObjects.Graphics {
@@ -284,6 +303,10 @@ export default class PlayScene extends Phaser.Scene {
 	}
 
 	private _pushMultiplayerUpdate(): void {
+		if (!this.isSceneActive()) {
+			return;
+		}
+
 		if (this._localPlayerField.fieldStateChanged && this._localPlayerField.fieldState == FieldState.Loss) {
 			this._localPlayerField.fieldStateChanged = false;
 			this._processLoss();
