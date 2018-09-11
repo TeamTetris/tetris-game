@@ -42,18 +42,22 @@ const config = {
         fonts: {
             scoreboard: {
                 size: 18,
+                fontKey: "kenneyMiniSquare",
                 font: {font: "16px Kenney Mini Square", fill: "#fff", align: 'center'},
             },
             countdown: {
                 size: 32,
+                fontKey: "kenneyMiniSquare",
                 font: {font: "32px Kenney Mini Square", fill: "#fff", align: 'center'},
             },
             small: {
                 size: 22,
+                fontKey: "kenneyMiniSquare",
                 font: {font: "20px Kenney Mini Square", fill: "#fff", align: 'center'},
             },
             large: {
                 size: 64,
+                fontKey: "kenneyMiniSquare",
                 font: {font: "64px Kenney Mini Square", fill: "#fff", align: 'center'},
             },
         },

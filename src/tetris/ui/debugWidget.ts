@@ -6,7 +6,7 @@ import Font from 'tetris/interfaces/Font';
 export default class DebugWidget {
 
 	//region public members
-	public debugInformation: Phaser.GameObjects.Text[];
+	public debugInformation: Phaser.GameObjects.BitmapText[];
 	
 	public get height(): number {
 		return this.debugInformation.length * config.ui.fonts.small.size;
@@ -46,7 +46,7 @@ export default class DebugWidget {
 		const missingLines = debugInformationText.length - this.debugInformation.length;
 		if (missingLines > 0) {
 			for (let i = 0; i < missingLines; i++) {
-				const line = this._scene.add.text(this._x, this._y, "", this._font.font);
+				const line = this._scene.add.bitmapText(this._x, this._y, this._font.fontKey, '', this._font.size);
 				line.setVisible(this._displayed);
 				this.debugInformation.push(line);
 			}
