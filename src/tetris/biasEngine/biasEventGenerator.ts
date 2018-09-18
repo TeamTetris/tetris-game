@@ -45,8 +45,6 @@ export default class BiasEventGenerator {
 
     //region public methods
     public update(time: number, delta: number): void {
-    	// TODO: check whether or not the player is actually playing right now
-
 	    this._biasEventReceivers.forEach(receiver => {
 	    	receiver.update(time, delta);
 	    });
