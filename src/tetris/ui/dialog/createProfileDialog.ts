@@ -32,7 +32,7 @@ export default class CreateProfileDialog extends Dialog {
 		super(dialogId, false);
 		this._htmlElement.querySelector('#activate-camera-button').addEventListener(
 			'click',
-			this._onActivateCameraButtonClicked
+			this._onActivateCameraButtonClicked.bind(this)
 		);
 	}
 	//endregion
