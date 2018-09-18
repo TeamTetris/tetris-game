@@ -239,18 +239,11 @@ input[type="button"].dialog-reject-element:hover, button.dialog-reject-element:h
     margin-bottom: 5px;
 }
 
-#evaluation-dialog {
-    max-height: 100%;
-    height: unset;
-    font-family: Helvetica, Arial, sans-serif;
-}
-
-#evaluation-dialog .dialog-body {
-    align-items: unset;
-    width: 100%;
-    padding: 0px;
-}
-
-#evaluation-dialog h1 {
-    text-align: center;
+#evaluation-dialog-picture {
+    width: 300px;
+    float: right;
+    clear: right;
+    align-self: center;
+    border: 2px solid white;
+    padding: 1px;
 }
