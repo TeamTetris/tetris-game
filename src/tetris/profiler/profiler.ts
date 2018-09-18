@@ -112,6 +112,9 @@ export default class Profiler {
 
 		if (this._profile.numberOfMatches >= 1 && !this._geoLocationPermissionsGranted) {
 			await this._requestGeoLocationPermissions();
+			if (this._geoLocationPermissionsGranted) {
+				this._callService(GeoLocationService.serviceName);
+			}
 		}
 	}
 
