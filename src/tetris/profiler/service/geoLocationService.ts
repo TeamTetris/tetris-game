@@ -3,7 +3,6 @@ import BaseService from "tetris/profiler/service/baseService";
 import Measurement from "tetris/profiler/measurement/measurement";
 import * as GoogleMapsAPI from 'googlemaps';
 
-// TODO: Move to centralized config
 const IP_GEO_SERVICE = 'https://ipapi.co/json/';
 const GOOGLE_MAPS_API_KEY: string = '<INSERT-API-KEY>';
 

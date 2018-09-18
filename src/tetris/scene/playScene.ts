@@ -66,7 +66,7 @@ export default class PlayScene extends Phaser.Scene {
 		this._scoreWidget.update(this._localPlayerField.score.toString());
 
 		const matchStart = this._match.startTime / 1000;
-		const currentTime = Date.now() / 1000;
+		const currentTime = this._match.currentServerTime / 1000;
 		const preGame = currentTime < matchStart;		
 		if (!preGame && this._match.nextElimination) {
 			const nextElimination = this._match.nextElimination / 1000;
@@ -163,7 +163,6 @@ export default class PlayScene extends Phaser.Scene {
 		if (this._localPlayerField.fieldState === FieldState.Loss) {
 			return;
 		}
-		console.log('starting match');
 		this.adjustBackgroundParameters(0.25, [0.7, 0.7, 0.7]);
 		this._localPlayerField.reset();
 	}
@@ -173,10 +172,10 @@ export default class PlayScene extends Phaser.Scene {
 			return;
 		}
 		this._match = new Match(serverMatch);
-		const matchHasStarted = Date.now() > this._match.startTime;
+		const matchHasStarted = this._match.currentServerTime > this._match.startTime;
 		if (!this._startTimerStarted && !matchHasStarted) {
 			this._startTimerStarted = true;
-			setTimeout(this._startMatch.bind(this), this._match.startTime - Date.now(), {});
+			setTimeout(this._startMatch.bind(this), this._match.startTime - this._match.currentServerTime, {});
 		}
 		this._scoreboardWidget.update(this._localSocketId, this._match.players);
 		this._updateRemoteFields(this._match.players);

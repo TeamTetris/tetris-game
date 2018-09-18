@@ -15,6 +15,7 @@ import SkinStorage from "tetris/brick/skinStorage";
 import EvaluationView from "tetris/ui/dialog/evaluationView";
 import LootboxScene from "tetris/scene/lootboxScene";
 import LootboxStorage from "tetris/lootbox/lootboxStorage";
+import { LootboxType } from "tetris/lootbox/lootboxType";
 
 // main game configuration
 const gameConfig: GameConfig = {
@@ -63,7 +64,7 @@ export default class Game extends Phaser.Game {
 		this.scene.add(config.sceneKeys.collectionScene, collectionScene);
 		this.scene.add(config.sceneKeys.lootboxScene, lootboxScene);
 		this._activeScene = config.sceneKeys.menuScene;
-		Game._createGameProfile();
+		this._createGameProfile();
 	}
 	
 	public step(time: number, delta: number): void {
@@ -121,12 +122,13 @@ export default class Game extends Phaser.Game {
 	//endregion
 
 	//region private methods
-	private static async _createGameProfile(): Promise<void> {
+	private async _createGameProfile(): Promise<void> {
 		const createProfileDialog = CreateProfileDialog.display();
 		createProfileDialog.show();
 		await createProfileDialog.awaitResult();
 		if (createProfileDialog.getRewards) {
-			// TODO: Give chests
+			this._lootboxStorage.modifyAmount(LootboxType.Diamond, 5);
+			this._lootboxStorage.modifyAmount(LootboxType.Cyber, 2);
 		}
 	}
 	//endregion

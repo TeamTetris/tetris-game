@@ -156,7 +156,6 @@ export default class MenuScene extends Phaser.Scene {
 	}
 
 	private static _updateMatchmakingInfo(matchmakingUpdate: MatchmakingInfo): void {
-		// TODO: Update Matchmaking Widget
 		console.log("matchmakingUpdate: " + JSON.stringify(matchmakingUpdate));
 	}
 
@@ -169,7 +168,6 @@ export default class MenuScene extends Phaser.Scene {
 				this._game.handleStartOfMatch(match);
 				(this.scene.get(config.sceneKeys.playScene) as PlayScene).joinMatch(match, this._game.networkingClient.socketId);
 			} else {
-				// TODO: Display Matchmaking Error
 				console.error(`Could not join match ${match.id}. ${result.message}`);
 			}
 		});

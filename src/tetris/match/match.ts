@@ -7,6 +7,10 @@ export default class Match {
 		return this._startTime;
 	}
 
+	public get currentServerTime(): number {
+		return this._currentServerTime + Date.now() - this._localTimeAtCapture;
+	}
+
 	public get endTime(): number {
 		return this._endTime;
 	}
@@ -50,6 +54,8 @@ export default class Match {
 		this._joinUntil = serverResponse['joinUntil'] ? Date.parse(serverResponse['joinUntil']) : 0;
 		this._nextElimination = serverResponse['nextElimination'] ? Date.parse(serverResponse['nextElimination']) : 0;
 		this._startTime = serverResponse['startTime'] ? Date.parse(serverResponse['startTime']) : 0;
+		this._currentServerTime = serverResponse['currentServerTime'] ? Date.parse(serverResponse['currentServerTime']) : 0;
+		this._localTimeAtCapture = Date.now();
 	}
 	//endregion
 
@@ -59,6 +65,8 @@ export default class Match {
 	private readonly _joinUntil: number;
 	private readonly _nextElimination: number;
 	private readonly _startTime: number;
+	private readonly _currentServerTime: number;
+	private readonly _localTimeAtCapture: number;
 	private _endTime: number;
 	private _score: number;
 	//endregion

@@ -48,7 +48,7 @@ export default class CameraController {
 			return stream;
 		} catch(reason) {
 			this._permissionState = HardwarePermission.Denied;
-			console.log('Can not start video stream. Message: ' + reason);
+			console.error('Can not start video stream. Message: ' + reason);
 			throw reason;
 		}
 	}
