@@ -33,7 +33,7 @@ input[type="button"].dialog-reject-element:hover, button.dialog-reject-element:h
 }
 
 /* The dialog (background) */
-.dialog, .view {
+.dialog {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
@@ -47,22 +47,8 @@ input[type="button"].dialog-reject-element:hover, button.dialog-reject-element:h
     font-family: "Kenney Mini Square", sans-serif;
 }
 
-.view-content {
-    background: white;
-    height: 100%;
-    padding: 10px;
-}
-
-.view-title {
-    margin: 0;
-}
-
 .visible {
     display: block !important;
-}
-
-#evaluation-view {
-    font-family: Helvetica, Arial, sans-serif;
 }
 
 /* dialog Content/Box */
@@ -235,13 +221,53 @@ input[type="button"].dialog-reject-element:hover, button.dialog-reject-element:h
     right: 10px;
 }
 
-#evaluation-view-basic-information {
-    width: 300px;
-    float: left;
+#evaluation-dialog {
+    max-height: 100%;
+    height: unset;
+    font-family: Helvetica, Arial, sans-serif;
+    background-color: #ee7220;
+    min-height: 100%;
 }
 
-#evaluation-view-picture {
-    display: none;
-    float: right;
+#evaluation-dialog .dialog-body {
+    align-items: unset;
+    width: 100%;
+    padding: 0px;
+}
+
+#evaluation-dialog::-webkit-scrollbar,
+#evaluation-dialog::-webkit-scrollbar { 
+    display: none; 
+}
+
+#evaluation-dialog h1 {
+    text-align: center;
+}
+
+#evaluation-dialog-basic-information {
+    float: left;
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    grid-column-gap: 75px;
+    max-width: 900px;
+    align-self: center;
+}
+
+#evaluation-dialog-basic-information > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#evaluation-dialog-basic-information h2 {
+    margin-bottom: 5px;
+}
+
+#evaluation-dialog-picture {
     width: 300px;
+    float: right;
+    clear: right;
+    align-self: center;
+    border: 2px solid white;
+    padding: 1px;
 }

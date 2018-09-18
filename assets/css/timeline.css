@@ -23,6 +23,28 @@
     border-color: #408440;
 }
 
-#evaluation-view-timeline {
-    margin-top: 20px;
+#evaluation-dialog-timeline {
+    margin-top: 80px;
+    margin-bottom: 300px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.vis-inner, .vis-item-content, .vis-text {
+    color: white !important;
+}
+
+.vis-label, .vis-panel, .vis-group {
+    border-color: white !important;
+}
+
+.DisableInput .vis-item,
+.FreezeLocalField .vis-item,
+.DuplicateInput .vis-item {
+    border-color: #673AB7;
+    background-color: #673AB7;
+}
+
+.DuplicateInput .vis-item-content {
+    background-color: #3F51B5;
 }

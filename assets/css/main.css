@@ -1,3 +1,7 @@
+html {
+    overflow: hidden;
+}
+
 body {
     background: url("../images/bg_dark.png") repeat;
     margin: 0;
@@ -43,16 +47,6 @@ div#game {
 
 .right-sidebar {
     float: right;
-}
-
-#evaluation-dialog-basic-information {
-    float: left;
-}
-
-#evaluation-dialog-picture {
-    width: 300px;
-    float: right;
-    clear: right;
 }
 
 .display {

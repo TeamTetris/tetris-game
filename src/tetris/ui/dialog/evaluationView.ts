@@ -8,7 +8,7 @@ import BiasEngine from "tetris/biasEngine/biasEngine";
 
 const CSS_CLASS_DATA_WRAPPER = "evaluation-data-wrapper";
 const BASE64_IMAGE_PREFIX = "data:image/png;base64, ";
-const VIEW_TITLE_WRAPPER_CLASS = "view-title";
+
 
 const TIMELINE_GROUP_BIAS_EVENTS = "Bias Events";
 const TIMELINE_GROUP_BIAS_VALUE = "Bias Value";
@@ -31,12 +31,11 @@ export default class EvaluationView {
 
 	//region constructor
 	public constructor(game: Game) {
-		this._htmlElement = document.getElementById("evaluation-view");
-		this._informationContainer = this._htmlElement.querySelector("#evaluation-view-basic-information");
-		this._pictureContainer = this._htmlElement.querySelector("#evaluation-view-picture");
-		this._timelineContainer = this._htmlElement.querySelector("#evaluation-view-timeline");
+		this._htmlElement = document.getElementById("evaluation-dialog");
+		this._informationContainer = this._htmlElement.querySelector("#evaluation-dialog-basic-information");
+		this._pictureContainer = this._htmlElement.querySelector("#evaluation-dialog-picture");
+		this._timelineContainer = this._htmlElement.querySelector("#evaluation-dialog-timeline");
 		this._game = game;
-		this._displayTitle("Evaluate your player profile");
 	}
 	//endregion
 
@@ -194,7 +193,7 @@ export default class EvaluationView {
 		wrapper.classList.add(CSS_CLASS_DATA_WRAPPER);
 		wrapper.classList.add(key);
 		wrapper.id = "evaluation-" + key;
-		wrapper.innerHTML = "<strong>" + key.replace(/-/g, " ") + ":</strong> " + value.toString() || "undefined";
+		wrapper.innerHTML = `<h2>${ value.toString() || "undefined" }</h2><h4>${ key.replace(/-/g, " ") }</h4>`;
 		return wrapper;
 	}
 
@@ -203,14 +202,6 @@ export default class EvaluationView {
 		this._displayLastPlayerImage();
 		this._createTimeLineGroups();
 		this._displayTimeline();
-	}
-
-	private _displayTitle(title: string): void {
-		const titleWrapper = this._htmlElement.querySelector('.' + VIEW_TITLE_WRAPPER_CLASS);
-		if (!titleWrapper) {
-			return;
-		}
-		titleWrapper.innerHTML = title;
 	}
 	//endregion
 }
