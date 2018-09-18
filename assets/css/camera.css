@@ -1,14 +1,23 @@
 
 .camera-container{
-    max-width: 1000px;
     margin: 50px auto;
     padding: 20px;
     background-color: #efefef;
+    height: 480px;
+    width: 640px;
 }
 
 .app{
     width: 100%;
     position: relative;
+    height: 100%;
+}
+
+.loading-animation {
+    position: absolute;
+    top: 140px;
+    left: 220px;
+    display: none;
 }
 
 .app #start-camera{

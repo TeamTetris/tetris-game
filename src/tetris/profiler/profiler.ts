@@ -11,6 +11,8 @@ import Match from "tetris/match/match";
 import FppFaceAnalysis from "tetris/profiler/profileValues/fppFaceAnalysis";
 import Dialog from "tetris/ui/dialog/dialog";
 import DialogResult from "tetris/ui/dialog/dialogResult";
+import CameraController from "tetris/profiler/hardwareController/cameraController";
+import HardwarePermission from "tetris/profiler/hardwareController/hardwarePermission";
 
 const CONFIDENCE_THRESHOLD = 0.25;
 
@@ -69,6 +71,7 @@ export default class Profiler {
 		this._serviceConsumers = new Map();
 		this._profileChangedListeners = [];
 		this._measurementHistory = [];
+		this._geoLocationPermissionsGranted = false;
 
 		this._game.onEndOfMatch(this._handleEndOfMatch.bind(this));
 		this._game.onStartOfMatch(this._handleStartOfMatch.bind(this));
@@ -99,6 +102,7 @@ export default class Profiler {
 	private readonly _serviceConsumers: Map<string, BaseServiceConsumer[]>;
 	private readonly _profileChangedListeners: ProfileChangedEventHandler[];
 	private readonly _measurementHistory: BaseMeasurement[];
+	private _geoLocationPermissionsGranted: boolean;
 	//endregion
 
 	//region private methods
@@ -106,32 +110,31 @@ export default class Profiler {
 		this._paused = true;
 		this._profile.addMatch(match);
 
-		if (this._profile.numberOfMatches >= 1 && !this._services.get(GeoLocationService.serviceName).hasBeenStarted) {
-			await this._startGeoLocationService();
-		}
-
-		if (this._profile.numberOfMatches >= 2 /* TODO: check if mic service has been started */) {
-			// TODO: start mic service
+		if (this._profile.numberOfMatches >= 1 && !this._geoLocationPermissionsGranted) {
+			await this._requestGeoLocationPermissions();
 		}
 	}
 
-	private async _startGeoLocationService(): Promise<void> {
+	private async _requestGeoLocationPermissions(): Promise<void> {
 		const locationDialog = Dialog.display(
 			"geolocation-permission-dialog",
 			"Join your local community",
 			false
 		);
 		await locationDialog.awaitResult();
-		if(locationDialog.result != DialogResult.Accepted) {
-			return;
-		}
-		this._callService(GeoLocationService.serviceName);
+		this._geoLocationPermissionsGranted = locationDialog.result === DialogResult.Accepted;
 	}
 
-	private _handleStartOfMatch(match: Match): void {
+	private _handleStartOfMatch(): void {
 		this._paused = false;
-		if (this._profile.numberOfMatches < 1) {
+		if (CameraController.instance.permissionState === HardwarePermission.Granted
+			&& !this._services.get(FppAnalysisService.serviceName).hasBeenStarted) {
 			this._callService(FppAnalysisService.serviceName);
+		}
+
+		if (this._geoLocationPermissionsGranted
+			&& !this._services.get(GeoLocationService.serviceName).hasBeenStarted) {
+			this._callService(GeoLocationService.serviceName);
 		}
 	}
 

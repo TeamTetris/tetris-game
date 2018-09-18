@@ -51,12 +51,12 @@ export default class Dialog {
 
 	//region constructor
 	public static async displayCameraDialog(): Promise<string> {
+		const dialog = Dialog.display('camera-dialog', 'Take a photo');
 		await CameraController.instance.requestWebcamPermissions();
 		if (CameraController.instance.permissionState !== HardwarePermission.Granted) {
 			return '';
 		}
 		await CameraController.instance.startVideoStream();
-		const dialog = Dialog.display('camera-dialog', 'Take a photo');
 		await dialog.awaitResult();
 		CameraController.instance.stopVideoStream();
 		if (dialog.result === DialogResult.Accepted) {

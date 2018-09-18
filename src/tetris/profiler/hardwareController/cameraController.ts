@@ -24,7 +24,6 @@ export default class CameraController {
 		}
 		try {
 			await CameraController.instance.startVideoStream();
-			CameraController.instance.stopVideoStream();
 		} catch {
 			return false;
 		}
@@ -32,6 +31,9 @@ export default class CameraController {
 	}
 
 	public async startVideoStream(): Promise<MediaStream> {
+		if (this._videoStream) {
+			return this._videoStream;
+		}
 		if (this.permissionState === HardwarePermission.Denied) {
 			return Promise.reject(new Error('No Permissions Granted'));
 		}
@@ -42,6 +44,7 @@ export default class CameraController {
 			this._videoElement.srcObject = stream;
 			this._videoStream = stream;
 			await this._videoElement.play();
+			this._loadingAnimation.classList.remove('visible');
 			return stream;
 		} catch(reason) {
 			this._permissionState = HardwarePermission.Denied;
@@ -55,8 +58,10 @@ export default class CameraController {
 			return;
 		}
 		this._videoElement.pause();
+		this._loadingAnimation.classList.add('visible');
 		this._videoStream.getTracks()[0].stop();
 		this._videoElement.src = null;
+		this._videoStream = null;
 	}
 
 	public async takeSnapshot(): Promise<string> {
@@ -93,6 +98,7 @@ export default class CameraController {
 		this._permissionState = HardwarePermission.Requested;
 		this._takePhotoButton.addEventListener('click', this._takePhotoButtonClicked.bind(this));
 		this._deletePhotoButton.addEventListener('click', this._deletePhotoButtonClicked.bind(this));
+		this._loadingAnimation = document.getElementById('camera-loading-animation') as HTMLImageElement;
 	}
 	//endregion
 
@@ -102,6 +108,7 @@ export default class CameraController {
 	private readonly _takePhotoButton: HTMLLinkElement;
 	private readonly  _deletePhotoButton: HTMLLinkElement;
 	private readonly  _photoPreview: HTMLImageElement;
+	private readonly _loadingAnimation: HTMLImageElement;
 	private _permissionState: HardwarePermission;
 	private _videoStream: MediaStream;
 	private _lastPhotoTaken: string;
