@@ -1,3 +1,7 @@
+html {
+    overflow: hidden;
+}
+
 body {
     background: url("../images/bg_dark.png") repeat;
     margin: 0;

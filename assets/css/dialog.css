@@ -221,7 +221,31 @@ input[type="button"].dialog-reject-element:hover, button.dialog-reject-element:h
     right: 10px;
 }
 
+#evaluation-dialog {
+    max-height: 100%;
+    height: unset;
+    font-family: Helvetica, Arial, sans-serif;
+    background-color: #ee7220;
+    min-height: 100%;
+}
+
+#evaluation-dialog .dialog-body {
+    align-items: unset;
+    width: 100%;
+    padding: 0px;
+}
+
+#evaluation-dialog::-webkit-scrollbar,
+#evaluation-dialog::-webkit-scrollbar { 
+    display: none; 
+}
+
+#evaluation-dialog h1 {
+    text-align: center;
+}
+
 #evaluation-dialog-basic-information {
+    float: left;
     display: grid;
     grid-template-columns: auto auto auto auto;
     grid-column-gap: 75px;
