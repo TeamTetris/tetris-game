@@ -67,7 +67,12 @@ export default class PlayScene extends Phaser.Scene {
 
 		const matchStart = this._match.startTime / 1000;
 		const currentTime = this._match.currentServerTime / 1000;
-		const preGame = currentTime < matchStart;		
+		const preGame = currentTime < matchStart;
+		if (preGame && !this._game.profiler.isPaused) {
+			this._game.profiler.isPaused = true;
+		} else if (!preGame && this._game.profiler.isPaused) {
+			this._game.profiler.isPaused = false;
+		}
 		if (!preGame && this._match.nextElimination) {
 			const nextElimination = this._match.nextElimination / 1000;
 			this._countdownWidget.update(Math.max(0, nextElimination - currentTime), Math.max(nextElimination - matchStart, matchStart - currentTime), preGame);
