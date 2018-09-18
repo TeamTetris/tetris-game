@@ -221,6 +221,12 @@ input[type="button"].dialog-reject-element:hover, button.dialog-reject-element:h
     right: 10px;
 }
 
+.preset-border {
+    border: 2px solid white;
+    padding: 1px;
+    border-radius: 9px;
+}
+
 #evaluation-dialog {
     max-height: 100%;
     height: unset;

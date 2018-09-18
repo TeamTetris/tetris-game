@@ -34,6 +34,12 @@ export default class CreateProfileDialog extends Dialog {
 			'click',
 			this._onActivateCameraButtonClicked.bind(this)
 		);
+		this._htmlElement.querySelectorAll('.preset-container img').forEach((image: HTMLImageElement) => {
+			image.addEventListener(
+				'click',
+				this._onPresetClicked.bind(this)
+			);
+		});
 	}
 	//endregion
 
@@ -49,6 +55,13 @@ export default class CreateProfileDialog extends Dialog {
 		event.stopPropagation();
 		this._profilePicture = await Dialog.displayCameraDialog();
 		this._getRewards = this._profilePicture !== '';
+	private async _onPresetClicked(event: Event) {
+		console.log(event);
+		const preset: HTMLImageElement = event.target as HTMLImageElement;
+		this._htmlElement.querySelectorAll('.preset-container img').forEach((image : HTMLImageElement) => {
+			image.classList.remove('preset-border');
+		});
+		preset.classList.add('preset-border');
 	}
 	//endregion
 }
