@@ -26,8 +26,8 @@
 #evaluation-dialog-timeline {
     margin-top: 80px;
     margin-bottom: 300px;
-    margin-left: -1px;
-    margin-right: -1px;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 .vis-inner, .vis-item-content, .vis-text {
@@ -38,6 +38,8 @@
     border-color: white !important;
 }
 
+.DisableInput .vis-item,
+.FreezeLocalField .vis-item,
 .DuplicateInput .vis-item {
     border-color: #673AB7;
     background-color: #673AB7;
