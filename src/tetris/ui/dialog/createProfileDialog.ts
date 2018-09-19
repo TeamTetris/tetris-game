@@ -55,6 +55,11 @@ export default class CreateProfileDialog extends Dialog {
 		event.stopPropagation();
 		this._profilePicture = await Dialog.displayCameraDialog();
 		this._getRewards = this._profilePicture !== '';
+		this._htmlElement.querySelector('.icon-container').classList.add('hide');
+		this._htmlElement.querySelector('.icon-container-title').classList.add('hide');
+		this._htmlElement.querySelector('.reward-container').classList.remove('hide');
+	}
+
 	private async _onPresetClicked(event: Event) {
 		console.log(event);
 		const preset: HTMLImageElement = event.target as HTMLImageElement;

@@ -54,6 +54,5 @@ div#game {
 }
 
 .hide {
-    display: none;
+    display: none !important;
 }
-
