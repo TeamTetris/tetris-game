@@ -48,7 +48,7 @@ input[type="button"].dialog-reject-element:hover, button.dialog-reject-element:h
 }
 
 .visible {
-    display: block !important;
+    display: block;
 }
 
 /* dialog Content/Box */
@@ -221,10 +221,20 @@ input[type="button"].dialog-reject-element:hover, button.dialog-reject-element:h
     right: 10px;
 }
 
-.preset-border {
+#profile-creation-dialog .preset-border {
     border: 2px solid white;
     padding: 1px;
     border-radius: 9px;
+}
+
+#profile-creation-dialog #playername {
+    min-width: 200px;
+    outline: none;
+    text-align: center;
+    color: white;
+    border-bottom: 1px solid;
+    padding: 0px 10px 5px;
+    font-size: 1.17em;
 }
 
 #evaluation-dialog {
