@@ -76,10 +76,8 @@ export default class PlayScene extends Phaser.Scene {
 		}
 
 		// Disable profiler during preGame
-		if (preGame && !this._game.profiler.isPaused) {
-			this._game.profiler.isPaused = true;
-		} else if (!preGame && this._game.profiler.isPaused) {
-			this._game.profiler.isPaused = false;
+		if (this._game.profiler.isPaused != preGame){
+			this._game.profiler.isPaused = preGame;
 		}
 
 		if (!preGame && this._match.nextElimination) {
