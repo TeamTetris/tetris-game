@@ -38,6 +38,10 @@ export default class Profiler {
 	public get isPaused(): boolean {
 		return this._paused;
 	}
+	
+	public set isPaused(paused: boolean) {
+		this._paused = paused;
+	}
 
 	public forEachMeasurement(callback: (Measurement) => void): void {
 		this._measurementHistory.forEach(callback);

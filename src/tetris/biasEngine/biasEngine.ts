@@ -60,6 +60,9 @@ export default class BiasEngine {
 
     // @ts-ignore
     public get currentBiasValue(): number {
+		if (this._profiler.isPaused) {
+			return BiasEngine.NEUTRAL_BIAS_VALUE;
+		}
         return this._currentBiasValue;
 	}
 
