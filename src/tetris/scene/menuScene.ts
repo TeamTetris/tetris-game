@@ -53,6 +53,11 @@ export default class MenuScene extends Phaser.Scene {
 			'click',
 			this._setLocalPlayerName.bind(this)
 		);
+
+		document.querySelector('#playername').addEventListener(
+			'DOMSubtreeModified',
+			MenuScene._setRegisterButtonState
+		);
 	}
 	//endregion
 
@@ -68,8 +73,19 @@ export default class MenuScene extends Phaser.Scene {
 	//endregion
 
 	//region private methods
+	private static _setRegisterButtonState(event: Event): void {
+		const inputValue: string = (event.target as any).textContent;
+		const registerButton: HTMLButtonElement = document.querySelector('#register-button');
+
+		if (inputValue === '' && !registerButton.disabled) {
+			registerButton.disabled = true;
+		} else if (inputValue !== '' && registerButton.disabled) {
+			registerButton.disabled = false;
+		};
+	}
+
 	private _setLocalPlayerName(): void {
-		const input: HTMLInputElement = document.querySelector('#playername');
+		const input: HTMLDivElement = document.querySelector('#playername');
 		this._localPlayerName = input.innerHTML;
 	}
 

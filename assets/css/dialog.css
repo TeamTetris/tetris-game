@@ -51,6 +51,11 @@ input[type="button"].dialog-reject-element:hover, button.dialog-reject-element:h
     display: block;
 }
 
+button:disabled {
+    background-color: #797979 !important;
+    box-shadow: 0 5px #696969 !important;
+}
+
 /* dialog Content/Box */
 .dialog-content {
     width: 100%;
