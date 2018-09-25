@@ -69,8 +69,8 @@ export default class MenuScene extends Phaser.Scene {
 
 	//region private methods
 	private _setLocalPlayerName(): void {
-		const input: HTMLInputElement = document.querySelector('#playername');
-		this._localPlayerName = input.value;
+		const input: HTMLDivElement = document.querySelector('#playername');
+		this._localPlayerName = input.innerHTML;
 	}
 
 	private _createBackground(): void {

@@ -77,9 +77,9 @@
             
             <h2>Player Tag</h2>
             
-            <input title="playername" type="text" id="playername" autofocus>
+            <div id="playername" contenteditable="true" autofocus></div>
             
-            <h2>Player Icon</h2>
+            <h2 class="icon-container-title">Player Icon</h2>
 
             <div class="icon-container">
                 <div class="preset-container">
@@ -100,14 +100,18 @@
                     </ul>
                 </div>
                 <h3>or</h3>
-                <div class="photo-container">
+                <div class="photo-container visible">
                     <h3>Take a photo</h3>
                     <button id="activate-camera-button">Shoot!</button>
                     <h3>+7 exclusive lootboxes!</h3>
                 </div>
             </div>
+
+            <div class="reward-container hide">
+                <h2>+2 Cyber Chests, +5 Diamond Chests awarded!</h2>
+            </div>
             
-            <button class="dialog-accept-element" id="register-button">Play!</button>
+            <button class="dialog-accept-element" id="register-button" disabled>Play!</button>
         </div>
     </div>
 </div>
