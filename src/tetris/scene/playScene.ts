@@ -21,10 +21,7 @@ import SkinStorage from "tetris/brick/skinStorage";
 import TextButton from "tetris/ui/textButton";
 import Utility from "tetris/utility";
 import { Scene } from "phaser";
-
-const PLAYER_FIELD_DRAW_OFFSET: Vector2 = new Vector2(
-	(config.graphics.width - config.field.width * config.field.blockSize) / 2, 
-	(config.graphics.height - config.field.height * config.field.blockSize) / 1.5);
+	
 
 export default class PlayScene extends Phaser.Scene {
 
@@ -45,7 +42,10 @@ export default class PlayScene extends Phaser.Scene {
 		this._sceneStarted = true;
 		this.adjustBackgroundParameters(0.10, [0.2, 0.2, 0.2]);
 		if (!this._localPlayerField) {
-			this._localPlayerField = this._newField(config.field.width, config.field.height, PLAYER_FIELD_DRAW_OFFSET);
+			const offset = new Vector2(
+				(config.graphics.width - config.field.width * config.field.blockSize) / 2, 
+				(config.graphics.height - config.field.height * config.field.blockSize) / 1.5);
+			this._localPlayerField = this._newField(config.field.width, config.field.height, offset);
 		} else {
 			this._localPlayerField.fieldState = FieldState.Playing;
 		}
@@ -139,7 +139,9 @@ export default class PlayScene extends Phaser.Scene {
 	private _backgroundGraphicsPipeline: Phaser.Renderer.WebGL.Pipelines.TextureTintPipeline;
 	private _backgroundSprite: Phaser.GameObjects.Sprite;
 	private _matchStartTimer: number;
+	private _startMatchTimeoutHandle: number;
 	private _sceneStarted: boolean = false;
+	private readonly lagThreshold: number = 300;
 	//endregion
 	
 	//region private methods
@@ -185,9 +187,12 @@ export default class PlayScene extends Phaser.Scene {
 		}
 		this._match = new Match(serverMatch);
 		const matchHasStarted = this._match.currentServerTime > this._match.startTime;
-		if (!this._startTimerStarted && !matchHasStarted) {
+		if ((!this._startTimerStarted || Math.abs(this._match.startTime - this._match.currentServerTime) > this.lagThreshold) && !matchHasStarted) {
 			this._startTimerStarted = true;
-			setTimeout(this._startMatch.bind(this), this._match.startTime - this._match.currentServerTime, {});
+			if (this._startMatchTimeoutHandle) {
+				clearTimeout(this._startMatchTimeoutHandle);
+			}
+			this._startMatchTimeoutHandle = setTimeout(this._startMatch.bind(this), this._match.startTime - this._match.currentServerTime, {});
 		}
 		this._scoreboardWidget.update(this._localSocketId, this._match.players);
 		this._updateRemoteFields(this._match.players);
