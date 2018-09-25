@@ -110,7 +110,8 @@ export default class ScoreboardWidget {
     private _updateDividers(players: MatchPlayer[]): void {
         for (let index = 1; index < DISPLAYED_PLAYERS; index++) {
             if (index >= players.length) {
-                return;
+                this._clearDivider(index - 1);
+                continue;
             }
             const currentPlayerRank = players[index].placement;
             const previousPlayerRank = players[index - 1].placement;
@@ -131,10 +132,18 @@ export default class ScoreboardWidget {
         }
     }
 
+    private _clearDivider(index: number): void {
+        // Clear graphic
+        this.dividers[index].clear();
+    }
+
     private _updatePlayerText(players: MatchPlayer[]): void {
         for (let index = 0; index < DISPLAYED_PLAYERS; index++) {
             if (index >= players.length) {
-                break;
+                this.ranks[index].setText('');
+                this.names[index].setText('');
+                this.scores[index].setText('');
+                continue;
             }
             this.ranks[index].setText(players[index].placement.toString());
             this.names[index].setText(players[index].displayName);
