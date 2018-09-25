@@ -116,7 +116,7 @@ export default class ScoreboardWidget {
             const previousPlayerRank = players[index - 1].placement;
             const doubleLine = currentPlayerRank - previousPlayerRank > 1;
             const lineColor = players[index].scoreboardStatus === ScoreboardStatus.Endangered ? config.ui.colors.red.hex : config.ui.colors.white.hex;
-            this._updateDivider(index, lineColor, doubleLine);
+            this._updateDivider(index - 1, lineColor, doubleLine);
         }
     }
 
