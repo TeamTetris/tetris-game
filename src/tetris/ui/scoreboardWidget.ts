@@ -116,7 +116,7 @@ export default class ScoreboardWidget {
             const previousPlayerRank = players[index - 1].placement;
             const doubleLine = currentPlayerRank - previousPlayerRank > 1;
             const lineColor = players[index].scoreboardStatus === ScoreboardStatus.Endangered ? config.ui.colors.red.hex : config.ui.colors.white.hex;
-            this._updateDivider(index, lineColor, doubleLine);
+            this._updateDivider(index - 1, lineColor, doubleLine);
         }
     }
 
@@ -192,7 +192,7 @@ export default class ScoreboardWidget {
 
     private _adjustDividerY(): void {
         for (const [index, divider] of this.dividers.entries()) {
-            divider.y = this.y + index * (config.ui.spacing + this._font.size) - config.ui.spacing / 2;;
+            divider.y = this.y + (index + 1) * (config.ui.spacing + this._font.size) - config.ui.spacing / 2;;
         }
     }
 	//endregion
