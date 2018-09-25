@@ -40,6 +40,16 @@ export default class RemoteField {
 		this._updatePlayerInformation(player);
 	}
 
+	public clear(): void {		
+		for (let y = 0; y < this._height; y++) {
+			for (let x = 0; x < this._width; x++) {
+				this._blockRows[y][x].sprite.setVisible(false);
+			}
+		}
+		this._name.setText("");
+		this._score.setText("");
+	}
+
 	public destroy(): void {
 		this._background.destroy();
 		this._background = null;
