@@ -40,6 +40,11 @@ export default class CreateProfileDialog extends Dialog {
 				this._onPresetClicked.bind(this)
 			);
 		});
+
+		document.querySelector('#playername').addEventListener(
+			'DOMSubtreeModified',
+			this._setRegisterButtonState.bind(this)
+		);
 	}
 	//endregion
 
@@ -47,9 +52,22 @@ export default class CreateProfileDialog extends Dialog {
 	private _profilePicture: string;
 	private _playerName: string;
 	private _getRewards: boolean;
+	private _presetOrImageChosen: boolean = false;
 	//endregion
 
 	//region private methods
+	private _setRegisterButtonState(): void {
+		const input: HTMLDivElement = document.querySelector('#playername');
+		const inputValue: string = input.innerHTML;
+		const registerButton: HTMLButtonElement = document.querySelector('#register-button');
+
+		if ((inputValue === '' || !this._presetOrImageChosen) && !registerButton.disabled) {
+			registerButton.disabled = true;
+		} else if (inputValue !== '' && this._presetOrImageChosen && registerButton.disabled) {
+			registerButton.disabled = false;
+		};
+	}
+
 	private async _onActivateCameraButtonClicked(event: Event): Promise<void> {
 		event.preventDefault();
 		event.stopPropagation();
@@ -58,6 +76,8 @@ export default class CreateProfileDialog extends Dialog {
 		this._htmlElement.querySelector('.icon-container').classList.add('hide');
 		this._htmlElement.querySelector('.icon-container-title').classList.add('hide');
 		this._htmlElement.querySelector('.reward-container').classList.remove('hide');
+		this._presetOrImageChosen = true;
+		this._setRegisterButtonState();
 	}
 
 	private async _onPresetClicked(event: Event) {
@@ -67,6 +87,8 @@ export default class CreateProfileDialog extends Dialog {
 			image.classList.remove('preset-border');
 		});
 		preset.classList.add('preset-border');
+		this._presetOrImageChosen = true;
+		this._setRegisterButtonState();
 	}
 	//endregion
 }
