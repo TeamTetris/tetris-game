@@ -1,16 +1,140 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="author" content="digitsensitive">
-    <title>phaser3-typescript</title>
-    <link rel="stylesheet" type="text/css" href="styles/css/styles.css">
-    <script src="build/bundle.js"></script>
-  </head>
-  <body>
-    <div class="container">
-      <h1>phaser3-typescript</h1>
-      <div id="game"></div>
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="author" content="Christian Friedow, Johannes Schneider, Maximilian Söchting, Julian Weise">
+    <title>TETRIS - Battle Royale</title>
+    <link rel="stylesheet" type="text/css" href="assets/css/dialog.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/camera.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/main.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/fontLoader.css">
+    <link rel="stylesheet" type="text/css" href="node_modules/vis/dist/vis.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/timeline.css">
+    <link rel="shortcut icon" type="image/png" href="assets/images/favicon.png"/>
+</head>
+
+<body>
+<div class="container">
+    <div id="game"></div>
+    <div id="font-hack">
+        .
     </div>
-  </body>
+</div>
+
+<!-- Camera dialog start -->
+<div id="camera-dialog" class="dialog">
+    <div class="dialog-content">
+        <div class="dialog-body">
+            <span class="close dialog-reject-element">&times;</span>
+            <h1 class="dialog-title"></h1>
+            <div class="camera-container">
+                <div id="camera-stream-with-js" class="app">
+                    <img src="assets/images/loadingicon.svg" class="loading-animation visible" id="camera-loading-animation" />
+                    <video id="camera-stream"></video>
+                    <img id="snap" src=""/>
+                    <div class="controls">
+                        <a href="#" id="delete-photo" title="Delete Photo" class="disabled">
+                            <i class="material-icons">delete</i>
+                        </a>
+                        <a href="#" id="take-photo" title="Take Photo">
+                            <i class="material-icons">camera_alt</i>
+                        </a>
+                    </div>
+                    <!-- Hidden canvas element. Used for taking snapshot of video. -->
+                    <canvas id="hidden-camera-canvas"></canvas>
+                </div>
+            </div>
+            <button class="dialog-accept-element">Accept</button>
+        </div>
+    </div>
+</div>
+<!-- Camera dialog end -->
+
+<!-- Permission dialog Camera start -->
+<div id="geolocation-permission-dialog" class="dialog">
+    <div class="dialog-content">
+        <div class="dialog-body">
+            <span class="close dialog-reject-element">&times;</span>
+            <h1>Join your city!</h1>
+            <p id="prompt">Fight side-by-side with friends and locals, 
+                Level-up your city and compete against others from all over the world.
+                Help your city to gain endless glory and reach the top of the highscore.
+            </p>
+            <h2 style="text-align: center; display: block">Become a legend!</h2>
+            <button class="dialog-accept-element float-left">Join now!</button>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+<!-- Permission dialog Camera end -->
+
+<!-- Permission dialog Camera start -->
+<div id="profile-creation-dialog" class="dialog">
+    <div class="dialog-content">
+        <div class="dialog-body">
+            <h1>Tetris - Battle Royale</h1>
+            
+            <h2>Player Tag</h2>
+            
+            <div id="playername" contenteditable="true" autofocus></div>
+            
+            <h2 class="icon-container-title">Player Icon</h2>
+
+            <div class="icon-container">
+                <div class="preset-container">
+                    <h3>Choose a preset</h3>
+                    <ul>
+                        <li>
+                            <img src="/assets/images/blue_icon.png">
+                        </li>
+                        <li>
+                            <img src="/assets/images/green_icon.png">
+                        </li>
+                        <li>
+                            <img src="/assets/images/red_icon.png">
+                        </li>
+                        <li>
+                            <img src="/assets/images/yellow_icon.png">
+                        </li>
+                    </ul>
+                </div>
+                <h3>or</h3>
+                <div class="photo-container visible">
+                    <h3>Take a photo</h3>
+                    <button id="activate-camera-button">Shoot!</button>
+                    <h3>+7 exclusive lootboxes!</h3>
+                </div>
+            </div>
+
+            <div class="reward-container hide">
+                <h2>+2 Cyber Chests, +5 Diamond Chests awarded!</h2>
+            </div>
+            
+            <button class="dialog-accept-element" id="register-button" disabled>Play!</button>
+        </div>
+    </div>
+</div>
+<!-- Permission dialog Camera end -->
+
+<!-- Evaluation Dialog start -->
+<div id="evaluation-dialog" class="dialog">
+    <div class="dialog-content">
+        <div class="dialog-body">
+            <h1>Detected profile information</h1>
+            <img src="" id="evaluation-dialog-picture" />
+            <div id="evaluation-dialog-basic-information">
+            </div>
+            <div class="clear"></div>
+            <div id="evaluation-dialog-timeline"></div>
+        </div>
+    </div>
+</div>
+<!-- Evaluation Dialog end -->
+
+
+</body>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script src="build/bundle.js"></script>
+<script src="build/libs.bundle.js"></script>
 </html>

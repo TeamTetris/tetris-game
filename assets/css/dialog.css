@@ -1,0 +1,294 @@
+input[type="button"], button {
+    font-family: "Kenney Mini Square", Helvetica, Arial, sans-serif;
+    background: #5c6fb8;
+    border: 1px solid #2C2C2C;
+    color: white;
+    font-size: 16px;
+    padding: 5px 20px;
+}
+
+input[type="button"]:hover, button:hover {
+    background: #404e84;
+    cursor: pointer;
+}
+
+input[type="button"].dialog-accept-element, button.dialog-accept-element {
+    background: #5cb85c;
+}
+
+input[type="button"].dialog-reject-element, button.dialog-reject-element {
+    background: #b85c5c;
+}
+
+input[type="button"].dialog-accept-element:hover, button.dialog-accept-element:hover  {
+    background: #408440;
+}
+
+input[type="button"].dialog-reject-element:hover, button.dialog-reject-element:hover {
+    background: #844340;
+}
+
+.dialog-title {
+    font-weight: normal;
+}
+
+/* The dialog (background) */
+.dialog {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    font-family: "Kenney Mini Square", sans-serif;
+}
+
+.visible {
+    display: block;
+}
+
+button:disabled {
+    background-color: #797979 !important;
+    box-shadow: 0 5px #696969 !important;
+}
+
+/* dialog Content/Box */
+.dialog-content {
+    width: 100%;
+    height: 100%;
+    border: none;
+    margin: 0;
+    background-color: #fefefe;
+    padding: 20px;
+}
+
+/* The Close Button */
+.close {
+    padding: 5px 20px;
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* dialog Header */
+.dialog-header {
+    padding: 2px 0 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+
+/* dialog Body */
+.dialog-body {
+    padding: 2px 16px 10px 16px;
+}
+
+/* dialog Footer */
+.dialog-footer {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+
+/* dialog Content */
+.dialog-content {
+    position: relative;
+    background-color: #ee7220;
+    padding: 0;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+    display: flex;
+    justify-content: center;
+}
+
+.dialog-content .dialog-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.dialog-content h1, h2, h3, h4, p {
+    color: white;
+}
+
+.dialog-content h1 {
+    font-size: 60px;
+}
+
+.dialog-content h2 {
+    margin-top: 60px;
+    font-size: 35px;
+}
+
+.dialog-content h3 {
+    margin-bottom: 0;
+}
+
+.dialog-content .icon-container {
+    display: flex;
+    align-items: center;
+}
+
+.dialog-content .icon-container > * {
+    margin: 0 25px;
+}
+
+.dialog-content .preset-container, .dialog-content .photo-container {
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dialog-content input {
+    font-size: 25px;
+    font-family: "Kenney Mini Square", sans-serif;
+    text-align: center;
+    border: none;
+    margin: 0;
+    background: transparent;
+    color: white;
+}
+
+.dialog-content input:focus {
+    outline: none;
+}
+
+.dialog-content ul {
+    list-style: none;
+    display: flex;
+    padding: 0;
+}
+
+.dialog-content ul > * {
+    margin: 0 5px;
+}
+
+.dialog-content .selected img {
+    border: 1px solid white;
+    border-radius: 5px;
+}
+
+.dialog-content #activate-camera-button {
+    margin-top: 16px;
+    height: 45px;
+}
+.dialog-content button {
+    border-radius: 5px;
+    box-shadow: 0 5px #0d4358;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    background: #206f92;
+}
+
+.dialog-content button:hover {
+    background: #206f92;
+}
+
+.dialog-content .dialog-accept-element {
+    margin-top: 60px;
+    font-size: 40px;
+}
+
+/* Add Animation */
+@keyframes animatetop {
+    from {top: -300px; opacity: 0}
+    to {top: 0; opacity: 1}
+}
+
+#permission-dialog .dialog-content {
+    width: 30%;
+}
+
+.dialog-content p {
+    font-family: "Kenney Mini", Helvetica, Arial, sans-serif;
+    text-align: justify;
+    max-width: 600px;
+    font-size: 20px;
+}
+
+.dialog-reject-element {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+#profile-creation-dialog .preset-border {
+    border: 2px solid white;
+    padding: 1px;
+    border-radius: 9px;
+}
+
+#profile-creation-dialog #playername {
+    min-width: 200px;
+    outline: none;
+    text-align: center;
+    color: white;
+    border-bottom: 1px solid;
+    padding: 0px 10px 5px;
+    font-size: 1.17em;
+}
+
+#evaluation-dialog {
+    max-height: 100%;
+    height: unset;
+    font-family: Helvetica, Arial, sans-serif;
+    background-color: #ee7220;
+    min-height: 100%;
+}
+
+#evaluation-dialog .dialog-body {
+    align-items: unset;
+    width: 100%;
+    padding: 0px;
+}
+
+#evaluation-dialog::-webkit-scrollbar,
+#evaluation-dialog::-webkit-scrollbar { 
+    display: none; 
+}
+
+#evaluation-dialog h1 {
+    text-align: center;
+}
+
+#evaluation-dialog-basic-information {
+    float: left;
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    grid-column-gap: 75px;
+    max-width: 900px;
+    align-self: center;
+}
+
+#evaluation-dialog-basic-information > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#evaluation-dialog-basic-information h2 {
+    margin-bottom: 5px;
+}
+
+#evaluation-dialog-picture {
+    width: 300px;
+    float: right;
+    clear: right;
+    align-self: center;
+    border: 2px solid white;
+    padding: 1px;
+}
